@@ -36,6 +36,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   ),
                 ),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     labelText: 'Telefonnummer',
                   ),
@@ -52,7 +53,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   decoration: const InputDecoration(
                     labelText: 'Bekräfta lösenord',
                   ),
-                  keyboardType: TextInputType.visiblePassword,
                 ),
                 Row(
                   children: [
