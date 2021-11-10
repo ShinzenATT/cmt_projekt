@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/website/Pages/loginpage.dart';
+import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: LoginPage(),
+      home: AppLoginPage(),
     );
   }
 }
