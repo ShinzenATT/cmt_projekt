@@ -4,14 +4,14 @@ import 'package:flutter/painting.dart';
 
 ///First version of loginpage for the website.
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class WebLoginPage extends StatefulWidget {
+  const WebLoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _WebLoginPageState createState() => _WebLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _WebLoginPageState extends State<WebLoginPage> {
   String title = 'Comment'; //The website logotype.
   bool _passwordVisible = false; // Controlls the hide-password feature.
 

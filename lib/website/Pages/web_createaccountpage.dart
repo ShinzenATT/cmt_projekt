@@ -5,14 +5,14 @@ import 'package:flutter/widgets.dart';
 
 ///First version of the CreateAcountPage for the website.
 
-class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({Key? key}) : super(key: key);
+class WebCreateAccountPage extends StatefulWidget {
+  const WebCreateAccountPage({Key? key}) : super(key: key);
 
   @override
-  _CreateAccountPageState createState() => _CreateAccountPageState();
+  _WebCreateAccountPageState createState() => _WebCreateAccountPageState();
 }
 
-class _CreateAccountPageState extends State<CreateAccountPage> {
+class _WebCreateAccountPageState extends State<WebCreateAccountPage> {
   bool _passwordVisible = false; //controls the hide-password feature.
   @override
   Widget build(BuildContext context) {
