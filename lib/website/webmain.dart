@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/website/Pages/web_loginage.dart';
+import 'package:cmt_projekt/website/View/web_loginage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
