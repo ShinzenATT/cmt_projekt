@@ -1,19 +1,13 @@
+import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 ///First version of the CreateAcountPage for the website.
 
-class WebCreateAccountWidget extends StatefulWidget {
-  const WebCreateAccountWidget({Key? key}) : super(key: key);
-
-  @override
-  _WebCreateAccountWidgetState createState() => _WebCreateAccountWidgetState();
-}
-
-class _WebCreateAccountWidgetState extends State<WebCreateAccountWidget> {
-  bool _passwordVisible = false; //controls the hide-password feature.
+class WebCreateAccountWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -42,14 +36,16 @@ class _WebCreateAccountWidgetState extends State<WebCreateAccountWidget> {
                 ),
               ),
               TextFormField(
-                obscureText: !_passwordVisible,
+                obscureText:
+                    !context.watch<CreateAccountViewModel>().accountPassword,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
                 ),
                 keyboardType: TextInputType.visiblePassword,
               ),
               TextFormField(
-                obscureText: !_passwordVisible,
+                obscureText:
+                    !context.watch<CreateAccountViewModel>().accountPassword,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
                 ),
@@ -60,11 +56,12 @@ class _WebCreateAccountWidgetState extends State<WebCreateAccountWidget> {
                     splashRadius: 0,
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    value: _passwordVisible,
-                    onChanged: (value) {
-                      setState(() {
-                        _passwordVisible = value!;
-                      });
+                    value:
+                        context.watch<CreateAccountViewModel>().accountPassword,
+                    onChanged: (_) {
+                      context
+                          .read<CreateAccountViewModel>()
+                          .changePasswordVisibility();
                     },
                   ),
                   InkWell(
@@ -72,9 +69,9 @@ class _WebCreateAccountWidgetState extends State<WebCreateAccountWidget> {
                     highlightColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     onTap: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
+                      context
+                          .read<CreateAccountViewModel>()
+                          .changePasswordVisibility();
                     },
                     child: const Text("Visa lösenord"),
                   ),

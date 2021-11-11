@@ -1,22 +1,14 @@
+import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:provider/provider.dart';
 
 ///First version of loginpage for the website.
 
-class WebLoginPage extends StatefulWidget {
+class WebLoginPage extends StatelessWidget {
   const WebLoginPage({Key? key}) : super(key: key);
-
-  @override
-  _WebLoginPageState createState() => _WebLoginPageState();
-}
-
-class _WebLoginPageState extends State<WebLoginPage> {
-  String title = 'Comment'; //The website logotype.
-  bool _passwordVisible = false; // Controlls the hide-password feature.
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
@@ -28,7 +20,7 @@ class _WebLoginPageState extends State<WebLoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                title,
+                context.read<LoginPageViewModel>().title,
                 style:
                     const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
               ),
@@ -75,20 +67,24 @@ class _WebLoginPageState extends State<WebLoginPage> {
                                   splashColor: Colors.transparent,
                                   icon: Icon(
                                     // Based on passwordVisible state choose the icon
-                                    _passwordVisible
+                                    context
+                                            .watch<LoginPageViewModel>()
+                                            .loginPassword
                                         ? Icons.visibility
                                         : Icons.visibility_off,
                                     color: Theme.of(context).primaryColorDark,
                                   ),
                                   onPressed: () {
                                     // Update the state i.e. toogle the state of passwordVisible variable
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
+                                    context
+                                        .read<LoginPageViewModel>()
+                                        .changePasswordVisibility();
                                   },
                                 ),
                               ),
-                              obscureText: !_passwordVisible,
+                              obscureText: !context
+                                  .watch<LoginPageViewModel>()
+                                  .loginPassword,
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
@@ -121,7 +117,7 @@ class _WebLoginPageState extends State<WebLoginPage> {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const WebCreateAccountWidget();
+                                      return WebCreateAccountWidget();
                                     });
                               },
                               child:
