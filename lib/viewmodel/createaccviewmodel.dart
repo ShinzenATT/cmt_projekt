@@ -1,14 +1,13 @@
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:flutter/material.dart';
 
-class LoginPageViewModel with ChangeNotifier {
+class CreateAccountViewModel with ChangeNotifier {
   LoginModel p = LoginModel();
 
   void changePasswordVisibility() {
-    p.loginPassword = !p.loginPassword;
+    p.accountPassword = !p.accountPassword;
     notifyListeners();
   }
 
-  get loginPassword => p.loginPassword;
-  get title => p.title;
+  get accountPassword => p.accountPassword;
 }

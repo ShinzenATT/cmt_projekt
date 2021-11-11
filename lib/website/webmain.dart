@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/website/View/web_loginage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LoginPageViewModel()),
+      ChangeNotifierProvider(create: (_) => CreateAccountViewModel()),
     ],
     child: const MyApp(),
   ));

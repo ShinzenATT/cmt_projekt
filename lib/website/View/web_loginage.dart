@@ -117,7 +117,7 @@ class WebLoginPage extends StatelessWidget {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const WebCreateAccountWidget();
+                                      return WebCreateAccountWidget();
                                     });
                               },
                               child:
