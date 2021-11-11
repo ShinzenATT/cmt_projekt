@@ -1,6 +1,8 @@
 import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:flutter/material.dart';
 
+import 'View/app_createaccountpage.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: AppLoginPage(),
+      home: const AppLoginPage(),
     );
   }
 }
