@@ -97,7 +97,11 @@ class WebLoginPage extends StatelessWidget {
                               height: 30,
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                                    .read<LoginPageViewModel>()
+                                    .changePage(context);
+                              },
                               child: const Text('Logga in'),
                             ),
                           ],
