@@ -11,6 +11,8 @@ class LoginPageViewModel with ChangeNotifier {
 
   get loginPassword => lm.loginPassword;
   get title => lm.title;
+  get login => lm.login;
+  get password => lm.password;
 
   void changePage(var context) {
     Navigator.of(context).pushReplacementNamed('/Home');

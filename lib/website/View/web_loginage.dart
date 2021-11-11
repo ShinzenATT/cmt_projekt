@@ -54,11 +54,15 @@ class WebLoginPage extends StatelessWidget {
                               height: 40,
                             ),
                             TextFormField(
+                              controller:
+                                  context.watch<LoginPageViewModel>().login,
                               decoration: const InputDecoration(
                                 labelText: 'E-post eller telefonnummer',
                               ),
                             ),
                             TextFormField(
+                              controller:
+                                  context.watch<LoginPageViewModel>().password,
                               decoration: InputDecoration(
                                 labelText: 'Lösenord',
                                 suffixIcon: IconButton(
