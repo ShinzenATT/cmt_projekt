@@ -1,9 +1,12 @@
 import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
-import 'package:cmt_projekt/website/View/web_homepage.dart';
-import 'package:cmt_projekt/website/View/web_loginage.dart';
+import 'package:cmt_projekt/viewmodel/page_navigator_viewmodel.dart';
+import 'package:cmt_projekt/website/View/web_loginpage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'app/View/app_loginpage.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -21,14 +24,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        home: const WebLoginPage(),
-        routes: <String, WidgetBuilder>{
-          '/Home': (BuildContext context) => const WebHomePage(),
-        });
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: kIsWeb ? const WebLoginPage() : AppLoginPage(),
+      routes: PageNavigator().routes,
+    );
   }
 }
