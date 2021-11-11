@@ -25,17 +25,20 @@ class WebCreateAccountWidget extends StatelessWidget {
             children: [
               const Text("Ange dina uppgifter för att skapa ett konto. "),
               TextFormField(
+                controller: context.watch<CreateAccountViewModel>().email,
                 decoration: const InputDecoration(
                   labelText: 'Epost',
                 ),
               ),
               TextFormField(
+                controller: context.watch<CreateAccountViewModel>().phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   labelText: 'Telefonnummer',
                 ),
               ),
               TextFormField(
+                controller: context.watch<CreateAccountViewModel>().password1,
                 obscureText:
                     !context.watch<CreateAccountViewModel>().accountPassword,
                 decoration: const InputDecoration(
@@ -44,6 +47,7 @@ class WebCreateAccountWidget extends StatelessWidget {
                 keyboardType: TextInputType.visiblePassword,
               ),
               TextFormField(
+                controller: context.watch<CreateAccountViewModel>().password2,
                 obscureText:
                     !context.watch<CreateAccountViewModel>().accountPassword,
                 decoration: const InputDecoration(
@@ -78,7 +82,9 @@ class WebCreateAccountWidget extends StatelessWidget {
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CreateAccountViewModel>().comparePw(context);
+                },
                 child: const Text("Skapa Konto"),
               )
             ],

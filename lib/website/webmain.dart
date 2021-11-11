@@ -1,5 +1,6 @@
 import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+import 'package:cmt_projekt/website/View/web_homepage.dart';
 import 'package:cmt_projekt/website/View/web_loginage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +21,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const WebLoginPage(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: const WebLoginPage(),
+        routes: <String, WidgetBuilder>{
+          '/Home': (BuildContext context) => const WebHomePage(),
+        });
   }
 }
