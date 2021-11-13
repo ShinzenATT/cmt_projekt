@@ -12,6 +12,7 @@ class _WebHomePageState extends State<WebHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      body: Text("hej"),
     );
   }
 }
