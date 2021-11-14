@@ -33,10 +33,10 @@ class Server {
             await db.createAccount(query.email, query.password, query.phone);
         print(response);
         client.add(response);
-      } else if (query.email.isEmpty) {
-        db.read(query.phone, query.password);
       } else {
-        db.read(query.email, query.password);
+        String response = await db.read(query.email, query.password);
+        print(response);
+        client.add(response);
       }
     });
   }

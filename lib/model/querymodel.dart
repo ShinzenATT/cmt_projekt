@@ -1,9 +1,12 @@
 class QueryModel {
   final String email;
-  final String phone;
+  late String phone;
   final String password;
   QueryModel(
       {required this.email, required this.phone, required this.password});
+  QueryModel.login({required this.email, required this.password}) {
+    phone = "";
+  }
 
   QueryModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
