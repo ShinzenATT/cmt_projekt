@@ -5,8 +5,9 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class queryToDatabase {
   //Ansluter till server med ipadress och port
-  var channel =
-      WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5601'));
+  bool response = false;
+
+  var channel = WebSocketChannel.connect(Uri.parse('ws://192.168.0.37:5601'));
   queryToDatabase() {
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
@@ -17,8 +18,13 @@ class queryToDatabase {
     channel.sink.add(jsonEncode(message));
   }
 
-  void onMessage(message) {
+  void onMessage(String message) {
     //Skriver ut meddelandet.
     print(message);
+    if (message == "true") {
+      response = true;
+    } else {
+      response = false;
+    }
   }
 }

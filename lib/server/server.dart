@@ -20,16 +20,19 @@ class Server {
 
   void initServer() async {
     //Öppnar server på port och ip.
-    HttpServer server = await HttpServer.bind('188.150.156.238', 5601);
+    HttpServer server = await HttpServer.bind('192.168.0.37', 5601);
     //ställer in i att ifall man får ett meddelande ska onMessage köras.
     server.transform(WebSocketTransformer()).listen(onMessage);
   }
 
   void onMessage(var client) {
-    client.listen((data) {
+    client.listen((data) async {
       QueryModel query = QueryModel.fromJson(jsonDecode(data));
       if (query.isAccountCreation()) {
-        db.createAccount(query.email, query.password, query.phone);
+        String response =
+            await db.createAccount(query.email, query.password, query.phone);
+        print(response);
+        client.add(response);
       } else if (query.email.isEmpty) {
         db.read(query.phone, query.password);
       } else {
