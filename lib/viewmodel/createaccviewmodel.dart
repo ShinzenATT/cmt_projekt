@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +17,24 @@ class CreateAccountViewModel with ChangeNotifier {
   get password1 => lm.createpassword;
   get password2 => lm.createpassword2;
   get client => lm.databaseAPI;
+
   void comparePw(var context) {
     if (password1.value.text == password2.value.text) {
+      setUpResponeStream(context);
       createAccount();
-      Timer(const Duration(milliseconds: 500), () {
-        if (lm.databaseAPI.response) {
-          Navigator.of(context, rootNavigator: true)
-              .pop(); // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-          Navigator.of(context)
-              .pushReplacementNamed('/Home'); // Byter till homepage.
-        }
-      });
     }
+  }
+
+  ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
+  void setUpResponeStream(context) {
+    lm.databaseAPI.createAccountStreamValue.listen((value) {
+      if (value) {
+        Navigator.of(context, rootNavigator: true)
+            .pop(); // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
+        Navigator.of(context)
+            .pushReplacementNamed('/Home'); // Byter till homepage.
+      }
+    });
   }
 
   void createAccount() {

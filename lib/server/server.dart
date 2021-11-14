@@ -20,7 +20,7 @@ class Server {
 
   void initServer() async {
     //Öppnar server på port och ip.
-    HttpServer server = await HttpServer.bind('192.168.0.37', 5601);
+    HttpServer server = await HttpServer.bind('192.168.0.40', 5601);
     //ställer in i att ifall man får ett meddelande ska onMessage köras.
     server.transform(WebSocketTransformer()).listen(onMessage);
   }

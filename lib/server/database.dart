@@ -4,11 +4,8 @@ class Database {
   //Database host ip
 
   Future<String> read(String login, String pass) async {
-/*    var connection = PostgreSQLConnection(
-        "188.150.156.238", 5432, "cmt_projekt",
-        username: "pi", password: "Kastalagatan22");*/
-    var connection = PostgreSQLConnection("192.168.0.37", 5432, "portal",
-        username: "postgres", password: "postgres");
+    var connection = PostgreSQLConnection("192.168.0.40", 5432, "cmt_projekt",
+        username: "pi", password: "Kastalagatan22");
     await connection.open();
 
     List<List<dynamic>> results = await connection.query(
@@ -21,8 +18,8 @@ class Database {
 
   Future<String> createAccount(String email, String pass, String phone) async {
     try {
-      var connection = PostgreSQLConnection("192.168.0.37", 5432, "portal",
-          username: "postgres", password: "postgres");
+      var connection = PostgreSQLConnection("192.168.0.40", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
       await connection.open();
 
       List<List<dynamic>> results = await connection
