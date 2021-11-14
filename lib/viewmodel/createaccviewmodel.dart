@@ -27,7 +27,7 @@ class CreateAccountViewModel with ChangeNotifier {
 
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponeStream(context) {
-    lm.databaseAPI.createAccountStreamValue.listen((value) {
+    lm.databaseAPI.streamController.stream.listen((value) {
       if (value) {
         Navigator.of(context, rootNavigator: true)
             .pop(); // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.

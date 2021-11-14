@@ -5,42 +5,31 @@ import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class queryToDatabase {
+  //En ström som skickar ut en bool till alla lyssnare.
+  StreamController<bool> streamController = StreamController<bool>.broadcast();
   //Ansluter till server med ipadress och port
-  final StreamController<bool> _createAccountController =
-      StreamController<bool>();
-  late Stream createAccountStreamValue;
-  final StreamController<bool> _loginController = StreamController<bool>();
-  late Stream loginStreamValue;
   var channel =
       WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5601'));
   queryToDatabase() {
-    createAccountStreamValue = _createAccountController.stream;
-    loginStreamValue = _loginController.stream;
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
     channel.stream.listen((message) => onMessage(message));
   }
+
+  ///Skickar en QueryModel till servern
   void sendRequest(QueryModel message) {
     print(jsonEncode(message));
     channel.sink.add(jsonEncode(message));
   }
 
+  ///Metod som hanterar inkommande meddelanden från servern.
   void onMessage(String message) {
     //Skriver ut meddelandet.
     print(message);
     if (message == "true") {
-      _createAccountController.add(true);
-      _loginController.add(true);
+      streamController.add(true);
     } else {
-      _createAccountController.add(false);
-      _loginController.add(false);
+      streamController.add(false);
     }
-  }
-
-  Future<bool> waitformessage() async {
-    await for (var fileInfo in channel.stream) {
-      print(fileInfo);
-    }
-    return true;
   }
 }
