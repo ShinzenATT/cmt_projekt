@@ -2,22 +2,24 @@ import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/material.dart';
 
+
+
 class LoginPageViewModel with ChangeNotifier {
   LoginModel lm = LoginModel();
 
   void changePasswordVisibility() {
-    lm.loginPassword = !lm.loginPassword;
+    lm.passwordVisibilityLogin = !lm.passwordVisibilityLogin;
     notifyListeners();
   }
 
-  get loginPassword => lm.loginPassword;
+  get passwordVisibilityLogin => lm.passwordVisibilityLogin;
   get title => lm.title;
   get login => lm.login;
   get password => lm.password;
   get databaseAPI => lm.databaseAPI;
 
-  void changePage(var context) {
-    Navigator.of(context).pushReplacementNamed('/Home');
+  void changePage(var context, String route) {
+    Navigator.of(context).pushReplacementNamed(route);
   }
 
   void loginAttempt(context) async {

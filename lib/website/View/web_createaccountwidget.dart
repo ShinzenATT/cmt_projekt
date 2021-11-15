@@ -40,7 +40,7 @@ class WebCreateAccountWidget extends StatelessWidget {
               TextFormField(
                 controller: context.watch<CreateAccountViewModel>().password1,
                 obscureText:
-                    !context.watch<CreateAccountViewModel>().accountPassword,
+                    !context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
                 ),
@@ -49,7 +49,7 @@ class WebCreateAccountWidget extends StatelessWidget {
               TextFormField(
                 controller: context.watch<CreateAccountViewModel>().password2,
                 obscureText:
-                    !context.watch<CreateAccountViewModel>().accountPassword,
+                    !context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
                 ),
@@ -61,7 +61,7 @@ class WebCreateAccountWidget extends StatelessWidget {
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     value:
-                        context.watch<CreateAccountViewModel>().accountPassword,
+                        context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
                     onChanged: (_) {
                       context
                           .read<CreateAccountViewModel>()

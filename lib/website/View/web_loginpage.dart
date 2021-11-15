@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 
+import '../../constants.dart' as constant;
+
+
 ///First version of loginpage for the website.
 
 class WebLoginPage extends StatelessWidget {
@@ -73,7 +76,7 @@ class WebLoginPage extends StatelessWidget {
                                     // Based on passwordVisible state choose the icon
                                     context
                                             .watch<LoginPageViewModel>()
-                                            .loginPassword
+                                            .passwordVisibilityLogin
                                         ? Icons.visibility
                                         : Icons.visibility_off,
                                     color: Theme.of(context).primaryColorDark,
@@ -88,7 +91,7 @@ class WebLoginPage extends StatelessWidget {
                               ),
                               obscureText: !context
                                   .watch<LoginPageViewModel>()
-                                  .loginPassword,
+                                  .passwordVisibilityLogin,
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
