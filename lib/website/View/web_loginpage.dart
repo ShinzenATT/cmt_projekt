@@ -107,7 +107,7 @@ class WebLoginPage extends StatelessWidget {
                               onPressed: () {
                                 context
                                     .read<LoginPageViewModel>()
-                                    .changePage(context, constant.home);
+                                    .loginAttempt(context);
                               },
                               child: const Text('Logga in'),
                             ),
