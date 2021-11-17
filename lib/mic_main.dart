@@ -55,11 +55,14 @@ class _MyAppState extends State<MyApp> {
     });
 
     _audioStream = _recorder.audioStream.listen((data) {
+      /*
       if (_isPlaying) {
         _player.writeChunk(data);
       } else {
         _micChunks.add(data);
       }
+
+       */
       c.sendData(data);
     });
 

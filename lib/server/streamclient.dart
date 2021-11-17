@@ -23,9 +23,7 @@ class Client {
     await _player.start();
 
     if (event.isNotEmpty) {
-      for (var chunk in event) {
-        await _player.writeChunk(chunk);
-      }
+      await _player.writeChunk(event);
     }
   }
 
