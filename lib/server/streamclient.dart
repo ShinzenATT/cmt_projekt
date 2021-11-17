@@ -9,7 +9,7 @@ class Client {
 
 
   Client() {
-    client = WebSocketChannel.connect(Uri.parse("ws://10.0.177.85:8080"));
+    client = WebSocketChannel.connect(Uri.parse("ws://192.168.77.128:8080"));
     _player.initialize();
   }
 
@@ -37,5 +37,4 @@ class Client {
 
 void main() {
   Client c = Client();
-  c.listen();
 }

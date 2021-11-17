@@ -47,10 +47,11 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlugin() async {
     _recorderStatus = _recorder.status.listen((status) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _isRecording = status == SoundStreamStatus.Playing;
         });
+      }
     });
 
     _audioStream = _recorder.audioStream.listen((data) {
@@ -63,19 +64,20 @@ class _MyAppState extends State<MyApp> {
     });
 
     _playerStatus = _player.status.listen((status) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _isPlaying = status == SoundStreamStatus.Playing;
         });
+      }
     });
 
     await Future.wait([
       _recorder.initialize(),
-      _player.initialize(),
     ]);
   }
 
   void _play() async {
+    /*
     await _player.start();
 
     if (_micChunks.isNotEmpty) {
@@ -84,6 +86,7 @@ class _MyAppState extends State<MyApp> {
       }
       _micChunks.clear();
     }
+     */
   }
 
   @override

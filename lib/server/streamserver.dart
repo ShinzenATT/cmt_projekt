@@ -13,11 +13,13 @@ void main() async {
     webSocket.stream.listen((message) {
      // webSocket.sink.add("echo $message");
       print(message);
-      webSocket.sink.add(message);
+      for(WebSocketChannel sock in clients) {
+        sock.sink.add(message);
+      }
     });
   });
 
-  shelf_io.serve(handler, '10.0.177.85', 8080).then((server) {
+  shelf_io.serve(handler, '192.168.77.128', 8080).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
 }
