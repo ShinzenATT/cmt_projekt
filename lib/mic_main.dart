@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sound_stream/sound_stream.dart';
@@ -17,6 +18,9 @@ class _MyAppState extends State<MyApp> {
   RecorderStream _recorder = RecorderStream();
   PlayerStream _player = PlayerStream();
 
+  Client c = Client();
+
+
   List<Uint8List> _micChunks = [];
   bool _isRecording = false;
   bool _isPlaying = false;
@@ -28,14 +32,15 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    c.listen();
     initPlugin();
   }
 
   @override
   void dispose() {
-    _recorderStatus?.cancel();
-    _playerStatus?.cancel();
-    _audioStream?.cancel();
+    _recorderStatus.cancel();
+    _playerStatus.cancel();
+    _audioStream.cancel();
     super.dispose();
   }
 
@@ -54,6 +59,7 @@ class _MyAppState extends State<MyApp> {
       } else {
         _micChunks.add(data);
       }
+      c.sendData(data);
     });
 
     _playerStatus = _player.status.listen((status) {
