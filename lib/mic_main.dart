@@ -1,98 +1,153 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
+import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
+import 'package:flutter_sound_lite/public/tau.dart';
+import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sound_stream/sound_stream.dart';
+typedef _Fn = void Function();
 
 void main() {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatefulWidget {
+  late String title;
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  RecorderStream _recorder = RecorderStream();
-  PlayerStream _player = PlayerStream();
+  final int tSampleRate = 44000;
 
   Client c = Client();
 
+  FlutterSoundPlayer? _mPlayer = FlutterSoundPlayer();
+  FlutterSoundRecorder? _mRecorder = FlutterSoundRecorder();
+  bool _mPlayerIsInited = false;
+  bool _mRecorderIsInited = false;
+  bool _mplaybackReady = false;
+  String? _mPath;
+  StreamSubscription? _mRecordingDataSubscription;
 
-  List<Uint8List> _micChunks = [];
-  bool _isRecording = false;
-  bool _isPlaying = false;
-
-  late StreamSubscription _recorderStatus;
-  late StreamSubscription _playerStatus;
-  late StreamSubscription _audioStream;
+  Future<void> _openRecorder() async {
+    var status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw RecordingPermissionException('Microphone permission not granted');
+    }
+    await _mRecorder!.openAudioSession();
+    setState(() {
+      _mRecorderIsInited = true;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _mPlayer!.openAudioSession().then((value) {
+      setState(() {
+        _mPlayerIsInited = true;
+      });
+    });
+    _openRecorder();
     c.listen();
-    initPlugin();
   }
+
+  Future<void> record() async {
+    assert(_mRecorderIsInited && _mPlayer!.isStopped);
+    var recordingDataController = StreamController<Food>();
+    _mRecordingDataSubscription =
+        recordingDataController.stream.listen((buffer) {
+          if (buffer is Uint8List) {
+            print(buffer);
+            c.sendData(buffer, recordingDataController);
+          }
+        });
+    await _mRecorder!.startRecorder(
+      toStream: recordingDataController.sink,
+      codec: Codec.pcm16,
+      numChannels: 1,
+      sampleRate: tSampleRate,
+    );
+    setState(() {});
+  }
+
+  Future<void> stopRecorder() async {
+    await _mRecorder!.stopRecorder();
+    if (_mRecordingDataSubscription != null) {
+      await _mRecordingDataSubscription!.cancel();
+      _mRecordingDataSubscription = null;
+    }
+    _mplaybackReady = true;
+  }
+
+  _Fn? getRecorderFn() {
+    if (!_mRecorderIsInited || !_mPlayer!.isStopped) {
+      return null;
+    }
+    return _mRecorder!.isStopped
+        ? record
+        : () {
+      stopRecorder().then((value) => setState(() {}));
+    };
+  }
+
+  _Fn? getPlaybackFn() {
+    if (!_mPlayerIsInited || !_mplaybackReady || !_mRecorder!.isStopped) {
+      return null;
+    }
+    return _mPlayer!.isStopped
+        ? play
+        : () {
+      stopPlayer().then((value) => setState(() {}));
+    };
+  }
+
+  void play() async {
+    assert(_mPlayerIsInited &&
+        _mplaybackReady &&
+        _mRecorder!.isStopped &&
+        _mPlayer!.isStopped);
+    await _mPlayer!.startPlayer(
+        fromURI: _mPath,
+        sampleRate: tSampleRate,
+        codec: Codec.pcm16,
+        numChannels: 1,
+        whenFinished: () {
+          setState(() {});
+        }); // The readability of Dart is very special :-(
+    setState(() {});
+  }
+
+  Future<void> stopPlayer() async {
+    await _mPlayer!.stopPlayer();
+  }
+
 
   @override
   void dispose() {
-    _recorderStatus.cancel();
-    _playerStatus.cancel();
-    _audioStream.cancel();
+    stopPlayer();
+    _mPlayer!.closeAudioSession();
+    _mPlayer = null;
+
+    stopRecorder();
+    _mRecorder!.closeAudioSession();
+    _mRecorder = null;
     super.dispose();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlugin() async {
-    _recorderStatus = _recorder.status.listen((status) {
-      if (mounted) {
-        setState(() {
-          _isRecording = status == SoundStreamStatus.Playing;
-        });
-      }
-    });
 
-    _audioStream = _recorder.audioStream.listen((data) {
-      /*
-      if (_isPlaying) {
-        _player.writeChunk(data);
-      } else {
-        _micChunks.add(data);
-      }
-
-       */
-      c.sendData(data);
-    });
-
-    _playerStatus = _player.status.listen((status) {
-      if (mounted) {
-        setState(() {
-          _isPlaying = status == SoundStreamStatus.Playing;
-        });
-      }
-    });
-
-    await Future.wait([
-      _recorder.initialize(),
-    ]);
-  }
-
-  void _play() async {
-    /*
-    await _player.start();
-
-    if (_micChunks.isNotEmpty) {
-      for (var chunk in _micChunks) {
-        await _player.writeChunk(chunk);
-      }
-      _micChunks.clear();
-    }
-     */
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -104,13 +159,13 @@ class _MyAppState extends State<MyApp> {
           children: [
             IconButton(
               iconSize: 96.0,
-              icon: Icon(_isRecording ? Icons.mic_off : Icons.mic),
-              onPressed: _isRecording ? _recorder.stop : _recorder.start,
+              icon: Icon(_mRecorder!.isRecording ? Icons.mic_off : Icons.mic),
+              onPressed: getRecorderFn(),
             ),
             IconButton(
               iconSize: 96.0,
-              icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: _isPlaying ? _player.stop : _play,
+              icon: Icon(_mRecorder!.isPaused? Icons.pause : Icons.play_arrow),
+              onPressed: getPlaybackFn(),
             ),
           ],
         ),
