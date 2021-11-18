@@ -7,9 +7,9 @@ import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 
 class Client {
   late WebSocketChannel client;
-  FlutterSoundPlayer _player = FlutterSoundPlayer();
-  StreamController _stream = StreamController();
-
+  FlutterSoundPlayer? _player = FlutterSoundPlayer();
+  FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+  late StreamSink<Food> foodSink;
 
   Client() {
     client = WebSocketChannel.connect(Uri.parse("ws://192.168.10.106:8080"));
@@ -18,23 +18,30 @@ class Client {
   void listen() {
   print("Am i listening????");
     client.stream.listen((event) {
+      print("Stream running");
       playSound(event);
     });
   }
 
-  void playSound(event) async {
-    print("Playing!:");
-    await _player.startPlayerFromStream(
-        codec: Codec.pcm16, // Actually this is the only codec possible
-        numChannels: 1, // Actually this is the only value possible. You cannot have several channels.
-        sampleRate: 48100 // This parameter is very important if you want to specify your own sample rate
+  Future<void> stopSound() async {
+   await _player!.stopPlayer();
+  }
+
+  Future <void> playSound(event) async {
+    await _player!.startPlayerFromStream(
+        codec: Codec.pcm16,
+        numChannels: 1,
+        sampleRate: 48000,
     );
   }
 
+
   void sendData(data) {
     print("You alive?1");
+    //print(data.runtimeType);
     print(data.runtimeType);
-    client.sink.add(data);
+
+    //client.sink.add();
   }
 }
 
