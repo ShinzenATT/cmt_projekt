@@ -28,11 +28,7 @@ class Client {
   }
 
   Future <void> playSound(event) async {
-    await _player!.startPlayerFromStream(
-        codec: Codec.pcm16,
-        numChannels: 1,
-        sampleRate: 48000,
-    );
+
   }
 
 

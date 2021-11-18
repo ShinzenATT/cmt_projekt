@@ -122,7 +122,6 @@ class _StreamLoopState extends State<StreamLoop> {
   }
 
   Future<void> record() async {
-    c.sendData(_player!.feedFromStream(buffer));
 
 
     await _player!.startPlayerFromStream(
