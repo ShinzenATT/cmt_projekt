@@ -23,7 +23,7 @@ class Client {
   }
 
   void playSound(event) async {
-    //_player.feedFromStream();
+    print("Playing!:");
     await _player.startPlayerFromStream(
         codec: Codec.pcm16, // Actually this is the only codec possible
         numChannels: 1, // Actually this is the only value possible. You cannot have several channels.
@@ -31,9 +31,9 @@ class Client {
     );
   }
 
-  void sendData(data, StreamController) {
+  void sendData(data) {
     print("You alive?1");
-    _stream = StreamController;
+    print(data.runtimeType);
     client.sink.add(data);
   }
 }
