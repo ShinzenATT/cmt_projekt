@@ -19,7 +19,7 @@ void main() async {
     });
   });
 
-  shelf_io.serve(handler, '192.168.10.106', 8080).then((server) {
+  shelf_io.serve(handler, '192.168.0.2', 5604).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
 }

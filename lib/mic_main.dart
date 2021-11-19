@@ -59,7 +59,7 @@ class _StreamLoopState extends State<StreamLoop> {
 
   bool _isInited = false;
 
-  Client c = Client();
+  late Client c = Client(_player);
 
 
   Future<void> init() async {
@@ -84,6 +84,7 @@ class _StreamLoopState extends State<StreamLoop> {
       setState(() {
         _isInited = true;
       });
+      c.listen();
     });
   }
 
@@ -132,7 +133,7 @@ class _StreamLoopState extends State<StreamLoop> {
 
     await _recorder!.startRecorder(
       codec: Codec.pcm16,
-      toStream: _player!.foodSink, // ***** THIS IS THE LOOP !!! *****
+      toStream: c.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
       sampleRate: _sampleRateRecorder,
       numChannels: 1,
     );
