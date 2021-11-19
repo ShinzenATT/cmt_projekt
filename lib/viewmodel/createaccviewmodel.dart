@@ -30,8 +30,12 @@ class CreateAccountViewModel with ChangeNotifier {
     lm.databaseAPI.streamController.stream.listen((value) {
       var _context = context;
       if (value) {
-        Navigator.of(_context, rootNavigator: true)
-            .pop(); // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
+        if(kIsWeb){
+          // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
+            Navigator.of(_context, rootNavigator: true)
+            .pop();
+        }
+      
         Navigator.of(_context)
             .pushReplacementNamed('/Home'); // Byter till homepage.
       }

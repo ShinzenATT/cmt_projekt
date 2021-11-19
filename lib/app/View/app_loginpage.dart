@@ -38,11 +38,15 @@ class AppLoginPage extends StatelessWidget {
                     height: 40,
                   ),
                   TextFormField(
+                     controller:
+                                  context.watch<LoginPageViewModel>().login,
                     decoration: const InputDecoration(
                       labelText: 'E-post eller telefonnummer',
                     ),
                   ),
                   TextFormField(
+                     controller:
+                                  context.watch<LoginPageViewModel>().password,
                     decoration: InputDecoration(
                       labelText: 'Lösenord',
                       suffixIcon: IconButton(
@@ -84,7 +88,7 @@ class AppLoginPage extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<LoginPageViewModel>()
-                          .changePage(context, constant.home);
+                          .loginAttempt(context);
 
                     },
                     child: const Text('Logga in'),
