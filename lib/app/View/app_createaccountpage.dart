@@ -60,7 +60,7 @@ class AppCreateAccountPage extends StatelessWidget {
                   splashRadius: 0,
                   focusColor: Colors.transparent,
                   hoverColor: Colors.transparent,
-                  value: !context
+                  value: context
                       .watch<CreateAccountViewModel>()
                       .passwordVisibilityCreate,
                   onChanged: (_) {
