@@ -145,7 +145,7 @@ class _StreamLoopState extends State<StreamLoop> {
       await _recorder!.stopRecorder();
     }
     if (_player != null) {
-      await _player!.stopPlayer();
+   //   await _player!.stopPlayer();
     }
     setState(() {});
   }
