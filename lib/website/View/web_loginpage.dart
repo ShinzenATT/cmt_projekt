@@ -117,7 +117,11 @@ class WebLoginPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                context
+                          .read<LoginPageViewModel>()
+                          .changePage(context, constant.home);
+                              },
                               child: const Text(
                                 'Gästläge',
                                 style: TextStyle(fontStyle: FontStyle.italic),
