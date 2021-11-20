@@ -14,7 +14,7 @@ class Client {
 
   Client(FlutterSoundPlayer? player) {
     _player = player;
-    client = WebSocketChannel.connect(Uri.parse("ws://192.168.0.2:5604"));
+    client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
     foodStreamController!.stream.listen((event) {
 
       sendData(event);
