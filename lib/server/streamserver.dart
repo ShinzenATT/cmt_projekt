@@ -9,7 +9,7 @@ void main() async {
   ///En host variabel.
   WebSocketChannel? host;
 
-  var handler = webSocketHandler((webSocket) {
+  var handler = webSocketHandler((WebSocketChannel webSocket) {
     ///Ifall hosten är null så skall den första anslutna socketen bli lagras i host.
     if(host==null){
       host = webSocket;
@@ -19,10 +19,17 @@ void main() async {
         for(WebSocketChannel sock in clients) {
           sendData(sock, message);
         }
-      });
+      },onDone: () {
+        print("The host has left");
+      }
+      );
     } else {
       ///ifall host inte är null (redan är ansluten), lägg till nästa socket
       ///i listan.
+      ///
+      webSocket.stream.listen((event) { },onDone: (){
+        print("A client has left");
+      });
       clients.add(webSocket);
     }
     print("A new client has connected: $webSocket");
