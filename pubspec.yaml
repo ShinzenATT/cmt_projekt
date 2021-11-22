@@ -38,6 +38,10 @@ dependencies:
   postgres:
   web_socket_channel:
   json_serializable:
+  shelf_web_socket:
+  sound_stream:
+  flutter_sound_lite:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:
