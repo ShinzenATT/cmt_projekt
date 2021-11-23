@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class LoginPageViewModel with ChangeNotifier {
 
   void loginAttempt(context) async {
     setUpResponseStream(context);
-    lm.databaseAPI.sendRequest(QueryModel.login(
+    lm.databaseAPI.sendRequest(QueryModel.login(code: dbLogin,
         email: login.value.text, password: password.value.text));
   }
 
@@ -35,6 +36,8 @@ class LoginPageViewModel with ChangeNotifier {
         // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
         Navigator.of(context)
             .pushReplacementNamed('/Home'); // Byter till homepage.
+        lm.databaseAPI.sendRequest(QueryModel.login(code: dbGetInfo,
+            email: login.value.text, password: password.value.text));
       }
     });
   }

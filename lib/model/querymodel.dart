@@ -1,22 +1,38 @@
 class QueryModel {
-  final String email;
+  late String email;
   late String phone;
-  final String password;
+  late String password;
+  late String uid;
+  final String code;
   QueryModel(
-      {required this.email, required this.phone, required this.password});
-  QueryModel.login({required this.email, required this.password}) {
+      {required this.code,required this.email, required this.phone, required this.password}){
+    uid = "";
+  }
+  QueryModel.login({required this.code,required this.email, required this.password}) {
     phone = "";
+    uid = "";
   }
 
   QueryModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
         phone = json['phone'],
-        password = json['password'];
+        password = json['password'],
+        uid = json['uid'],
+        code = json['code'];
+
+  QueryModel.fromJsonLogin(Map<String, dynamic> json)
+      : email = json['email'],
+        phone = json['phone'],
+        password = "",
+        uid = json['uid'],
+        code = "";
 
   Map<String, dynamic> toJson() => {
         'email': email,
         'phone': phone,
         'password': password,
+        'uid': uid,
+        'code': code,
       };
   @override
   String toString() {

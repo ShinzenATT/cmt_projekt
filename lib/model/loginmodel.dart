@@ -1,8 +1,8 @@
-import 'package:cmt_projekt/api/query_to_dbserver.dart';
+import 'package:cmt_projekt/api/database_api.dart';
 import 'package:flutter/cupertino.dart';
 
 class LoginModel {
-  queryToDatabase databaseAPI = queryToDatabase();
+  DatabaseApi databaseAPI = DatabaseApi();
 
   ///For LoginPageViewModel
   bool passwordVisibilityLogin = false; // Controlls the hide-password feature.
