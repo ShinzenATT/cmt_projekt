@@ -1,16 +1,30 @@
+import 'package:cmt_projekt/constants.dart';
+
 class QueryModel {
   late String email;
   late String phone;
   late String password;
   late String uid;
-  final String code;
-  QueryModel(
-      {required this.code,required this.email, required this.phone, required this.password}){
+  late String code;
+
+  ///En Querymodel som försöker skapa ett konto utifrån givna parametrar.
+  QueryModel.account(
+      {required this.email, required this.phone, required this.password}){
     uid = "";
+    code = dbAccount;
   }
-  QueryModel.login({required this.code,required this.email, required this.password}) {
+  ///En Querymodel som gör ett inloggningsförsök utifrån givna parametrar.
+  QueryModel.login({required this.email, required this.password}) {
     phone = "";
     uid = "";
+    code = dbLogin;
+  }
+
+  ///En Querymodel som ger returnerar uid, email och telefonnr utifrån givna parametrar.
+  QueryModel.userInfo({required this.email, required this.password}) {
+    phone = "";
+    uid = "";
+    code = dbGetInfo;
   }
 
   QueryModel.fromJson(Map<String, dynamic> json)
@@ -20,7 +34,7 @@ class QueryModel {
         uid = json['uid'],
         code = json['code'];
 
-  QueryModel.fromJsonLogin(Map<String, dynamic> json)
+  QueryModel.fromJsonUserinfo(Map<String, dynamic> json)
       : email = json['email'],
         phone = json['phone'],
         password = "",
@@ -37,12 +51,5 @@ class QueryModel {
   @override
   String toString() {
     return "email: $email phone: $phone password: $password";
-  }
-
-  bool isAccountCreation() {
-    if (email.isNotEmpty && phone.isNotEmpty && password.isNotEmpty) {
-      return true;
-    }
-    return false;
   }
 }

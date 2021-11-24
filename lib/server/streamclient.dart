@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cmt_projekt/model/streammessage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -15,8 +16,8 @@ class Client {
   Client(FlutterSoundPlayer? player) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
+    client.sink.add(jsonEncode(StreamMessage.host(uid: "2", channelType: "a")));
     foodStreamController!.stream.listen((event) {
-
       sendData(event);
     });
   }

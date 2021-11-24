@@ -34,8 +34,8 @@ class DatabaseApi {
       streamController.add(false);
     }else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', QueryModel.fromJsonLogin(jsonDecode(message)).uid);
-      await prefs.setString('email', QueryModel.fromJsonLogin(jsonDecode(message)).email);
+      await prefs.setString('uid', QueryModel.fromJsonUserinfo(jsonDecode(message)).uid);
+      await prefs.setString('email', QueryModel.fromJsonUserinfo(jsonDecode(message)).email);
       print(prefs.getString("uid"));
     }
   }

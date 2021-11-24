@@ -40,16 +40,15 @@ class CreateAccountViewModel with ChangeNotifier {
       
         Navigator.of(_context)
             .pushReplacementNamed('/Home'); // Byter till homepage.
-        client.sendRequest(QueryModel.login(code: dbGetInfo,
-            email: email.value.text, password: password1.value.text));
+        client.sendRequest(QueryModel.userInfo(email: email.value.text, password: password1.value.text,),);
       }
     });
   }
 
   void createAccount() {
-    client.sendRequest(QueryModel(code: dbAccount,
+    client.sendRequest(QueryModel.account(
         email: email.value.text,
         phone: phone.value.text,
-        password: password1.value.text));
+        password: password1.value.text),);
   }
 }

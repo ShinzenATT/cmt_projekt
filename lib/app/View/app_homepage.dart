@@ -16,7 +16,7 @@ class _AppHomePageState extends State<AppHomePage> {
   RecorderStream _recorder = RecorderStream();
   PlayerStream _player = PlayerStream();
 
-  Client c = Client();
+ //Client c = Client();
 
   List<Uint8List> _micChunks = [];
   bool _isRecording = false;
@@ -61,7 +61,7 @@ class _AppHomePageState extends State<AppHomePage> {
     _audioStream = _recorder.audioStream.listen((data) {
       if (true) {
         //_player.writeChunk(data);
-        c.client.sink.add(data);
+     //   c.client.sink.add(data);
       } else {
         _micChunks.add(data);
       }

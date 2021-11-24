@@ -25,7 +25,7 @@ class LoginPageViewModel with ChangeNotifier {
 
   void loginAttempt(context) async {
     setUpResponseStream(context);
-    lm.databaseAPI.sendRequest(QueryModel.login(code: dbLogin,
+    lm.databaseAPI.sendRequest(QueryModel.login(
         email: login.value.text, password: password.value.text));
   }
 
@@ -36,8 +36,7 @@ class LoginPageViewModel with ChangeNotifier {
         // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
         Navigator.of(context)
             .pushReplacementNamed('/Home'); // Byter till homepage.
-        lm.databaseAPI.sendRequest(QueryModel.login(code: dbGetInfo,
-            email: login.value.text, password: password.value.text));
+        lm.databaseAPI.sendRequest(QueryModel.userInfo(email: login.value.text, password: password.value.text));
       }
     });
   }
