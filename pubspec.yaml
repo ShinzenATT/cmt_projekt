@@ -42,6 +42,7 @@ dependencies:
   sound_stream:
   flutter_sound_lite:
   permission_handler:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

@@ -16,6 +16,9 @@ void main() async {
       ///Här ställer vi in så att såfort hosten skickar ett meddelande
       ///ska detta meddelande skickas till alla klienter.
       host!.stream.listen((message) async {
+        if(message.runtimeType == String){
+          print(message);
+        }
         for(WebSocketChannel sock in clients) {
           sendData(sock, message);
         }
