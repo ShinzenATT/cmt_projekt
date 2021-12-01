@@ -109,13 +109,16 @@ class AppLoginPage extends StatelessWidget {
                       style: TextStyle(fontStyle: FontStyle.italic),
                     ),
                   ),
-                  TextButton(
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      
+                    ),
                     onPressed: () {
                       context
                           .read<LoginPageViewModel>()
                           .changePage(context, constant.createAccount);
                     },
-                    child: const Text('Inget konto? Registrera dig här'),
+                    child: const Text('Skapa konto'),
                   ),
                 ],
               ),
