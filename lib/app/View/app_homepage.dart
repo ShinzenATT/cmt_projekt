@@ -18,7 +18,35 @@ class _AppHomePageState extends State<AppHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.black,
+                      Colors.blueAccent,
+                    ])),
+          ),
+          elevation: 0,
+          centerTitle: true,
+          title: Column(
+            children: [
+              Text(
+                context.read<LoginPageViewModel>().title.toUpperCase(),
+                style:
+                const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Din moderna radioapp',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
       ),
       body: ElevatedButton(onPressed: () {
         Navigator.of(context)

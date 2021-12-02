@@ -12,7 +12,7 @@ class LoginPageViewModel with ChangeNotifier {
   }
 
   get passwordVisibilityLogin => lm.passwordVisibilityLogin;
-  get title => lm.title;
+  String get title => lm.title;
   get login => lm.login;
   get password => lm.password;
   get databaseAPI => lm.databaseAPI;
