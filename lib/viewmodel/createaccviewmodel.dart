@@ -15,6 +15,7 @@ class CreateAccountViewModel with ChangeNotifier {
   }
 
   bool get passwordVisibilityCreate => lm.passwordVisibilityCreate;
+  get title => lm.title.toUpperCase();
   TextEditingController get email => lm.createEmail;
   TextEditingController get phone => lm.createPhone;
   TextEditingController get password1 => lm.createPassword;
@@ -32,23 +33,29 @@ class CreateAccountViewModel with ChangeNotifier {
     client.streamController.stream.listen((value) {
       var _context = context;
       if (value) {
-        if(kIsWeb){
+        if (kIsWeb) {
           // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-            Navigator.of(_context, rootNavigator: true)
-            .pop();
+          Navigator.of(_context, rootNavigator: true).pop();
         }
-      
+
         Navigator.of(_context)
             .pushReplacementNamed('/Home'); // Byter till homepage.
-        client.sendRequest(QueryModel.userInfo(email: email.value.text, password: password1.value.text,),);
+        client.sendRequest(
+          QueryModel.userInfo(
+            email: email.value.text,
+            password: password1.value.text,
+          ),
+        );
       }
     });
   }
 
   void createAccount() {
-    client.sendRequest(QueryModel.account(
-        email: email.value.text,
-        phone: phone.value.text,
-        password: password1.value.text),);
+    client.sendRequest(
+      QueryModel.account(
+          email: email.value.text,
+          phone: phone.value.text,
+          password: password1.value.text),
+    );
   }
 }
