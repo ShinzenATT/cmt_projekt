@@ -111,7 +111,13 @@ class AppLoginPage extends StatelessWidget {
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
-                      
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(18.0),
+      side: BorderSide(color: Colors.black)
+      
+    )
+  )
                     ),
                     onPressed: () {
                       context
