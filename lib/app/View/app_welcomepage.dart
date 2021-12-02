@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/src/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants.dart' as constant;
 
@@ -15,7 +16,15 @@ class AppWelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.purpleAccent,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black,
+            Colors.blueAccent,
+          ],
+        )),
         padding: const EdgeInsets.all(30),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -27,8 +36,9 @@ class AppWelcomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    context.read<LoginPageViewModel>().title,
+                    context.read<LoginPageViewModel>().title.toUpperCase(),
                     style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
                     ),
@@ -39,6 +49,7 @@ class AppWelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ],
