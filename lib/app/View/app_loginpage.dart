@@ -19,6 +19,16 @@ class AppLoginPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ])),
+          ),
           elevation: 0,
           centerTitle: true,
           title: Column(
@@ -121,7 +131,6 @@ class AppLoginPage extends StatelessWidget {
                         'Logga in',
                         style: TextStyle(
                           fontSize: 25,
-                          color: Colors.purple,
                         ),
                       ),
                     ),
@@ -147,7 +156,7 @@ class AppLoginPage extends StatelessWidget {
                         child: const Text(
                           "gäst",
                           style: TextStyle(
-                              color: Colors.purple,
+                              color: Colors.blueAccent,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -171,7 +180,7 @@ class AppLoginPage extends StatelessWidget {
                           child: const Text(
                             "Registrera dig här",
                             style: TextStyle(
-                                color: Colors.purple,
+                                color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
