@@ -14,7 +14,6 @@ class Client {
   StreamController<Food>? foodStreamController = StreamController<Food>.broadcast();
 
   Client(FlutterSoundPlayer? player) {
-    print("hekki");
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
   //  client.sink.add(jsonEncode(StreamMessage.host(uid: "2", channelType: "a")));

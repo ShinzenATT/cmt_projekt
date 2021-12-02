@@ -37,7 +37,6 @@ class _StreamLoopState extends State<StreamLoop> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<StreamViewModel>().startup();
     return MaterialApp(
         home: Scaffold(
           appBar: AppBar(
@@ -61,7 +60,7 @@ class _StreamLoopState extends State<StreamLoop> {
                 child: Row(children: [
                   ElevatedButton(
                     onPressed: () {
-                      context.read<StreamViewModel>().getRecFn;
+                      context.read<StreamViewModel>().getRecFn();
                     },
                     //color: Colors.white,
                     //disabledColor: Colors.grey,

@@ -15,34 +15,6 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
-  RecorderStream _recorder = RecorderStream();
-  PlayerStream _player = PlayerStream();
-
- //Client c = Client();
-
-  List<Uint8List> _micChunks = [];
-  bool _isRecording = false;
-  bool _isPlaying = false;
-
-  late StreamSubscription _recorderStatus;
-  late StreamSubscription _playerStatus;
-  late StreamSubscription _audioStream;
-
-  @override
-  void initState() {
-    super.initState();
-    initPlugin();
-  }
-
-  @override
-  void dispose() {
-    _recorderStatus.cancel();
-    _playerStatus.cancel();
-    _audioStream.cancel();
-    super.dispose();
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,38 +22,9 @@ class _AppHomePageState extends State<AppHomePage> {
       ),
       body: ElevatedButton(onPressed: () {
         Navigator.of(context)
-            .pushReplacementNamed('/Demo');
+            .pushNamed('/Demo');
+        context.read<StreamViewModel>().startup();
       }, child: null,),
     );
-  }
-
-  Future<void> initPlugin() async {
-    _recorderStatus = _recorder.status.listen((status) {
-      if (mounted)
-        setState(() {
-          _isRecording = status == SoundStreamStatus.Playing;
-        });
-    });
-
-    _audioStream = _recorder.audioStream.listen((data) {
-      if (true) {
-        //_player.writeChunk(data);
-     //   c.client.sink.add(data);
-      } else {
-        _micChunks.add(data);
-      }
-    });
-
-    _playerStatus = _player.status.listen((status) {
-      if (mounted)
-        setState(() {
-          _isPlaying = status == SoundStreamStatus.Playing;
-        });
-    });
-
-    await Future.wait([
-      _recorder.initialize(),
-      _player.initialize(),
-    ]);
   }
 }

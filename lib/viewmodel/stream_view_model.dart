@@ -25,6 +25,11 @@ class StreamViewModel with ChangeNotifier{
       audioFlags: allowHeadset | allowEarPiece | allowBlueToothA2DP,
       category: SessionCategory.playAndRecord,
     );
+    await smodel.player!.startPlayerFromStream(
+      codec: Codec.pcm16,
+      numChannels: 1,
+      sampleRate: 44000,
+    );
   }
 
 
@@ -64,13 +69,6 @@ class StreamViewModel with ChangeNotifier{
 
   Future<void> record() async {
 
-
-    await smodel.player!.startPlayerFromStream(
-      codec: Codec.pcm16,
-      numChannels: 1,
-      sampleRate: 44000,
-    );
-
     await smodel.recorder!.startRecorder(
       codec: Codec.pcm16,
       toStream: smodel.c.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
@@ -90,10 +88,16 @@ class StreamViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  Fn? getRecFn() {
-    if (smodel.isInited) {
+
+  void getRecFn() {
+    if (!smodel.isInited) {
       return null;
     }
-    return smodel.recorder!.isRecording ? stop : record;
+    print("hello" + " "+ "${smodel.recorder!.isRecording}");
+    if(smodel.recorder!.isRecording){
+      stop();
+    }else {
+      record();
+    };
   }
 }

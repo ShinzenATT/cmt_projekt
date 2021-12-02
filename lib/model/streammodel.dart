@@ -7,7 +7,6 @@ import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 class StreamModel{
   FlutterSoundPlayer? player = FlutterSoundPlayer();
   FlutterSoundRecorder? recorder = FlutterSoundRecorder();
-  late Uint8List buffer;
 
   bool isInited = false;
 
