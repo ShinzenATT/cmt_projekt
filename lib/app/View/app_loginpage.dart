@@ -8,7 +8,6 @@ import 'package:provider/src/provider.dart';
 
 import '../../constants.dart' as constant;
 
-
 ///First version of loginpage for the app.
 
 class AppLoginPage extends StatelessWidget {
@@ -17,7 +16,26 @@ class AppLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          centerTitle: true,
+          title: Column(
+            children: [
+              Text(
+                context.read<LoginPageViewModel>().title,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Din moderna radioapp',
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(30),
@@ -29,24 +47,22 @@ class AppLoginPage extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Text(
-                    context.read<LoginPageViewModel>().title,
-                    style:
-                        const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  const Text(
+                    'Välkommen',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
+                  const Text('Vänligen ange dina inloggningsuppgifter'),
                   const SizedBox(
                     height: 40,
                   ),
                   TextFormField(
-                     controller:
-                                  context.watch<LoginPageViewModel>().login,
+                    controller: context.watch<LoginPageViewModel>().login,
                     decoration: const InputDecoration(
                       labelText: 'E-post eller telefonnummer',
                     ),
                   ),
                   TextFormField(
-                     controller:
-                                  context.watch<LoginPageViewModel>().password,
+                    controller: context.watch<LoginPageViewModel>().password,
                     decoration: InputDecoration(
                       labelText: 'Lösenord',
                       suffixIcon: IconButton(
@@ -55,7 +71,9 @@ class AppLoginPage extends StatelessWidget {
                         splashColor: Colors.transparent,
                         icon: Icon(
                           // Based on passwordVisible state choose the icon
-                          context.read<LoginPageViewModel>().passwordVisibilityLogin
+                          context
+                                  .read<LoginPageViewModel>()
+                                  .passwordVisibilityLogin
                               ? Icons.visibility
                               : Icons.visibility_off,
                           color: Theme.of(context).primaryColorDark,
@@ -78,53 +96,74 @@ class AppLoginPage extends StatelessWidget {
                       onPressed: () {
                         /// Implement password reset
                       },
-                      child: const Text('Glömt lösenord?'),
+                      child: const Text('Glömt ditt lösenord?'),
                     ),
                   ),
                   const SizedBox(
                     height: 30,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context
-                          .read<LoginPageViewModel>()
-                          .loginAttempt(context);
-
-                    },
-                    child: const Text('Logga in'),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 10,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: const BorderSide(
+                                  color: Colors.black, width: 3))),
+                      onPressed: () {
+                        context
+                            .read<LoginPageViewModel>()
+                            .loginAttempt(context);
+                      },
+                      child: const Text(
+                        'Logga in',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                       context
-                          .read<LoginPageViewModel>()
-                          .changePage(context, constant.home);
-                    },
-                    child: const Text(
-                      'Gästläge',
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Välkommen att logga in som'),
+                      TextButton(
+                        onPressed: () {
+                          context
+                              .read<LoginPageViewModel>()
+                              .changePage(context, constant.home);
+                        },
+                        child: const Text(
+                          'gäst',
+                          //  style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ],
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(18.0),
-      side: BorderSide(color: Colors.black)
-      
-    )
-  )
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Inget konto än?'),
+                        TextButton(
+                          onPressed: () {
+                            context
+                                .read<LoginPageViewModel>()
+                                .changePage(context, constant.createAccount);
+                          },
+                          child: const Text('Registrera dig här'),
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      context
-                          .read<LoginPageViewModel>()
-                          .changePage(context, constant.createAccount);
-                    },
-                    child: const Text('Skapa konto'),
                   ),
                 ],
               ),
