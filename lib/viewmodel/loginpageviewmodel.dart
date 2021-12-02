@@ -14,7 +14,7 @@ class LoginPageViewModel with ChangeNotifier {
   }
 
   get passwordVisibilityLogin => lm.passwordVisibilityLogin;
-  get title => lm.title;
+  get title => lm.title.toUpperCase();
   get login => lm.login;
   get password => lm.password;
   get databaseAPI => lm.databaseAPI;
