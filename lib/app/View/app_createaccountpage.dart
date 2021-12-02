@@ -16,6 +16,16 @@ class AppCreateAccountPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ])),
+          ),
           elevation: 0,
           centerTitle: true,
           title: Column(
@@ -117,7 +127,6 @@ class AppCreateAccountPage extends StatelessWidget {
                   'Skapa konto',
                   style: TextStyle(
                     fontSize: 25,
-                    color: Colors.purple,
                   ),
                 ),
               ),

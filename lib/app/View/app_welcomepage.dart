@@ -72,7 +72,11 @@ class AppWelcomePage extends StatelessWidget {
                       },
                       child: const Text(
                         'Skapa konto',
-                        style: TextStyle(fontSize: 30, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -94,7 +98,8 @@ class AppWelcomePage extends StatelessWidget {
                       'Logga in',
                       style: TextStyle(
                         fontSize: 30,
-                        color: Colors.purple,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
