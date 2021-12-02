@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cmt_projekt/server/streamclient.dart';
+import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 import 'package:sound_stream/sound_stream.dart';
 
 class AppHomePage extends StatefulWidget {
@@ -46,7 +48,10 @@ class _AppHomePageState extends State<AppHomePage> {
     return Scaffold(
       appBar: AppBar(
       ),
-      body: const Text("apphome yay"),
+      body: ElevatedButton(onPressed: () {
+        Navigator.of(context)
+            .pushReplacementNamed('/Demo');
+      }, child: null,),
     );
   }
 

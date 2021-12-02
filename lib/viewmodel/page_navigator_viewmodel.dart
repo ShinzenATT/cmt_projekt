@@ -1,5 +1,6 @@
 import 'package:cmt_projekt/app/View/app_createaccountpage.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
+import 'package:cmt_projekt/mic_main.dart';
 import 'package:cmt_projekt/website/View/web_homepage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class PageNavigator {
     constant.home: (BuildContext context) =>
         kIsWeb ? const WebHomePage() : const AppHomePage(),
     constant.createAccount: (BuildContext context) => const AppCreateAccountPage(),
+    constant.demo: (BuildContext context) => StreamLoop(),
   };
 
   get routes => _routes;
