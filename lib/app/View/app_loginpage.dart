@@ -19,6 +19,7 @@ class AppLoginPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
+          elevation: 0,
           centerTitle: true,
           title: Column(
             children: [
@@ -27,10 +28,9 @@ class AppLoginPage extends StatelessWidget {
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              Text(
+              const Text(
                 'Din moderna radioapp',
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               )
             ],
           ),
@@ -134,33 +134,46 @@ class AppLoginPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Välkommen att logga in som'),
-                      TextButton(
-                        onPressed: () {
+                      Text('Välkommen att logga in som '),
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        onTap: () {
                           context
                               .read<LoginPageViewModel>()
                               .changePage(context, constant.home);
                         },
                         child: const Text(
-                          'gäst',
-                          //  style: TextStyle(fontStyle: FontStyle.italic),
+                          "gäst",
+                          style: TextStyle(
+                              color: Colors.purple,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Inget konto än?'),
-                        TextButton(
-                          onPressed: () {
+                        Text('Inget konto än? '),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          onTap: () {
                             context
                                 .read<LoginPageViewModel>()
                                 .changePage(context, constant.createAccount);
                           },
-                          child: const Text('Registrera dig här'),
+                          child: const Text(
+                            "Registrera dig här",
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),

@@ -13,6 +13,26 @@ class AppCreateAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: Column(
+            children: [
+              Text(
+                context.read<CreateAccountViewModel>().title,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Din moderna radioapp',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
+      ),
       body: Container(
         padding: const EdgeInsets.all(30),
         width: MediaQuery.of(context).size.width,
@@ -20,7 +40,7 @@ class AppCreateAccountPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text("Ange dina uppgifter för att skapa ett konto. "),
+            const Text("Ange dina uppgifter för att skapa ett konto."),
             TextFormField(
               controller: context.watch<CreateAccountViewModel>().email,
               decoration: const InputDecoration(

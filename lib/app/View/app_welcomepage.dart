@@ -57,8 +57,7 @@ class AppWelcomePage extends StatelessWidget {
                               side: const BorderSide(
                                   color: Colors.white, width: 3))),
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(constant.createAccount);
+                        Navigator.of(context).pushNamed(constant.createAccount);
                       },
                       child: const Text(
                         'Skapa konto',
@@ -78,8 +77,7 @@ class AppWelcomePage extends StatelessWidget {
                             side: const BorderSide(
                                 color: Colors.white, width: 3))),
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(constant.login);
+                      Navigator.of(context).pushNamed(constant.login);
                     },
                     child: const Text(
                       'Logga in',
