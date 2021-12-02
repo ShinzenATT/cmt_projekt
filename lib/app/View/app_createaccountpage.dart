@@ -1,4 +1,3 @@
-
 import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,12 +81,27 @@ class AppCreateAccountPage extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                context.read<CreateAccountViewModel>().comparePw(context);
-              },
-              child: const Text("Skapa Konto"),
-            )
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 10,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.black, width: 3))),
+                onPressed: () {
+                  context.read<CreateAccountViewModel>().comparePw(context);
+                },
+                child: const Text(
+                  'Skapa konto',
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.purple,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
