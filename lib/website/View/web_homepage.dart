@@ -23,6 +23,24 @@ class _WebHomePageState extends State<WebHomePage> {
                 Colors.blueAccent,
               ])),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              onTap: () {},
+              child: const Text(
+                'COMMENT',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: SizedBox(
