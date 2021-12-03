@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/src/provider.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
 
@@ -112,26 +113,27 @@ class AppLoginPage extends StatelessWidget {
                   height: 30,
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 10,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(
-                                color: Colors.black, width: 3))),
-                    onPressed: () {
-                      context
-                          .read<LoginPageViewModel>()
-                          .loginAttempt(context);
-                    },
+                  width: 200,
+                  height: 50,
+                  child: GradientElevatedButton(
                     child: const Text(
                       'Logga in',
                       style: TextStyle(
                         fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    onPressed: () {
+                      context.read<LoginPageViewModel>().loginAttempt(context);
+                    },
+                    gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.black,
+                          Colors.blueAccent,
+                        ]),
                   ),
                 ),
               ],

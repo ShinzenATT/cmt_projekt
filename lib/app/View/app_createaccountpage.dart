@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
 
 ///First version of the CreateAcountPage for the website.
@@ -112,23 +113,27 @@ class AppCreateAccountPage extends StatelessWidget {
               ],
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 10,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(color: Colors.black, width: 3))),
-                onPressed: () {
-                  context.read<CreateAccountViewModel>().comparePw(context);
-                },
+              width: 200,
+              height: 50,
+              child: GradientElevatedButton(
                 child: const Text(
                   'Skapa konto',
                   style: TextStyle(
                     fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                onPressed: () {
+                  context.read<CreateAccountViewModel>().comparePw(context);
+                },
+                gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.black,
+                      Colors.blueAccent,
+                    ]),
               ),
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
 import 'package:sound_stream/sound_stream.dart';
 
@@ -50,12 +51,30 @@ class _AppHomePageState extends State<AppHomePage> {
         ),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/Demo');
-            context.read<StreamViewModel>().startup();
-          },
-          child: Text('Demo Sida'),
+        child: SizedBox(
+          width: 200,
+          height: 50,
+          child: GradientElevatedButton(
+            child: const Text(
+              'Demo sida',
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/Demo');
+              context.read<StreamViewModel>().startup();
+            },
+            gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ]),
+          ),
         ),
       ),
     );
