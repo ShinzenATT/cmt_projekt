@@ -44,6 +44,7 @@ dependencies:
   permission_handler:
   shared_preferences:
   google_fonts:
+  gradient_ui_widgets: ^1.0.2-nullsafety
 
 dev_dependencies:
   flutter_test:

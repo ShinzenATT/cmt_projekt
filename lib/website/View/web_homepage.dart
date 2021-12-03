@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -11,10 +12,41 @@ class _WebHomePageState extends State<WebHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: ElevatedButton(
-        child: Text('knapp'),
-        onPressed: () {},
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                Colors.black,
+                Colors.blueAccent,
+              ])),
+        ),
+      ),
+      body: Center(
+        child: SizedBox(
+          width: 200,
+          height: 50,
+          child: GradientElevatedButton(
+            child: const Text(
+              'Demo Sida',
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {},
+            gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ]),
+          ),
+        ),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -24,11 +56,32 @@ class _WebHomePageState extends State<WebHomePage> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.green,
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                    Colors.black,
+                    Colors.blueAccent,
+                  ])),
+              child: Column(
+                children: const [
+                  Text(
+                    'HEJ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    'Här ska användarens namn stå',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-              child: Text('MENY'),
             ),
             ListTile(
               title: const Text('Profil information'),
@@ -40,6 +93,30 @@ class _WebHomePageState extends State<WebHomePage> {
             ),
             ListTile(
               title: const Text('Inställningar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Kontakta oss'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Om'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                showAboutDialog(context: context);
+              },
+            ),
+            ListTile(
+              title: const Text('Logga ut'),
               onTap: () {
                 // Update the state of the app.
                 // ...

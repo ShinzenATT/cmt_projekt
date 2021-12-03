@@ -38,21 +38,24 @@ class _StreamLoopState extends State<StreamLoop> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: Column(
-          children: [Text('COMMENT'), Text('Demo')],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                Colors.black,
-                Colors.blueAccent,
-              ])),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: Column(
+            children: [Text('COMMENT'), Text('Demo')],
+          ),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ])),
+          ),
         ),
       ),
       body: Container(
