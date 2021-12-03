@@ -39,6 +39,7 @@ class _StreamLoopState extends State<StreamLoop> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         title: Column(
           children: [Text('COMMENT'), Text('Demo')],
@@ -54,27 +55,38 @@ class _StreamLoopState extends State<StreamLoop> {
               ])),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(3),
-            padding: const EdgeInsets.all(3),
-            height: 80,
-            width: double.infinity,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Color(0xFFFAF0E6),
-              border: Border.all(
-                color: Colors.indigo,
-                width: 3,
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black,
+            Colors.blueAccent,
+          ],
+        )),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
+              height: 80,
+              width: double.infinity,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Color(0xFFFAF0E6),
+                border: Border.all(
+                  color: Colors.indigo,
+                  width: 3,
+                ),
               ),
+              child: Text(
+                  context.watch<StreamViewModel>().smodel.recorder!.isRecording
+                      ? 'Playback to your headset!'
+                      : 'Recorder is stopped'),
             ),
-            child: Text(
-                context.watch<StreamViewModel>().smodel.recorder!.isRecording
-                    ? 'Playback to your headset!'
-                    : 'Recorder is stopped'),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(

@@ -28,9 +28,9 @@ class _AppHomePageState extends State<AppHomePage> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Colors.black,
-                      Colors.blueAccent,
-                    ])),
+                  Colors.black,
+                  Colors.blueAccent,
+                ])),
           ),
           elevation: 0,
           centerTitle: true,
@@ -39,7 +39,7 @@ class _AppHomePageState extends State<AppHomePage> {
               Text(
                 context.read<LoginPageViewModel>().title.toUpperCase(),
                 style:
-                const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               const Text(
                 'Din moderna radioapp',
@@ -49,11 +49,15 @@ class _AppHomePageState extends State<AppHomePage> {
           ),
         ),
       ),
-      body: ElevatedButton(onPressed: () {
-        Navigator.of(context)
-            .pushNamed('/Demo');
-        context.read<StreamViewModel>().startup();
-      }, child: null,),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/Demo');
+            context.read<StreamViewModel>().startup();
+          },
+          child: Text('Demo Sida'),
+        ),
+      ),
     );
   }
 }
