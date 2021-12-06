@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'package:cmt_projekt/model/radiochannel.dart';
+import 'package:cmt_projekt/model/streammessage.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -8,36 +12,28 @@ void main() async {
   List<WebSocketChannel> clients = List.empty(growable: true);
   ///En host variabel.
   WebSocketChannel? host;
+  Map<String, RadioChannel> rooms = {};
 
   var handler = webSocketHandler((WebSocketChannel webSocket) {
-    ///Ifall hosten är null så skall den första anslutna socketen bli lagras i host.
-    if(host==null){
-      host = webSocket;
-      ///Här ställer vi in så att såfort hosten skickar ett meddelande
-      ///ska detta meddelande skickas till alla klienter.
-      host!.stream.listen((message) async {
-        if(message.runtimeType == String){
-          print(message);
-        }
-        for(WebSocketChannel sock in clients) {
-          sendData(sock, message);
-        }
-      },onDone: () {
-        print("The host has left");
-      }
-      );
-    } else {
-      ///ifall host inte är null (redan är ansluten), lägg till nästa socket
-      ///i listan.
-      ///
-      webSocket.stream.listen((event) { },onDone: (){
-        print("A client has left");
-      });
-      clients.add(webSocket);
-    }
-    print("A new client has connected: $webSocket");
-  });
 
+    var streamController = StreamController.broadcast();
+    streamController.addStream(webSocket.stream);
+    streamController.stream.asBroadcastStream().listen((event) {
+      print(event.runtimeType);
+      if(event.runtimeType == String) {
+        StreamMessage message = StreamMessage.fromJson(jsonDecode(event));
+        if(message.hostOrJoin == "h" && !rooms.containsKey(message.hostId)) {
+          print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
+          rooms[message.hostId] = RadioChannel(streamController,message.hostId);
+
+        }else if (message.hostOrJoin == "j" && rooms.containsKey(message.hostId)) {
+          print("A new client ${message.uid} has connected: ${webSocket.hashCode} and wants to join room ${message.hostId}");
+          RadioChannel? room = rooms[message.hostId];
+          room!.connectedAudioClients.add(webSocket);
+        }
+      }
+    });
+  });
   shelf_io.serve(handler, '192.168.0.2', 5605).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
