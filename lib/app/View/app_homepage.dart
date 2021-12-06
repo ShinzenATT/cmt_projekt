@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cmt_projekt/server/streamclient.dart';
+import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,23 @@ class _AppHomePageState extends State<AppHomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.all(10),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.menu),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.mic_none),
+                iconSize: 30,
+              ),
+            )
+          ],
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -76,6 +94,22 @@ class _AppHomePageState extends State<AppHomePage> {
                 ]),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Sök',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.house),
+            label: 'Hem',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
       ),
     );
   }
