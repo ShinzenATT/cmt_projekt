@@ -1,5 +1,7 @@
+import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
+import 'package:provider/src/provider.dart';
 
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -84,8 +86,8 @@ class _WebHomePageState extends State<WebHomePage> {
                     Colors.blueAccent,
                   ])),
               child: Column(
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     'HEJ',
                     style: TextStyle(
                       color: Colors.white,
@@ -93,8 +95,8 @@ class _WebHomePageState extends State<WebHomePage> {
                     ),
                   ),
                   Text(
-                    'Här ska användarens namn stå',
-                    style: TextStyle(
+                    context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                    style: const TextStyle(
                       color: Colors.white,
                     ),
                   ),
@@ -104,9 +106,8 @@ class _WebHomePageState extends State<WebHomePage> {
             ListTile(
               title: const Text('Profil information'),
               onTap: () {
-                // Update the state of the app.
-                // ...
                 Navigator.pop(context);
+                context.read<HomePageViewModel>().profileInformation(context);
               },
             ),
             ListTile(

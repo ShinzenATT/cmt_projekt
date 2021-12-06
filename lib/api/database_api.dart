@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -32,11 +33,13 @@ class DatabaseApi {
       streamController.add(true);
     } else if (message == 'false') {
       streamController.add(false);
-    }else {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('uid', QueryModel.fromJsonUserinfo(jsonDecode(message)).uid);
-      await prefs.setString('email', QueryModel.fromJsonUserinfo(jsonDecode(message)).email);
-      print(prefs.getString("uid"));
+    } else {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      await Prefs().storedData.setString(
+          "uid", QueryModel.fromJsonUserinfo(jsonDecode(message)).uid);
+      await Prefs().storedData.setString(
+          "email", QueryModel.fromJsonUserinfo(jsonDecode(message)).email);
+      //print(Prefs().storedData.getString("email"));
     }
   }
 }
