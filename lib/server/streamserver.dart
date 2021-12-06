@@ -16,7 +16,7 @@ void main() async {
 
   var handler = webSocketHandler((WebSocketChannel webSocket) {
 
-    var streamController = StreamController.broadcast();
+    StreamController streamController = StreamController.broadcast();
     streamController.addStream(webSocket.stream);
     streamController.stream.asBroadcastStream().listen((event) {
       print(event.runtimeType);
