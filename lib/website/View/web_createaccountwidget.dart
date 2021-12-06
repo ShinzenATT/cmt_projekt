@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 
 ///First version of the CreateAcountPage for the website.
@@ -39,8 +40,9 @@ class WebCreateAccountWidget extends StatelessWidget {
               ),
               TextFormField(
                 controller: context.watch<CreateAccountViewModel>().password1,
-                obscureText:
-                    !context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
+                obscureText: !context
+                    .watch<CreateAccountViewModel>()
+                    .passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
                 ),
@@ -48,8 +50,9 @@ class WebCreateAccountWidget extends StatelessWidget {
               ),
               TextFormField(
                 controller: context.watch<CreateAccountViewModel>().password2,
-                obscureText:
-                    !context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
+                obscureText: !context
+                    .watch<CreateAccountViewModel>()
+                    .passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
                 ),
@@ -60,8 +63,9 @@ class WebCreateAccountWidget extends StatelessWidget {
                     splashRadius: 0,
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    value:
-                        context.watch<CreateAccountViewModel>().passwordVisibilityCreate,
+                    value: context
+                        .watch<CreateAccountViewModel>()
+                        .passwordVisibilityCreate,
                     onChanged: (_) {
                       context
                           .read<CreateAccountViewModel>()
@@ -81,12 +85,30 @@ class WebCreateAccountWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<CreateAccountViewModel>().comparePw(context);
-                },
-                child: const Text("Skapa Konto"),
-              )
+              SizedBox(
+                width: 200,
+                height: 50,
+                child: GradientElevatedButton(
+                  child: const Text(
+                    'Skapa konto',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    context.read<CreateAccountViewModel>().comparePw(context);
+                  },
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.black,
+                        Colors.blueAccent,
+                      ]),
+                ),
+              ),
             ],
           ),
         ),

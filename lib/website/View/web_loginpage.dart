@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
-
 
 ///First version of loginpage for the website.
 
@@ -14,140 +14,230 @@ class WebLoginPage extends StatelessWidget {
   const WebLoginPage({Key? key}) : super(key: key);
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                context.read<LoginPageViewModel>().title,
-                style:
-                    const TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          FittedBox(
-            child: Column(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+              Colors.black,
+              Colors.blueAccent,
+            ])),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+                Text(
+                  context.read<LoginPageViewModel>().title.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 80,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  elevation: 3,
-                  child: Container(
-                    //Här kan ni ta
-                    padding: const EdgeInsets.all(30),
-                    width: 500,
-                    height: MediaQuery.of(context).size.height,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Välkommen',
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            TextFormField(
-                              controller:
-                                  context.watch<LoginPageViewModel>().login,
-                              decoration: const InputDecoration(
-                                labelText: 'E-post eller telefonnummer',
-                              ),
-                            ),
-                            TextFormField(
-                              controller:
-                                  context.watch<LoginPageViewModel>().password,
-                              decoration: InputDecoration(
-                                labelText: 'Lösenord',
-                                suffixIcon: IconButton(
-                                  hoverColor: Colors.transparent,
-                                  splashRadius: null,
-                                  splashColor: Colors.transparent,
-                                  icon: Icon(
-                                    // Based on passwordVisible state choose the icon
-                                    context
-                                            .watch<LoginPageViewModel>()
-                                            .passwordVisibilityLogin
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                  onPressed: () {
-                                    // Update the state i.e. toogle the state of passwordVisible variable
-                                    context
-                                        .read<LoginPageViewModel>()
-                                        .changePasswordVisibility();
-                                  },
-                                ),
-                              ),
-                              obscureText: !context
-                                  .watch<LoginPageViewModel>()
-                                  .passwordVisibilityLogin,
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: TextButton(
-                                onPressed: () {},
-                                child: const Text('Glömt lösenord?'),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                context
-                                    .read<LoginPageViewModel>()
-                                    .loginAttempt(context);
-                              },
-                              child: const Text('Logga in'),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                context
-                          .read<LoginPageViewModel>()
-                          .changePage(context, constant.home);
-                              },
-                              child: const Text(
-                                'Gästläge',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return WebCreateAccountWidget();
-                                    });
-                              },
-                              child:
-                                  const Text('Inget konto? Registrera dig här'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                ),
+                const Text(
+                  'Din moderna liveradio',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            FittedBox(
+              child: Column(
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 3,
+                    child: Container(
+                      //Här kan ni ta
+                      padding: const EdgeInsets.all(30),
+                      width: 550,
+                      height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Välkommen',
+                                style: TextStyle(
+                                    fontSize: 50, fontWeight: FontWeight.bold),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 40),
+                                child: Text(
+                                  'Vänligen ange dina inloggningsuppgifter',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              TextFormField(
+                                controller:
+                                    context.watch<LoginPageViewModel>().login,
+                                decoration: const InputDecoration(
+                                  labelText: 'E-post eller telefonnummer',
+                                ),
+                              ),
+                              TextFormField(
+                                controller: context
+                                    .watch<LoginPageViewModel>()
+                                    .password,
+                                decoration: InputDecoration(
+                                  labelText: 'Lösenord',
+                                  suffixIcon: IconButton(
+                                    hoverColor: Colors.transparent,
+                                    splashRadius: null,
+                                    splashColor: Colors.transparent,
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      context
+                                              .watch<LoginPageViewModel>()
+                                              .passwordVisibilityLogin
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      context
+                                          .read<LoginPageViewModel>()
+                                          .changePasswordVisibility();
+                                    },
+                                  ),
+                                ),
+                                obscureText: !context
+                                    .watch<LoginPageViewModel>()
+                                    .passwordVisibilityLogin,
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    'Glömt lösenord?',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 200,
+                                height: 50,
+                                child: GradientElevatedButton(
+                                  child: const Text(
+                                    'Logga in',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    context
+                                        .read<LoginPageViewModel>()
+                                        .loginAttempt(context);
+                                  },
+                                  gradient: const LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                        Colors.black,
+                                        Colors.blueAccent,
+                                      ]),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      'Inget konto än? ',
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return WebCreateAccountWidget();
+                                            });
+                                      },
+                                      child: const Text(
+                                        "Registrera dig här",
+                                        style: TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Välkommen att logga in som ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    onTap: () {
+                                      context
+                                          .read<LoginPageViewModel>()
+                                          .changePage(context, constant.home);
+                                    },
+                                    child: const Text(
+                                      "gäst",
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

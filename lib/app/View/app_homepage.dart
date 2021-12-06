@@ -2,7 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cmt_projekt/server/streamclient.dart';
+import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
+import 'package:provider/src/provider.dart';
 import 'package:sound_stream/sound_stream.dart';
 
 class AppHomePage extends StatefulWidget {
@@ -13,70 +17,66 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
-  RecorderStream _recorder = RecorderStream();
-  PlayerStream _player = PlayerStream();
-
- //Client c = Client();
-
-  List<Uint8List> _micChunks = [];
-  bool _isRecording = false;
-  bool _isPlaying = false;
-
-  late StreamSubscription _recorderStatus;
-  late StreamSubscription _playerStatus;
-  late StreamSubscription _audioStream;
-
-  @override
-  void initState() {
-    super.initState();
-    initPlugin();
-  }
-
-  @override
-  void dispose() {
-    _recorderStatus.cancel();
-    _playerStatus.cancel();
-    _audioStream.cancel();
-    super.dispose();
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80.0),
+        child: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ])),
+          ),
+          elevation: 0,
+          centerTitle: true,
+          title: Column(
+            children: [
+              Text(
+                context.read<LoginPageViewModel>().title.toUpperCase(),
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Din moderna radioapp',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+        ),
       ),
-      body: const Text("apphome yay"),
+      body: Center(
+        child: SizedBox(
+          width: 200,
+          height: 50,
+          child: GradientElevatedButton(
+            child: const Text(
+              'Demo sida',
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/Demo');
+              context.read<StreamViewModel>().startup();
+            },
+            gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Colors.black,
+                  Colors.blueAccent,
+                ]),
+          ),
+        ),
+      ),
     );
-  }
-
-  Future<void> initPlugin() async {
-    _recorderStatus = _recorder.status.listen((status) {
-      if (mounted)
-        setState(() {
-          _isRecording = status == SoundStreamStatus.Playing;
-        });
-    });
-
-    _audioStream = _recorder.audioStream.listen((data) {
-      if (true) {
-        //_player.writeChunk(data);
-     //   c.client.sink.add(data);
-      } else {
-        _micChunks.add(data);
-      }
-    });
-
-    _playerStatus = _player.status.listen((status) {
-      if (mounted)
-        setState(() {
-          _isPlaying = status == SoundStreamStatus.Playing;
-        });
-    });
-
-    await Future.wait([
-      _recorder.initialize(),
-      _player.initialize(),
-    ]);
   }
 }
