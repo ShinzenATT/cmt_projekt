@@ -8,9 +8,9 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() async {
-  ///En lista med alla anslutna klienter exklisive host.
+  ///En map med alla anslutna användare.
   Map<WebSocketChannel,StreamController> connectedUsers = {};
-  ///En host variabel.
+  ///En map med alla rum
   Map<String, RadioChannel> rooms = {};
 
   ///Meddelar att en host har anslutit till ett rum och skapar detta rummet med hostens Id.
@@ -18,7 +18,7 @@ void main() async {
   void initHostStream(message,webSocket){
     print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
     ///Skapar en radiokanal.
-    RadioChannel channel = RadioChannel(connectedUsers[webSocket]!,message.hostId);
+    RadioChannel channel = RadioChannel(webSocket,message.hostId);
     ///Lägger till radiokanalen i listan av alla radiokanaler.
     rooms[message.hostId] = channel;
     ///Sätter upp en listen funktion specifikt för en host. Denna ström låter hosten skicka meddelade till alla klienter anslutna på dennes kanal.
@@ -33,7 +33,8 @@ void main() async {
         client.sink.close(100005,"Rum ${channel.channelId} stängdes");
       }
       print("Kanal ${channel.channelId} tas bort");
-      rooms.remove(channel);
+      rooms.remove(channel.channelId);
+      connectedUsers.remove(webSocket);
     });
   }
 
@@ -49,8 +50,9 @@ void main() async {
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {
     },onDone: () {
       print("Klient ${webSocket.hashCode} lämnade");
-      room!.disconnectAudioViewer(webSocket);
+      room.disconnectAudioViewer(webSocket);
       webSocket.sink.close(10006,"lämnade servern");
+      connectedUsers.remove(webSocket);
     });
   }
 

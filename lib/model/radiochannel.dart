@@ -6,11 +6,11 @@ class RadioChannel {
   //user ID of the host
   late final String channelId;
 
-  late final StreamController streamAudioHost;
+  late final WebSocketChannel streamAudioHost;
   late final WebSocketChannel streamVideoHost;
   final List<WebSocketChannel> connectedAudioClients = List.empty(growable: true);
   final List<WebSocketChannel> connectedVideoClients = List.empty(growable: true);
-  RadioChannel(StreamController wc, String channel) {
+  RadioChannel(WebSocketChannel wc, String channel) {
     channelId = channel;
     streamAudioHost = wc;
     print("room: $channel created");
