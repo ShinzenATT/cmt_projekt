@@ -13,11 +13,6 @@ class RadioChannel {
   RadioChannel(StreamController wc, String channel) {
     channelId = channel;
     streamAudioHost = wc;
-    streamAudioHost.stream.asBroadcastStream().listen((message) {
-      for (WebSocketChannel sock in connectedAudioClients) {
-        sendData(sock, message);
-      }
-    });
     print("room: $channel created");
   }
 
@@ -47,10 +42,6 @@ class RadioChannel {
 
   startHosting(){
   return channelId;
-  }
-
-  Future<void> sendData(WebSocketChannel client, message) async {
-    client.sink.add(message);
   }
 
   //Probably needs more

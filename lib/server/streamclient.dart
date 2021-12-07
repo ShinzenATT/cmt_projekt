@@ -16,7 +16,7 @@ class Client {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
     client.sink.add(jsonEncode(StreamMessage.host(uid: "4", channelType: "a")));
-    //client.sink.add(jsonEncode(StreamMessage.join(uid: "3", channelType: "a", hostId: '2')));
+    //client.sink.add(jsonEncode(StreamMessage.join(uid: "3", channelType: "a", hostId: '4')));
     foodStreamController!.stream.listen((event) {
       sendData(event);
     });
@@ -25,6 +25,8 @@ class Client {
   print("Am i listening????");
     client.stream.listen((event) {
       playSound(event);
+    },onDone: () {
+      print(client.closeReason);
     });
   }
 
