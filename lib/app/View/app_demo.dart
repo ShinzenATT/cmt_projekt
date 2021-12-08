@@ -34,9 +34,13 @@ class StreamLoop extends StatefulWidget {
 }
 
 class _StreamLoopState extends State<StreamLoop> {
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: context.read<StreamViewModel>().closeClient,
+      child: Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
@@ -54,7 +58,7 @@ class _StreamLoopState extends State<StreamLoop> {
                   Colors.black,
                   Colors.blueAccent,
                 ])),
-          ),
+          ) ,
         ),
       ),
       body: Container(
@@ -100,6 +104,6 @@ class _StreamLoopState extends State<StreamLoop> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+    ));
   }
 }

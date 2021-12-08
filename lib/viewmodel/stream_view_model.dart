@@ -14,6 +14,16 @@ class StreamViewModel with ChangeNotifier{
     });
   }
 
+  Future<bool> closeClient() async {
+    smodel.player!.stopPlayer();
+    smodel.recorder!.stopRecorder();
+    smodel.c.stopSound();
+    smodel.isInited = false;
+
+    smodel.c.client.sink.add("CLOSE");
+    return true;
+  }
+
   Future<void> init() async {
     await smodel.recorder!.openAudioSession(
       device: AudioDevice.blueToothA2DP,
