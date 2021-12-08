@@ -2,6 +2,7 @@ import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
+///Widget för sidan med profilinformation.
 class WebProfileWidget extends StatelessWidget {
   const WebProfileWidget({Key? key}) : super(key: key);
 
