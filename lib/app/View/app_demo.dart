@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/server/streamserver.dart';
@@ -106,6 +107,9 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
+                      context.read<StreamViewModel>().startup(
+                          Prefs().storedData.getString("uid")!,"h");
+
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
@@ -130,6 +134,8 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
+                      context.read<StreamViewModel>().startup(
+                      context.watch<StreamViewModel>().hostID.value.text, "j");
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
