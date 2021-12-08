@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:postgres/postgres.dart';
 
 ///View model för Homepage och profilewidget.
 class HomePageViewModel with ChangeNotifier {
@@ -12,8 +12,9 @@ class HomePageViewModel with ChangeNotifier {
 
   ///Returnerar användarens uID.
   String? getUid() {
-    print(Prefs().storedData.getString("uid"));
-    return Prefs().storedData.getString("uid");
+    String s = Prefs().storedData.getString("uid")??(PostgreSQLDataType.uuid.toString());
+    print(s);
+    return s;
   }
 
   /// Skapar en showdialog med webprofilewidget.

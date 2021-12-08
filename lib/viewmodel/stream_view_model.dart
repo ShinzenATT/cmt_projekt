@@ -1,13 +1,15 @@
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/streammodel.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 typedef Fn = void Function();
+
 class StreamViewModel with ChangeNotifier{
   StreamModel smodel = StreamModel();
 
-  void startup(){
-    smodel.c = Client(smodel.player);
+  void startup(String hostID, String intent){
+    smodel.c = Client(smodel.player, hostID, intent, Prefs().storedData.getString("uid")!);
     init().then((value) {
       smodel.isInited = true;
       smodel.c.listen();

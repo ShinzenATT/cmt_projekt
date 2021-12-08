@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/model/streammessage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
@@ -12,11 +11,15 @@ class Client {
   late FlutterSoundPlayer? _player;
   StreamController<Food>? foodStreamController = StreamController<Food>.broadcast();
 
-  Client(FlutterSoundPlayer? player) {
+  Client(FlutterSoundPlayer? player, String channelID, String intent, String user) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
-    client.sink.add(jsonEncode(StreamMessage.host(uid: "4", channelType: "a")));
-    //client.sink.add(jsonEncode(StreamMessage.join(uid: "3", channelType: "a", hostId: '4')));
+    if(intent == 'j') {
+      client.sink.add(jsonEncode(StreamMessage.join(
+          uid: user, channelType: "a", hostId: channelID)));
+    } else {
+      client.sink.add(jsonEncode(StreamMessage.host(uid: user, channelType: "a")));
+    }
     foodStreamController!.stream.listen((event) {
       sendData(event);
     });
