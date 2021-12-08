@@ -70,6 +70,10 @@ void main() async {
     ///och sätter sedan upp rätt funktioner beroende på vad den är.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {
       if(event.runtimeType == String) {
+        if(event=="CLOSE") {
+          webSocket.sink.close();
+          return;
+        }
         StreamMessage message = StreamMessage.fromJson(jsonDecode(event));
         if(message.hostOrJoin == "h" && !rooms.containsKey(message.hostId)) {
           initHostStream(message,webSocket);
