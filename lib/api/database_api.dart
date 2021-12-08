@@ -12,7 +12,7 @@ class DatabaseApi {
   StreamController<bool> streamController = StreamController<bool>.broadcast();
   //Ansluter till server med ipadress och port
   var channel =
-      WebSocketChannel.connect(Uri.parse('ws://localhost:5604'));
+      WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
   DatabaseApi() {
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
