@@ -35,8 +35,6 @@ class LoginPageViewModel with ChangeNotifier {
         Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
         //Navigator.of(context)
         //    .pushReplacementNamed('/Home'); // Byter till homepage.
-        lm.databaseAPI.sendRequest(QueryModel.userInfo(
-            email: login.value.text, password: password.value.text));
       }
     });
   }
