@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/app/View/app_channelpage.dart';
 import 'package:cmt_projekt/app/View/app_createaccountpage.dart';
 import 'package:cmt_projekt/app/View/app_demo.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
@@ -12,9 +13,11 @@ class PageNavigator {
   final Map _routes = <String, WidgetBuilder>{
     constant.home: (BuildContext context) =>
         kIsWeb ? const WebHomePage() : const AppHomePage(),
-    constant.createAccount: (BuildContext context) => const AppCreateAccountPage(),
+    constant.createAccount: (BuildContext context) =>
+        const AppCreateAccountPage(),
     constant.demo: (BuildContext context) => StreamLoop(),
     constant.login: (BuildContext context) => const AppLoginPage(),
+    constant.appChannel: (BuildContext context) => AppChannelPage(),
   };
 
   get routes => _routes;

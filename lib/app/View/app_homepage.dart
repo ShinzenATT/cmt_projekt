@@ -74,7 +74,7 @@ class _AppHomePageState extends State<AppHomePage> {
           height: 50,
           child: GradientElevatedButton(
             child: const Text(
-              'Demo sida',
+              'DEMO',
               style: TextStyle(
                 fontSize: 25,
                 color: Colors.white,
@@ -83,7 +83,7 @@ class _AppHomePageState extends State<AppHomePage> {
             ),
             onPressed: () {
               Navigator.of(context).pushNamed('/Demo');
-              context.read<StreamViewModel>().startup();
+              // context.read<StreamViewModel>().startup();
             },
             gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
