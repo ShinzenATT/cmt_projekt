@@ -36,8 +36,7 @@ class StreamLoop extends StatefulWidget {
 class _StreamLoopState extends State<StreamLoop> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
@@ -101,6 +100,6 @@ class _StreamLoopState extends State<StreamLoop> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    ));
+    );
   }
 }

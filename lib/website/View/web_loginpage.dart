@@ -8,7 +8,7 @@ import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
 
-///First version of loginpage for the website.
+///Loginpage för hemsidan.
 
 class WebLoginPage extends StatelessWidget {
   const WebLoginPage({Key? key}) : super(key: key);
@@ -19,6 +19,7 @@ class WebLoginPage extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
+        ///Här sätts färgtemat för bakgrunden på loginpage.
         decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
@@ -27,6 +28,9 @@ class WebLoginPage extends StatelessWidget {
               Colors.black,
               Colors.blueAccent,
             ])),
+
+        ///Rad som innehåller applikationens titel samt undertext till vänster och
+        ///ett kort med olika alternativ för att logga in, skapa konto osv till vänster.
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -61,7 +65,6 @@ class WebLoginPage extends StatelessWidget {
                     ),
                     elevation: 3,
                     child: Container(
-                      //Här kan ni ta
                       padding: const EdgeInsets.all(30),
                       width: 550,
                       height: MediaQuery.of(context).size.height,
@@ -103,7 +106,7 @@ class WebLoginPage extends StatelessWidget {
                                     splashRadius: null,
                                     splashColor: Colors.transparent,
                                     icon: Icon(
-                                      // Based on passwordVisible state choose the icon
+                                      /// Ikonen ändras beroende på om man valt att se lösenord eller inte.
                                       context
                                               .watch<LoginPageViewModel>()
                                               .passwordVisibilityLogin
@@ -112,7 +115,7 @@ class WebLoginPage extends StatelessWidget {
                                       color: Theme.of(context).primaryColorDark,
                                     ),
                                     onPressed: () {
-                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      /// Updaterar en bool ifall man vill se lösenord eller inte.
                                       context
                                           .read<LoginPageViewModel>()
                                           .changePasswordVisibility();

@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 
-///First version of the CreateAcountPage for the website.
+///CreateAccountPage för hemsidan, denna skapas i en showdialog på Loginpage.
 
 class WebCreateAccountWidget extends StatelessWidget {
   @override

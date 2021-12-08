@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
 import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
@@ -11,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  Prefs();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => LoginPageViewModel()),

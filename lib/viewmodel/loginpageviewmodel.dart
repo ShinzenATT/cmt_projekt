@@ -32,10 +32,9 @@ class LoginPageViewModel with ChangeNotifier {
     lm.databaseAPI.streamController.stream.listen((value) {
       if (value) {
         // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-        Navigator.of(context)
-            .pushReplacementNamed('/Home'); // Byter till homepage.
-        lm.databaseAPI.sendRequest(QueryModel.userInfo(
-            email: login.value.text, password: password.value.text));
+        Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
+        //Navigator.of(context)
+        //    .pushReplacementNamed('/Home'); // Byter till homepage.
       }
     });
   }
