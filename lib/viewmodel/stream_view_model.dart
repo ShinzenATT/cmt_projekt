@@ -6,11 +6,11 @@ typedef Fn = void Function();
 class StreamViewModel with ChangeNotifier{
   StreamModel smodel = StreamModel();
 
-  void startup(){
+  void startup(context){
     smodel.c = Client(smodel.player);
     init().then((value) {
       smodel.isInited = true;
-      smodel.c.listen();
+      smodel.c.listen(context);
     });
   }
 
@@ -20,7 +20,7 @@ class StreamViewModel with ChangeNotifier{
     smodel.c.stopSound();
     smodel.isInited = false;
 
-    smodel.c.client.sink.add("CLOSE");
+    smodel.c.client.sink.close();
     return true;
   }
 
