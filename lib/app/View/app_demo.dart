@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/server/streamserver.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
@@ -26,7 +27,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
+import 'package:gradient_ui_widgets/buttons/gradient_elevated_button.dart';
 import 'package:provider/src/provider.dart';
+
+import '../../constants.dart';
 
 class StreamLoop extends StatefulWidget {
   @override
@@ -108,9 +112,8 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
-                      context.read<StreamViewModel>().startup(
-                          Prefs().storedData.getString("uid")!,"h");
-
+                      Prefs().storedData.setString("joinHost","h");
+                      context.read<StreamViewModel>().startup(context);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
@@ -135,8 +138,9 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
-                      context.read<StreamViewModel>().startup(
-                      context.watch<StreamViewModel>().hostID.value.text, "j");
+                      Prefs().storedData.setString("joinChannelID", context.watch<StreamViewModel>().hostID.value.text);
+                      Prefs().storedData.setString("intent", "j");
+                      context.read<StreamViewModel>().startup(context);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
@@ -179,6 +183,6 @@ class _StreamLoopState extends State<StreamLoop> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

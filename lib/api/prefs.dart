@@ -11,6 +11,18 @@ class Prefs {
     return storedData.getString('email');
   }
 
+  String? getIntent(){
+    return storedData.getString('intent');
+  }
+
+  String? getJoinChannelID(){
+    return storedData.getString('joinChannelID');
+  }
+
+  String? joinHost(){
+    return storedData.getString('joinHost');
+  }
+
   Prefs._internal() {
     setUp();
   }

@@ -9,15 +9,11 @@ class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
   void startup(context){
-    smodel.c = Client();
+    smodel.c = Client(context);
     init().then((value) {
       smodel.isInited = true;
       smodel.c.listen(context);
     });
-  }
-
-  void hostJoin(String hostID, String intent){
-    smodel.c = Client(smodel.player, hostID, intent, Prefs().storedData.getString("uid")!);
   }
 
   Future<bool> closeClient() async {
