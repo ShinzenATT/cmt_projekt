@@ -24,8 +24,10 @@ void main() async {
     ///Sätter upp en listen funktion specifikt för en host. Denna ström låter hosten skicka meddelade till alla klienter anslutna på dennes kanal.
     ///OnDone disconnectar alla anslutna klienter till rummet och tar bort kanalen från listan
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((message) {
-      for (WebSocketChannel sock in channel.connectedAudioClients) {
-        sendData(sock, message);
+      if(message.runtimeType != String){
+        for (WebSocketChannel sock in channel.connectedAudioClients) {
+          sendData(sock, message);
+        }
       }
     },onDone: (){
       print("host för rum ${channel.channelId} lämnade");
@@ -75,6 +77,8 @@ void main() async {
           initHostStream(message,webSocket);
         }else if (message.hostOrJoin == "j" && rooms.containsKey(message.hostId)) {
           initClientStream(message,webSocket);
+        } else if(message.hostOrJoin == "j" && !rooms.containsKey(message.hostId)){
+          webSocket.sink.close(100009,"rummet finns inte");
         }
       }
     });

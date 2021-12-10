@@ -1,20 +1,33 @@
-import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/streammodel.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
-
+import 'package:cmt_projekt/api/prefs.dart';
 typedef Fn = void Function();
 
 class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
-  void startup(String hostID, String intent){
-    smodel.c = Client(smodel.player, hostID, intent, Prefs().storedData.getString("uid")!);
+  void startup(context){
+    smodel.c = Client();
     init().then((value) {
       smodel.isInited = true;
-      smodel.c.listen();
+      smodel.c.listen(context);
     });
+  }
+
+  void hostJoin(String hostID, String intent){
+    smodel.c = Client(smodel.player, hostID, intent, Prefs().storedData.getString("uid")!);
+  }
+
+  Future<bool> closeClient() async {
+    smodel.player!.stopPlayer();
+    smodel.recorder!.stopRecorder();
+    smodel.c.stopSound();
+    smodel.isInited = false;
+
+    smodel.c.client.sink.close();
+    return true;
   }
 
   TextEditingController get hostID => smodel.hostID;
@@ -67,6 +80,9 @@ class StreamViewModel with ChangeNotifier {
     return null;
   }
 
+  Future<void> addStream() async {
+    Stream<Food> stream;
+  }
 
   Future<void> record() async {
     await smodel.recorder!.startRecorder(

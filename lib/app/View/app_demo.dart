@@ -17,11 +17,15 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/constants.dart';
+import 'dart:async';
+import 'dart:typed_data';
+import 'package:cmt_projekt/server/streamclient.dart';
+import 'package:cmt_projekt/server/streamserver.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
+import 'package:flutter_sound_lite/flutter_sound.dart';
+import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
+import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 import 'package:provider/src/provider.dart';
 
 class StreamLoop extends StatefulWidget {
@@ -30,9 +34,13 @@ class StreamLoop extends StatefulWidget {
 }
 
 class _StreamLoopState extends State<StreamLoop> {
+
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: context.read<StreamViewModel>().closeClient,
+      child: Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80.0),
         child: AppBar(
@@ -53,7 +61,7 @@ class _StreamLoopState extends State<StreamLoop> {
                   Colors.black,
                   Colors.blueAccent,
                 ])),
-          ),
+          ) ,
         ),
       ),
       body: Container(

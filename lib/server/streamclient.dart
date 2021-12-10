@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/model/streammessage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
+
+import '../constants.dart';
 
 class Client {
   late WebSocketChannel client;
@@ -24,12 +27,13 @@ class Client {
       sendData(event);
     });
   }
-  void listen() {
+  void listen(context) {
   print("Am i listening????");
     client.stream.listen((event) {
       playSound(event);
     },onDone: () {
       print(client.closeReason);
+      Navigator.popUntil(context, ModalRoute.withName(home));
     });
   }
 
