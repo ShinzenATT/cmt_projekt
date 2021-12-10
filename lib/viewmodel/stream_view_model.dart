@@ -2,8 +2,10 @@ import 'package:cmt_projekt/model/streammodel.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
+
 typedef Fn = void Function();
-class StreamViewModel with ChangeNotifier{
+
+class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
   void startup(context){
@@ -14,6 +16,7 @@ class StreamViewModel with ChangeNotifier{
     });
   }
 
+  TextEditingController get hostID => smodel.hostID;
   Future<bool> closeClient() async {
     smodel.player!.stopPlayer();
     smodel.recorder!.stopRecorder();
@@ -41,7 +44,6 @@ class StreamViewModel with ChangeNotifier{
       sampleRate: 44000,
     );
   }
-
 
   Future<void> release() async {
     await stopPlayer();
@@ -78,10 +80,10 @@ class StreamViewModel with ChangeNotifier{
   }
 
   Future<void> record() async {
-
     await smodel.recorder!.startRecorder(
       codec: Codec.pcm16,
-      toStream: smodel.c.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
+      toStream: smodel
+          .c.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
       sampleRate: 44000,
       numChannels: 1,
     );
@@ -98,16 +100,16 @@ class StreamViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-
   void getRecFn() {
     if (!smodel.isInited) {
       return null;
     }
-    print("hello" + " "+ "${smodel.recorder!.isRecording}");
-    if(smodel.recorder!.isRecording){
+    print("hello" + " " + "${smodel.recorder!.isRecording}");
+    if (smodel.recorder!.isRecording) {
       stop();
-    }else {
+    } else {
       record();
-    };
+    }
+    ;
   }
 }

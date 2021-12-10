@@ -19,6 +19,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/server/streamserver.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
@@ -26,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
 
 class StreamLoop extends StatefulWidget {
@@ -42,12 +44,15 @@ class _StreamLoopState extends State<StreamLoop> {
       onWillPop: context.read<StreamViewModel>().closeClient,
       child: Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
+        preferredSize: const Size.fromHeight(80.0),
         child: AppBar(
           elevation: 0,
           centerTitle: true,
           title: Column(
-            children: [Text('COMMENT'), Text('Demo')],
+            children: const [
+              Text('COMMENT'),
+              Text('Demo'),
+            ],
           ),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -72,38 +77,105 @@ class _StreamLoopState extends State<StreamLoop> {
           ],
         )),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              margin: const EdgeInsets.all(3),
-              padding: const EdgeInsets.all(3),
-              height: 80,
-              width: double.infinity,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Color(0xFFFAF0E6),
-                border: Border.all(
-                  color: Colors.indigo,
-                  width: 3,
+              color: Colors.white,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: context.watch<StreamViewModel>().hostID,
+                    decoration: const InputDecoration(
+                      fillColor: Colors.white,
+                      labelText: 'HostId',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: GradientElevatedButton(
+                    child: const Text(
+                      'Host',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(appChannel);
+                    },
+                    gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.black,
+                          Colors.blueAccent,
+                        ]),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: GradientElevatedButton(
+                    child: const Text(
+                      'Join',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(appChannel);
+                    },
+                    gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.black,
+                          Colors.blueAccent,
+                        ]),
+                  ),
+                ),
+              ],
+            ),
+            /* Center(
+              child: SizedBox(
+                width: 200,
+                height: 50,
+                child: GradientElevatedButton(
+                  child: const Text(
+                    'DemoKanal',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(appChannel);
+                    context.read<StreamViewModel>().startup();
+                  },
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.black,
+                        Colors.blueAccent,
+                      ]),
                 ),
               ),
-              child: Text(
-                  context.watch<StreamViewModel>().smodel.recorder!.isRecording
-                      ? 'Playback to your headset!'
-                      : 'Recorder is stopped'),
-            ),
+            ), */
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-            context.watch<StreamViewModel>().smodel.recorder!.isRecording
-                ? Icons.mic
-                : Icons.mic_off),
-        onPressed: () {
-          context.read<StreamViewModel>().getRecFn();
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    ));
+    );
   }
 }
