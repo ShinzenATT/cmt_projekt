@@ -30,6 +30,7 @@ import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class StreamLoop extends StatefulWidget {
   @override
@@ -134,8 +135,8 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
-                      context.read<StreamViewModel>().startup(
-                      context.watch<StreamViewModel>().hostID.value.text, "j");
+                      context.read<StreamViewModel>().startupJoin(
+                      context.watch<StreamViewModel>().hostID.value.text, "j", Prefs().storedData.getString("uid")??const Uuid().toString());
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
