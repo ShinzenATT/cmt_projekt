@@ -83,7 +83,7 @@ class _AppHomePageState extends State<AppHomePage> {
             ),
             onPressed: () {
               Navigator.of(context).pushNamed('/Demo');
-              context.read<StreamViewModel>().startup();
+              context.read<StreamViewModel>().startup(context);
             },
             gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
