@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
@@ -27,7 +28,9 @@ class _AppHomePageState extends State<AppHomePage> {
           leading: Padding(
             padding: const EdgeInsets.all(10),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(appMenu);
+              },
               icon: const Icon(Icons.menu),
             ),
           ),

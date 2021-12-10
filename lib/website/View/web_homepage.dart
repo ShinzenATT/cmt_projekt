@@ -151,7 +151,7 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
+                context.read<HomePageViewModel>().logOut(context);
               },
             ),
           ],
