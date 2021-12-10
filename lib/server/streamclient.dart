@@ -7,6 +7,8 @@ import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 
+import '../constants.dart';
+
 class Client {
   late WebSocketChannel client;
   late FlutterSoundPlayer? _player;
@@ -15,18 +17,19 @@ class Client {
   Client(FlutterSoundPlayer? player) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
-    client.sink.add(jsonEncode(StreamMessage.host(uid: "4", channelType: "a")));
-    //client.sink.add(jsonEncode(StreamMessage.join(uid: "3", channelType: "a", hostId: '4')));
+    //client.sink.add(jsonEncode(StreamMessage.host(uid: "4", channelType: "a")));
+    client.sink.add(jsonEncode(StreamMessage.join(uid: "3", channelType: "a", hostId: '4')));
     foodStreamController!.stream.listen((event) {
       sendData(event);
     });
   }
-  void listen() {
+  void listen(context) {
   print("Am i listening????");
     client.stream.listen((event) {
       playSound(event);
     },onDone: () {
       print(client.closeReason);
+      Navigator.popUntil(context, ModalRoute.withName(home));
     });
   }
 

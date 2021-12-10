@@ -48,10 +48,8 @@ class DatabaseQueries {
   //Database host ip
 
   Future<String> compareCredentials(String login, String pass) async {
-    // var connection = PostgreSQLConnection("192.168.0.2", 5432, "cmt_projekt",
-    //     username: "pi", password: "Kastalagatan22");
-    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-        username: "postgres", password: "postgres");
+     var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+        username: "pi", password: "Kastalagatan22");
     await connection.open();
 
     List<List<dynamic>> results = await connection.query(
@@ -64,17 +62,12 @@ class DatabaseQueries {
 
   Future<String> createAccount(String email, String pass, String phone) async {
     try {
-      /*   var connection = PostgreSQLConnection("192.168.0.2", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22"); */
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "postgres", password: "postgres");
+         var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
       await connection.open();
 
       List<List<dynamic>> results = await connection
           .query("INSERT INTO users VALUES('$email', '$pass', '$phone')");
-      print(email);
-      print(phone);
-      print(results);
       return (getInfo(email));
     } on PostgreSQLException {
       return ("");
@@ -82,15 +75,11 @@ class DatabaseQueries {
   }
 
   Future<String> getInfo(String login) async {
-    /*  var connection = PostgreSQLConnection("192.168.0.2", 5432, "cmt_projekt",
-        username: "pi", password: "Kastalagatan22"); */
-    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-        username: "postgres", password: "postgres");
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+        username: "pi", password: "Kastalagatan22");
     await connection.open();
 
     List<List<dynamic>> results = await connection.query(
-
-      //"SELECT users.email, users.phone, users.uid FROM users WHERE ((email = '$login' OR phone = '$login'))");
         "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM users WHERE ((email = '$login' OR phone = '$login'))");
 
     if (results.isEmpty) {
