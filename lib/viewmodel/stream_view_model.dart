@@ -9,7 +9,7 @@ class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
   void startup(context){
-    smodel.c = Client(context);
+    smodel.c = Client(smodel.player);
     init().then((value) {
       smodel.isInited = true;
       smodel.c.listen(context);
@@ -109,6 +109,6 @@ class StreamViewModel with ChangeNotifier {
       stop();
     }else {
       record();
-    };
+    }
   }
 }

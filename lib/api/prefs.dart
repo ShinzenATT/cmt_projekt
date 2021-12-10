@@ -19,9 +19,6 @@ class Prefs {
     return storedData.getString('joinChannelID');
   }
 
-  String? joinHost(){
-    return storedData.getString('joinHost');
-  }
 
   Prefs._internal() {
     setUp();

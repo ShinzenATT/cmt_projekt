@@ -19,11 +19,12 @@ class Client {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
 
-    if(Prefs().getIntent() == 'j') {
+    if(Prefs().getIntent() == "j") {
+      print(Prefs().getIntent().toString());
       client.sink.add(jsonEncode(StreamMessage.join(
           uid: Prefs().storedData.getString("uid")!, channelType: "a", hostId: Prefs().storedData.getString("joinChannelID")!)));
     } else {
-      client.sink.add(jsonEncode(StreamMessage.host(uid: Prefs().storedData.getString("uid")!, channelType: "a")));
+      client.sink.add(jsonEncode(StreamMessage.host(uid: "uid", channelType: "a")));
     }
     foodStreamController!.stream.listen((event) {
       sendData(event);

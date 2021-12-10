@@ -112,7 +112,7 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
-                      Prefs().storedData.setString("joinHost","h");
+                      Prefs().storedData.setString("intent","h");
                       context.read<StreamViewModel>().startup(context);
                     },
                     gradient: const LinearGradient(
@@ -138,10 +138,11 @@ class _StreamLoopState extends State<StreamLoop> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamed(appChannel);
+                      context.read<StreamViewModel>().startup(context);
                       Prefs().storedData.setString("joinChannelID", context.watch<StreamViewModel>().hostID.value.text);
                       Prefs().storedData.setString("intent", "j");
-                      context.read<StreamViewModel>().startup(context);
-                    },
+                      print(Prefs().storedData.getString("intent"));
+                      },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
