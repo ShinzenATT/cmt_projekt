@@ -17,14 +17,6 @@ class StreamViewModel with ChangeNotifier {
     });
   }
 
-  void startupJoin(String hostID, String intent, String viewer){
-    smodel.c = Client(smodel.player, hostID, intent, Prefs().storedData.getString("uid")!);
-    init().then((value) {
-      smodel.isInited = true;
-      smodel.c.listen();
-    });
-  }
-
   TextEditingController get hostID => smodel.hostID;
 
   Future<void> init() async {
@@ -75,9 +67,6 @@ class StreamViewModel with ChangeNotifier {
     return null;
   }
 
-  Future<void> addStream() async {
-    Stream<Food> stream;
-  }
 
   Future<void> record() async {
     await smodel.recorder!.startRecorder(
