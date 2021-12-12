@@ -12,9 +12,7 @@ class HomePageViewModel with ChangeNotifier {
 
   ///Returnerar användarens uID.
   String? getUid() {
-    String s = Prefs().storedData.getString("uid")??(PostgreSQLDataType.uuid.toString());
-    print(s);
-    return s;
+    return Prefs().storedData.get("uid").toString();
   }
 
   /// Skapar en showdialog med webprofilewidget.

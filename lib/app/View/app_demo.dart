@@ -141,7 +141,7 @@ class _StreamLoopState extends State<StreamLoop> {
                       context.read<StreamViewModel>().startup(context);
                       Prefs().storedData.setString("joinChannelID", context.watch<StreamViewModel>().hostID.value.text);
                       Prefs().storedData.setString("intent", "j");
-                      print(Prefs().storedData.getString("intent"));
+                      print(Prefs().storedData.get("intent").toString());
                       },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,

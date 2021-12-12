@@ -22,7 +22,7 @@ class Client {
     if(Prefs().getIntent() == "j") {
       print(Prefs().getIntent().toString());
       client.sink.add(jsonEncode(StreamMessage.join(
-          uid: Prefs().storedData.get("uid").toString(), channelType: "a", hostId: Prefs().storedData.getString("joinChannelID")!)));
+          uid: Prefs().storedData.get("uid").toString(), channelType: "a", hostId: Prefs().storedData.get("joinChannelID").toString())));
     } else {
       client.sink.add(jsonEncode(StreamMessage.host(uid: Prefs().storedData.get("uid").toString(), channelType: "a")));
     }
