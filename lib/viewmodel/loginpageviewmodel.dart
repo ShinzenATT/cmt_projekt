@@ -31,9 +31,7 @@ class LoginPageViewModel with ChangeNotifier {
 
   void guestSign(context) async {
     setUpResponseStream(context);
-    if (Prefs().storedData.get("uid")==null){
-      Prefs().storedData.setString("uid", const Uuid().v4());
-    }
+    Prefs().storedData.setString("uid", const Uuid().v4());
     Prefs().storedData.get("uid");
   }
 
