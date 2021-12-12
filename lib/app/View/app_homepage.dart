@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
@@ -35,7 +36,10 @@ class _AppHomePageState extends State<AppHomePage> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Prefs().storedData.setString("intent","h");
+                  context.read<StreamViewModel>().startup(context);
+                },
                 icon: const Icon(Icons.mic_none),
                 iconSize: 30,
               ),
