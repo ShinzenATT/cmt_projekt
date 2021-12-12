@@ -31,10 +31,10 @@ class LoginPageViewModel with ChangeNotifier {
 
   void guestSign(context) async {
     setUpResponseStream(context);
-    if (Prefs().storedData.getString("uid")!.isEmpty){
-      Prefs().storedData.setString("uid", const Uuid().toString());
+    if (Prefs().storedData.get("uid")==null){
+      Prefs().storedData.setString("uid", const Uuid().v4());
     }
-    Prefs().storedData.getString("uid");
+    Prefs().storedData.get("uid");
   }
 
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
