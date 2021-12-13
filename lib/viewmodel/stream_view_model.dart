@@ -10,7 +10,7 @@ typedef Fn = void Function();
 class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
-  void startup(context){
+  void startup(context) {
     smodel.c = Client(smodel.player);
     init().then((value) {
       smodel.isInited = true;
@@ -18,7 +18,6 @@ class StreamViewModel with ChangeNotifier {
     });
   }
 
-  TextEditingController get hostID => smodel.hostID;
   Future<bool> closeClient() async {
     smodel.player!.stopPlayer();
     smodel.recorder!.stopRecorder();
@@ -116,6 +115,5 @@ class StreamViewModel with ChangeNotifier {
     }
 
     ;
-
   }
 }
