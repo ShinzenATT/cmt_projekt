@@ -33,11 +33,14 @@ class DatabaseServer {
       print(query.code);
       if (query.code == dbAccount) {
         String response =
-        await db.createAccount(query.email, query.password, query.phone);
+            await db.createAccount(query.email!, query.password!, query.phone!);
         client.add(response);
       } else if (query.code == dbLogin) {
-        String response = await db.compareCredentials(query.email, query.password);
+        String response =
+            await db.compareCredentials(query.email!, query.password!);
         client.add(response);
+      } else if (query.code == dbCreateChannel) {
+        db.createChannel(query.channelName!, query.uid!, query.category!);
       }
     });
   }
@@ -48,12 +51,12 @@ class DatabaseQueries {
   //Database host ip
 
   Future<String> compareCredentials(String login, String pass) async {
-     var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
         username: "pi", password: "Kastalagatan22");
     await connection.open();
 
     List<List<dynamic>> results = await connection.query(
-        "SELECT email, phone FROM users WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
+        "SELECT email, phone FROM Account WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
     if (results.isEmpty) {
       return "";
     }
@@ -62,12 +65,12 @@ class DatabaseQueries {
 
   Future<String> createAccount(String email, String pass, String phone) async {
     try {
-         var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
           username: "pi", password: "Kastalagatan22");
       await connection.open();
 
       List<List<dynamic>> results = await connection
-          .query("INSERT INTO users VALUES('$email', '$pass', '$phone')");
+          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
       return (getInfo(email));
     } on PostgreSQLException {
       return ("");
@@ -75,12 +78,12 @@ class DatabaseQueries {
   }
 
   Future<String> getInfo(String login) async {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
         username: "pi", password: "Kastalagatan22");
     await connection.open();
 
     List<List<dynamic>> results = await connection.query(
-        "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM users WHERE ((email = '$login' OR phone = '$login'))");
+        "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
 
     if (results.isEmpty) {
       return "";
@@ -91,5 +94,42 @@ class DatabaseQueries {
     String message =
         '{"uid": "${results.first[0].values.elementAt(0)}", "email": "${results.first[0].values.elementAt(1)}", "phone": "${results.first[0].values.elementAt(2)}"}';
     return message;
+  }
+
+  void goOnline(String uid) async {
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
+
+      List<List<dynamic>> results =
+          await connection.query("INSERT INTO Online VALUES('$uid')");
+    } on PostgreSQLException {
+      print("Exception when insering into Online");
+    }
+  }
+
+  void goOffline(String uid) async {
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
+      await connection.query("DELETE FRMO Online WHERE channelid = '$uid'");
+    } on PostgreSQLException {
+      print("Exception when insering into Online");
+    }
+  }
+
+  void createChannel(String channelName, String uid, String category) async {
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
+
+      List<List<dynamic>> results = await connection.query(
+          "INSERT INTO Channel VALUES('$channelName','$uid','$category')");
+    } on PostgreSQLException {
+      print("Exception when insering into Online");
+    }
   }
 }

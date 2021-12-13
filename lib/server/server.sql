@@ -7,7 +7,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 \set QUIET false  
 
 --Tables:
-CREATE TABLE User (
+CREATE TABLE Account (
 	email varchar(255) NOT NULL,
 	password TEXT NOT NULL,
 	phone char(10) NOT NULL CHECK(char_length(phone) = 10),
@@ -26,7 +26,7 @@ CREATE TABLE Favorite (
      users INT,
      category TEXT,
 
-     FOREIGN KEY (users) REFERENCES User(uid),
+     FOREIGN KEY (users) REFERENCES Account(uid),
      FOREIGN KEY (category) REFERENCES Category(category),
      PRIMARY KEY (users,category)
 );
@@ -36,28 +36,34 @@ CREATE TABLE Channel (
     channelOwner INT,
     categories   TEXT NOT NULL,
 
-    FOREIGN KEY (channelOwner) REFERENCES User(uid),
+    FOREIGN KEY (channelOwner) REFERENCES Account(uid),
     FOREIGN KEY (categories) REFERENCES Category(category),
 
     UNIQUE(channelName),
-    PRIMARY KEY channelOwner
+    PRIMARY KEY (channelOwner)
 );
 
 CREATE TABLE Online (
-    channelID TEXT,
+    channelID INT,
     channelSubject TEXT,
 
     FOREIGN KEY (channelID) REFERENCES Channel(channelOwner),
-    PRIMARY KEY channelID
+    PRIMARY KEY (channelID)
 );
 
 --Inserts:
-INSERT INTO User VALUES('simon@gmail.com', '123', '072-123000');
-INSERT INTO User VALUES('maxper@gmail.com', '124','072-124000');
-
+INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000');
+INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000');
+INSERT INTO Category VALUES('Sport');
+INSERT INTO Category VALUES('Rock');
+INSERT INTO Category VALUES('Jazz');
+INSERT INTO Category VALUES('Pop');
+INSERT INTO Category VALUES('Tjööt');
+INSERT INTO Channel VALUES('Prata strunt','1','Tjööt');
+INSERT INTO Online VALUES('1');
+DELETE FROM Online WHERE channelid = '1';
 --Views:
 CREATE VIEW userviews AS
-SELECT * FROM User;
+SELECT * FROM Account;
 
-
-SELECT * FROM User;
+SELECT * FROM userviews;

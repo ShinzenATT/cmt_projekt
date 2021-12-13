@@ -32,8 +32,8 @@ class CreateAccountViewModel with ChangeNotifier {
   void setUpResponseStream(context) {
     client.streamController.stream.listen((QueryModel message) async {
       var _context = context;
-      await Prefs().storedData.setString("uid", message.uid);
-      await Prefs().storedData.setString("email", message.email);
+      await Prefs().storedData.setString("uid", message.uid!);
+      await Prefs().storedData.setString("email", message.email!);
       if (kIsWeb) {
         // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
         Navigator.of(_context, rootNavigator: true).pop();

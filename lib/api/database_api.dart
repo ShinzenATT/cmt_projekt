@@ -28,7 +28,7 @@ class DatabaseApi {
     //Skriver ut meddelandet.
     if (message == "") {
     } else {
-      streamController.add(QueryModel.fromJsonUserinfo(jsonDecode(message)));
+      streamController.add(QueryModel.fromJson(jsonDecode(message)));
     }
   }
 }
