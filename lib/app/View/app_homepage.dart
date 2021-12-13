@@ -1,19 +1,10 @@
-import 'dart:async';
-import 'dart:typed_data';
-
-
 import 'package:cmt_projekt/api/prefs.dart';
-
 import 'package:cmt_projekt/constants.dart';
-
-import 'package:cmt_projekt/server/streamclient.dart';
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
-import 'package:sound_stream/sound_stream.dart';
 
 class AppHomePage extends StatefulWidget {
   const AppHomePage({Key? key}) : super(key: key);

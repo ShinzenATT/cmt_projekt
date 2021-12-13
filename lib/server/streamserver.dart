@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:cmt_projekt/model/radiochannel.dart';
 import 'package:cmt_projekt/model/streammessage.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
