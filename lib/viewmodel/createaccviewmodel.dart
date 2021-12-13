@@ -1,4 +1,5 @@
 import 'package:cmt_projekt/api/database_api.dart';
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/foundation.dart';
@@ -29,17 +30,17 @@ class CreateAccountViewModel with ChangeNotifier {
 
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStream(context) {
-    client.streamController.stream.listen((value) {
+    client.streamController.stream.listen((QueryModel message) async {
       var _context = context;
-      if (value) {
-        if (kIsWeb) {
-          // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-          Navigator.of(_context, rootNavigator: true).pop();
-        }
-
-        Navigator.of(_context)
-            .pushReplacementNamed('/Home'); // Byter till homepage.
+      await Prefs().storedData.setString("uid", message.uid);
+      await Prefs().storedData.setString("email", message.email);
+      if (kIsWeb) {
+        // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
+        Navigator.of(_context, rootNavigator: true).pop();
       }
+
+      Navigator.of(_context)
+          .pushReplacementNamed('/Home'); // Byter till homepage.
     });
   }
 

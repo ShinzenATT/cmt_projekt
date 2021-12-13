@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// Låter applikationen hämta och skicka data till databasen.
 class DatabaseApi {
   //En ström som skickar ut en bool till alla lyssnare.
-  StreamController<bool> streamController = StreamController<bool>.broadcast();
+  StreamController<QueryModel> streamController =
+      StreamController<QueryModel>.broadcast();
   //Ansluter till server med ipadress och port
   var channel =
       WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
@@ -29,13 +27,8 @@ class DatabaseApi {
   void onMessage(String message) async {
     //Skriver ut meddelandet.
     if (message == "") {
-      streamController.add(false);
     } else {
-      await Prefs().storedData.setString(
-          "uid", QueryModel.fromJsonUserinfo(jsonDecode(message)).uid);
-      await Prefs().storedData.setString(
-          "email", QueryModel.fromJsonUserinfo(jsonDecode(message)).email);
-      streamController.add(true);
+      streamController.add(QueryModel.fromJsonUserinfo(jsonDecode(message)));
     }
   }
 }
