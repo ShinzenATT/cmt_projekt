@@ -1,10 +1,8 @@
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/website/View/web_loginpage.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:postgres/postgres.dart';
 
 ///View model för Homepage och profilewidget.
 class HomePageViewModel with ChangeNotifier {

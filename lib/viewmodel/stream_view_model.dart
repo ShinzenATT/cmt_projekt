@@ -3,8 +3,6 @@ import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 
-import 'package:cmt_projekt/api/prefs.dart';
-
 typedef Fn = void Function();
 
 class StreamViewModel with ChangeNotifier {

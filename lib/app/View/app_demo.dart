@@ -1,35 +1,7 @@
-/*
- * Copyright 2018, 2019, 2020, 2021 Dooboolab.
- *
- * This file is part of Flutter-Sound.
- *
- * Flutter-Sound is free software: you can redistribute it and/or modify
- * it under the terms of the Mozilla Public License version 2 (MPL2.0),
- * as published by the Mozilla organization.
- *
- * Flutter-Sound is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * MPL General Public License for more details.
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
-
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:cmt_projekt/api/prefs.dart';
-
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/server/streamclient.dart';
-import 'package:cmt_projekt/server/streamserver.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound_lite/flutter_sound.dart';
-import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
-import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
 

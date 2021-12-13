@@ -1,5 +1,3 @@
-
-
 --Init
 \set QUIET true
 SET client_min_messages TO WARNING; -- Less talk please.
