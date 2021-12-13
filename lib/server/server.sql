@@ -9,7 +9,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 \set QUIET false  
 
 --Tables:
-CREATE TABLE users (
+CREATE TABLE User (
 	email varchar(255) NOT NULL,
 	password TEXT NOT NULL,
 	phone char(10) NOT NULL CHECK(char_length(phone) = 10),
@@ -19,47 +19,47 @@ CREATE TABLE users (
 	PRIMARY KEY(uid)
 );
 
-CREATE TABLE categories (
+CREATE TABLE Category (
     category TEXT,
     PRIMARY KEY (category)
 );
 
-CREATE TABLE favorites (
+CREATE TABLE Favorite (
      users INT,
      category TEXT,
 
-     FOREIGN KEY (users) REFERENCES users(uid),
-     FOREIGN KEY (category) REFERENCES categories(category),
+     FOREIGN KEY (users) REFERENCES User(uid),
+     FOREIGN KEY (category) REFERENCES Category(category),
      PRIMARY KEY (users,category)
 );
 
-CREATE TABLE channels (
+CREATE TABLE Channel (
     channelName TEXT NOT NULL,
     channelOwner INT,
     categories   TEXT NOT NULL,
 
-    FOREIGN KEY (channelOwner) REFERENCES users(uid),
-    FOREIGN KEY (categories) REFERENCES categories(category),
+    FOREIGN KEY (channelOwner) REFERENCES User(uid),
+    FOREIGN KEY (categories) REFERENCES Category(category),
 
     UNIQUE(channelName),
     PRIMARY KEY channelOwner
 );
 
-CREATE TABLE online (
+CREATE TABLE Online (
     channelID TEXT,
     channelSubject TEXT,
 
-    FOREIGN KEY (channelID) REFERENCES channels(channelOwner),
+    FOREIGN KEY (channelID) REFERENCES Channel(channelOwner),
     PRIMARY KEY channelID
 );
 
 --Inserts:
-INSERT INTO users VALUES('simon@gmail.com', '123', '072-123000');
-INSERT INTO users VALUES('maxper@gmail.com', '124','072-124000');
+INSERT INTO User VALUES('simon@gmail.com', '123', '072-123000');
+INSERT INTO User VALUES('maxper@gmail.com', '124','072-124000');
 
 --Views:
 CREATE VIEW userviews AS
-SELECT * FROM users;
+SELECT * FROM User;
 
 
-SELECT * FROM users;
+SELECT * FROM User;
