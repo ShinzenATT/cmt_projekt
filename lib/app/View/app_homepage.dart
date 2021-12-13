@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-
 import 'package:cmt_projekt/api/prefs.dart';
 
 import 'package:cmt_projekt/constants.dart';
@@ -35,7 +34,7 @@ class _AppHomePageState extends State<AppHomePage> {
               onPressed: () {
                 Navigator.of(context).pushNamed(appMenu);
               },
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.person_rounded),
             ),
           ),
           actions: [
@@ -43,7 +42,7 @@ class _AppHomePageState extends State<AppHomePage> {
               padding: const EdgeInsets.all(10),
               child: IconButton(
                 onPressed: () {
-                  Prefs().storedData.setString("intent","h");
+                  Prefs().storedData.setString("intent", "h");
                   context.read<StreamViewModel>().startup(context);
                 },
                 icon: const Icon(Icons.mic_none),
@@ -57,7 +56,7 @@ class _AppHomePageState extends State<AppHomePage> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -99,7 +98,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
           ),
@@ -116,8 +115,8 @@ class _AppHomePageState extends State<AppHomePage> {
             label: 'Hem',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.mic_none),
+            label: 'Gå live!',
           ),
         ],
       ),

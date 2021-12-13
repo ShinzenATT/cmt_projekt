@@ -63,14 +63,14 @@ class _StreamLoopState extends State<StreamLoop> {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                      Colors.black,
+                      Colors.greenAccent,
                       Colors.blueAccent,
                     ])),
               ),
             ),
           ),
           body: Container(
-            decoration: const BoxDecoration(
+            /* decoration: const BoxDecoration(
                 gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -78,7 +78,7 @@ class _StreamLoopState extends State<StreamLoop> {
                 Colors.black,
                 Colors.blueAccent,
               ],
-            )),
+            )), */
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -120,7 +120,7 @@ class _StreamLoopState extends State<StreamLoop> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              Colors.black,
+                              Colors.greenAccent,
                               Colors.blueAccent,
                             ]),
                       ),
@@ -154,7 +154,7 @@ class _StreamLoopState extends State<StreamLoop> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              Colors.black,
+                              Colors.greenAccent,
                               Colors.blueAccent,
                             ]),
                       ),
