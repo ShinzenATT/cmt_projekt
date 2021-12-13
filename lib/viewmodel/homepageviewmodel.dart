@@ -4,7 +4,7 @@ import 'package:cmt_projekt/website/View/web_loginpage.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:postgres/postgres.dart';
 
 ///View model för Homepage och profilewidget.
 class HomePageViewModel with ChangeNotifier {
@@ -15,8 +15,7 @@ class HomePageViewModel with ChangeNotifier {
 
   ///Returnerar användarens uID.
   String? getUid() {
-    print(Prefs().storedData.getString("uid"));
-    return Prefs().storedData.getString("uid");
+    return Prefs().storedData.get("uid").toString();
   }
 
   /// Skapar en showdialog med webprofilewidget.

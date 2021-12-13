@@ -24,6 +24,7 @@ class PageNavigator {
     constant.appChannel: (BuildContext context) => AppChannelPage(),
     constant.appMenu: (BuildContext context) => const AppMenu(),
     constant.appWelcome: (BuildContext context) => const AppWelcomePage(),
+
   };
 
   get routes => _routes;
