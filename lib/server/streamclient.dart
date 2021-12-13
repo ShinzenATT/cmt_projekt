@@ -36,7 +36,7 @@ class Client {
       playSound(event);
     },onDone: () {
       print(client.closeReason);
-      Navigator.popUntil(context, ModalRoute.withName(home));
+      Navigator.popUntil(context, ModalRoute.withName(demo));
     });
   }
 
