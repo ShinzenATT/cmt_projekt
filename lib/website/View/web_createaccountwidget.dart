@@ -104,8 +104,8 @@ class WebCreateAccountWidget extends StatelessWidget {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                        Colors.black,
                         Colors.blueAccent,
+                        Colors.greenAccent,
                       ]),
                 ),
               ),

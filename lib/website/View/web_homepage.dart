@@ -23,7 +23,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                Colors.black,
+                Colors.greenAccent,
                 Colors.blueAccent,
               ])),
         ),
@@ -70,7 +70,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
           ),
@@ -94,8 +94,8 @@ class _WebHomePageState extends State<WebHomePage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                    Colors.black,
                     Colors.blueAccent,
+                    Colors.greenAccent,
                   ])),
               child: Column(
                 children: [

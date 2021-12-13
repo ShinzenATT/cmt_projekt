@@ -26,7 +26,7 @@ class AppLoginPage extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -61,7 +61,12 @@ class AppLoginPage extends StatelessWidget {
                   'Välkommen',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-                const Text('Vänligen ange dina inloggningsuppgifter'),
+                const Text(
+                  'Vänligen ange dina inloggningsuppgifter',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
                 const SizedBox(
                   height: 40,
                 ),
@@ -131,7 +136,7 @@ class AppLoginPage extends StatelessWidget {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                          Colors.black,
+                          Colors.greenAccent,
                           Colors.blueAccent,
                         ]),
                   ),
@@ -144,15 +149,16 @@ class AppLoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Välkommen att logga in som '),
+                    const Text(
+                      'Välkommen att logga in som ',
+                      style: TextStyle(fontSize: 16),
+                    ),
                     InkWell(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       onTap: () {
-                        context
-                            .read<LoginPageViewModel>()
-                            .guestSign(context);
+                        context.read<LoginPageViewModel>().guestSign(context);
                         context
                             .read<LoginPageViewModel>()
                             .changePage(context, constant.home);
@@ -160,6 +166,7 @@ class AppLoginPage extends StatelessWidget {
                       child: const Text(
                         "gäst",
                         style: TextStyle(
+                            fontSize: 16,
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold),
                       ),
@@ -171,7 +178,12 @@ class AppLoginPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Inget konto än? '),
+                      const Text(
+                        'Inget konto än? ',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                       InkWell(
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
@@ -184,6 +196,7 @@ class AppLoginPage extends StatelessWidget {
                         child: const Text(
                           "Registrera dig här",
                           style: TextStyle(
+                              fontSize: 16,
                               color: Colors.blueAccent,
                               fontWeight: FontWeight.bold),
                         ),

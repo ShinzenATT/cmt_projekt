@@ -21,7 +21,7 @@ class AppWelcomePage extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black,
+            Colors.greenAccent,
             Colors.blueAccent,
           ],
         )),
