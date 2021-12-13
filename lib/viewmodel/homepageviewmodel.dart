@@ -1,5 +1,8 @@
 import 'package:cmt_projekt/api/prefs.dart';
+import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/website/View/web_loginpage.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
@@ -22,5 +25,14 @@ class HomePageViewModel with ChangeNotifier {
         builder: (context) {
           return const WebProfileWidget();
         });
+  }
+
+  void logOut(context) {
+    Prefs().storedData.clear();
+    if (kIsWeb) {
+      Navigator.of(context).pushReplacementNamed(login);
+    } else {
+      Navigator.of(context).pushReplacementNamed(appWelcome);
+    }
   }
 }

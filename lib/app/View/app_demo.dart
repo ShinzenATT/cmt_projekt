@@ -19,7 +19,10 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+
 import 'package:cmt_projekt/api/prefs.dart';
+
+import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:cmt_projekt/server/streamserver.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
@@ -27,7 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
-import 'package:gradient_ui_widgets/buttons/gradient_elevated_button.dart';
+import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
 
 import '../../constants.dart';
@@ -38,35 +41,37 @@ class StreamLoop extends StatefulWidget {
 }
 
 class _StreamLoopState extends State<StreamLoop> {
-
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: context.read<StreamViewModel>().closeClient,
       child: Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
-        child: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: Column(
-            children: const [
-              Text('COMMENT'),
-              Text('Demo'),
-            ],
+
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(80.0),
+          child: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: Column(
+              children: const [
+                Text('COMMENT'),
+                Text('Demo'),
+              ],
+            ),
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                    Colors.black,
+                    Colors.blueAccent,
+                  ])),
+            ),
+
           ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                  Colors.black,
-                  Colors.blueAccent,
-                ])),
-          ) ,
         ),
+
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -154,36 +159,19 @@ class _StreamLoopState extends State<StreamLoop> {
                 ),
               ],
             ),
-            /* Center(
-              child: SizedBox(
-                width: 200,
-                height: 50,
-                child: GradientElevatedButton(
-                  child: const Text(
-                    'DemoKanal',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(appChannel);
-                    context.read<StreamViewModel>().startup();
-                  },
-                  gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Colors.black,
-                        Colors.blueAccent,
-                      ]),
-                ),
-              ),
-            ), */
+
+
+
           ],
         ),
       ),
     ));
+
+            ],
+          ),
+        ),
+      ),
+    );
+
   }
 }

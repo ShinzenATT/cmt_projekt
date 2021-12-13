@@ -21,10 +21,10 @@ class Prefs {
 
 
   Prefs._internal() {
-    setUp();
+    //setUp();
   }
 
-  void setUp() async {
+  Future<void> setUp() async {
     storedData = await SharedPreferences.getInstance();
   }
 }
