@@ -14,6 +14,25 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
+  Widget _horizontalListView() {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (_, __) => _buildBox(color: Colors.orange),
+      ),
+    );
+  }
+
+  Widget _buildBox({required Color color}) => Container(
+        margin: const EdgeInsets.all(12),
+        height: 100,
+        width: 150,
+        color: color,
+      child: IconButton(
+        onPressed: ,
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +53,7 @@ class _AppHomePageState extends State<AppHomePage> {
               padding: const EdgeInsets.all(10),
               child: IconButton(
                 onPressed: () {
-                  Prefs().storedData.setString("intent","h");
+                  Prefs().storedData.setString("intent", "h");
                   context.read<StreamViewModel>().startup(context);
                 },
                 icon: const Icon(Icons.mic_none),
@@ -69,11 +88,23 @@ class _AppHomePageState extends State<AppHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: SizedBox(
-          width: 200,
-          height: 50,
-          child: GradientElevatedButton(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Text(
+            'Radiokanaler',
+            style: TextStyle(fontSize: 18),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 5,
+              itemBuilder: (BuildContext context, int index) {
+                return _horizontalListView();
+              },
+            ),
+          ),
+          GradientElevatedButton(
             child: const Text(
               'DEMO',
               style: TextStyle(
@@ -94,7 +125,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   Colors.blueAccent,
                 ]),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
