@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/app/View/app_channelsettings.dart';
 import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class AppMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 3),
         child: AppBar(
           elevation: 0,
           centerTitle: true,
@@ -24,8 +25,57 @@ class AppMenu extends StatelessWidget {
               const Text(
                 'Din moderna radioapp',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
+              ),
             ],
+          ),
+          bottom: PreferredSize(
+            preferredSize:
+                Size.fromHeight(MediaQuery.of(context).size.height / 3),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Text(
+                              'Redigera',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.edit_outlined,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.account_circle_outlined,
+                    size: 70,
+                    color: Colors.white,
+                  ),
+                  Text(
+                    context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -43,17 +93,8 @@ class AppMenu extends StatelessWidget {
         color: Colors.white,
         child: ListView(
           // Important: Remove any padding from the ListView.
-          padding: const EdgeInsets.only(top: 40, left: 10),
+          padding: const EdgeInsets.only(top: 20, left: 10),
           children: [
-            Center(
-              child: Text(
-                context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
             const Text(
               'Allmänt',
               style: TextStyle(
@@ -67,8 +108,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-
-                Navigator.pop(context);
+                context.read<HomePageViewModel>().channelSettings(context);
               },
             ),
             ListTile(
