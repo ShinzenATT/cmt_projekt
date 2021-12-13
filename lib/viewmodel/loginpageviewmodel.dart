@@ -1,7 +1,9 @@
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class LoginPageViewModel with ChangeNotifier {
   LoginModel lm = LoginModel();
@@ -25,6 +27,12 @@ class LoginPageViewModel with ChangeNotifier {
     setUpResponseStream(context);
     lm.databaseAPI.sendRequest(QueryModel.login(
         email: login.value.text, password: password.value.text));
+  }
+
+  void guestSign(context) async {
+    setUpResponseStream(context);
+    Prefs().storedData.setString("uid", const Uuid().v4());
+    Prefs().storedData.get("uid");
   }
 
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.

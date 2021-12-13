@@ -3,6 +3,8 @@ import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 
+import 'package:cmt_projekt/api/prefs.dart';
+
 typedef Fn = void Function();
 
 class StreamViewModel with ChangeNotifier {
@@ -26,6 +28,8 @@ class StreamViewModel with ChangeNotifier {
     smodel.c.client.sink.close();
     return true;
   }
+
+  TextEditingController get hostID => smodel.hostID;
 
   Future<void> init() async {
     await smodel.recorder!.openAudioSession(
@@ -110,6 +114,8 @@ class StreamViewModel with ChangeNotifier {
     } else {
       record();
     }
+
     ;
+
   }
 }
