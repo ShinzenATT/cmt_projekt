@@ -34,7 +34,8 @@ class _AppHomePageState extends State<AppHomePage> {
               padding: const EdgeInsets.all(10),
               child: IconButton(
                 onPressed: () {
-                  Prefs().storedData.setString("intent","h");
+                  Navigator.of(context).pushNamed(appChannel);
+                  Prefs().storedData.setString("intent", "h");
                   context.read<StreamViewModel>().startup(context);
                 },
                 icon: const Icon(Icons.mic_none),
