@@ -26,8 +26,6 @@ class StreamViewModel with ChangeNotifier {
     return true;
   }
 
-  TextEditingController get hostID => smodel.hostID;
-
   Future<void> init() async {
     await smodel.recorder!.openAudioSession(
       device: AudioDevice.blueToothA2DP,
@@ -79,6 +77,16 @@ class StreamViewModel with ChangeNotifier {
   Future<void> addStream() async {
     Stream<Food> stream;
   }
+
+  //Placeholder för funktion som tar in channelID när man trycker på enskild kanal
+  /*
+  void hostJoin() {
+    Prefs().storedData.setString("joinChannelID", tx.value.text);
+    print("HostID/Value/Text: " +
+        tx.value.text);
+    Prefs().storedData.setString("intent", "j");
+  }
+   */
 
   Future<void> record() async {
     await smodel.recorder!.startRecorder(
