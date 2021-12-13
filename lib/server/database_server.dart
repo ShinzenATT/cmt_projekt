@@ -21,7 +21,7 @@ class DatabaseServer {
 
   void initServer() async {
     //Öppnar server på port och ip.
-    HttpServer server = await HttpServer.bind('localhost', 5604);
+    HttpServer server = await HttpServer.bind('192.168.0.7', 5604);
     //ställer in i att ifall man får ett meddelande ska onMessage köras.
     server.transform(WebSocketTransformer()).listen(onMessage);
   }
@@ -31,16 +31,35 @@ class DatabaseServer {
       print(jsonDecode(data));
       QueryModel query = QueryModel.fromJson(jsonDecode(data));
       print(query.code);
-      if (query.code == dbAccount) {
-        String response =
-            await db.createAccount(query.email!, query.password!, query.phone!);
-        client.add(response);
-      } else if (query.code == dbLogin) {
-        String response =
-            await db.compareCredentials(query.email!, query.password!);
-        client.add(response);
-      } else if (query.code == dbCreateChannel) {
-        db.createChannel(query.channelName!, query.uid!, query.category!);
+      switch (query.code) {
+        case dbAccount:
+          {
+            String response = await db.createAccount(
+                query.email!, query.password!, query.phone!);
+            client.add(response);
+          }
+          break;
+        case dbLogin:
+          {
+            String response =
+                await db.compareCredentials(query.email!, query.password!);
+            client.add(response);
+          }
+          break;
+        case dbCreateChannel:
+          {
+            db.createChannel(query.channelName!, query.uid!, query.category!);
+          }
+          break;
+        case dbChannelOffline:
+          {
+            db.goOffline(query.uid!);
+          }
+          break;
+        default:
+          {
+            break;
+          }
       }
     });
   }
@@ -96,27 +115,14 @@ class DatabaseQueries {
     return message;
   }
 
-  void goOnline(String uid) async {
-    try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
-      List<List<dynamic>> results =
-          await connection.query("INSERT INTO Online VALUES('$uid')");
-    } on PostgreSQLException {
-      print("Exception when insering into Online");
-    }
-  }
-
   void goOffline(String uid) async {
     try {
       var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
           username: "pi", password: "Kastalagatan22");
       await connection.open();
-      await connection.query("DELETE FRMO Online WHERE channelid = '$uid'");
+      await connection.query("DELETE FROM Online WHERE channelid = '$uid'");
     } on PostgreSQLException {
-      print("Exception when insering into Online");
+      print(PostgreSQLException);
     }
   }
 
@@ -127,9 +133,9 @@ class DatabaseQueries {
       await connection.open();
 
       List<List<dynamic>> results = await connection.query(
-          "INSERT INTO Channel VALUES('$channelName','$uid','$category')");
+          "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
     } on PostgreSQLException {
-      print("Exception when insering into Online");
+      print(PostgreSQLException);
     }
   }
 }

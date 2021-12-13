@@ -28,6 +28,11 @@ class QueryModel {
       {required this.uid, required this.channelName, required this.category}) {
     code = dbCreateChannel;
   }
+
+  QueryModel.channelOffline({required this.uid}) {
+    code = dbChannelOffline;
+  }
+
   QueryModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
         phone = json['phone'],
