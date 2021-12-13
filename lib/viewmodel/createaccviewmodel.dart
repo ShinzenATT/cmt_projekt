@@ -1,5 +1,4 @@
 import 'package:cmt_projekt/api/database_api.dart';
-import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/loginmodel.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/foundation.dart';
