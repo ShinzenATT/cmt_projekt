@@ -3,8 +3,6 @@ import 'package:cmt_projekt/server/streamclient.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 
-import 'package:cmt_projekt/api/prefs.dart';
-
 typedef Fn = void Function();
 
 class StreamViewModel with ChangeNotifier {
@@ -27,8 +25,6 @@ class StreamViewModel with ChangeNotifier {
     smodel.c.client.sink.close();
     return true;
   }
-
-  TextEditingController get hostID => smodel.hostID;
 
   Future<void> init() async {
     await smodel.recorder!.openAudioSession(
@@ -81,6 +77,16 @@ class StreamViewModel with ChangeNotifier {
   Future<void> addStream() async {
     Stream<Food> stream;
   }
+
+  //Placeholder för funktion som tar in channelID när man trycker på enskild kanal
+  /*
+  void hostJoin() {
+    Prefs().storedData.setString("joinChannelID", tx.value.text);
+    print("HostID/Value/Text: " +
+        tx.value.text);
+    Prefs().storedData.setString("intent", "j");
+  }
+   */
 
   Future<void> record() async {
     await smodel.recorder!.startRecorder(
