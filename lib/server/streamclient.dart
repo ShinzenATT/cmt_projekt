@@ -28,7 +28,10 @@ class Client {
           hostId: Prefs().storedData.get("joinChannelID").toString())));
     } else {
       client.sink.add(jsonEncode(StreamMessage.host(
-          uid: Prefs().storedData.get("uid").toString(), channelType: "a")));
+          uid: Prefs().storedData.get("uid").toString(),
+          channelType: "a",
+          category: 'Rock',
+          channelName: 'Dags att snacka')));
     }
     foodStreamController!.stream.listen((event) {
       sendData(event);
@@ -40,7 +43,6 @@ class Client {
       playSound(event);
     },onDone: () {
       print(client.closeReason);
-
       Navigator.of(context).popUntil((route) => route.isFirst);
     });
   }
@@ -59,5 +61,4 @@ class Client {
     client.sink.add(fd.data);
   }
 }
-
 

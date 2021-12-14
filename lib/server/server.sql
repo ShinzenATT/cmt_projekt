@@ -1,63 +1,91 @@
 --Init
-\set QUIET true
 SET client_min_messages TO WARNING; -- Less talk please.
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
-\set QUIET false  
 
 --Tables:
-CREATE TABLE User (
-	email varchar(255) NOT NULL,
-	password TEXT NOT NULL,
-	phone char(10) NOT NULL CHECK(char_length(phone) = 10),
-	uid SERIAL,
-	UNIQUE(phone),
-	UNIQUE(email),
-	PRIMARY KEY(uid)
+CREATE TABLE Account (
+                         email varchar(255) NOT NULL,
+                         password TEXT NOT NULL,
+                         phone char(10) NOT NULL CHECK(char_length(phone) = 10),
+                         uid SERIAL,
+                         UNIQUE(phone),
+                         UNIQUE(email),
+                         PRIMARY KEY(uid)
 );
 
 CREATE TABLE Category (
-    category TEXT,
-    PRIMARY KEY (category)
+                          category TEXT,
+                          PRIMARY KEY (category)
 );
 
 CREATE TABLE Favorite (
-     users INT,
-     category TEXT,
+                          users INT,
+                          category TEXT,
 
-     FOREIGN KEY (users) REFERENCES User(uid),
-     FOREIGN KEY (category) REFERENCES Category(category),
-     PRIMARY KEY (users,category)
+                          FOREIGN KEY (users) REFERENCES Account(uid),
+                          FOREIGN KEY (category) REFERENCES Category(category),
+                          PRIMARY KEY (users,category)
 );
 
 CREATE TABLE Channel (
-    channelName TEXT NOT NULL,
-    channelOwner INT,
-    categories   TEXT NOT NULL,
+                         channelid INT,
+                         channelName TEXT NOT NULL,
+                         category   TEXT NOT NULL,
+                         isonline BOOLEAN NOT NULL,
+                         FOREIGN KEY (channelid) REFERENCES Account(uid),
+                         FOREIGN KEY (category) REFERENCES Category(category),
 
-    FOREIGN KEY (channelOwner) REFERENCES User(uid),
-    FOREIGN KEY (categories) REFERENCES Category(category),
-
-    UNIQUE(channelName),
-    PRIMARY KEY channelOwner
+    -- UNIQUE(channelName),
+                         PRIMARY KEY (channelid)
 );
 
-CREATE TABLE Online (
-    channelID TEXT,
-    channelSubject TEXT,
+--CREATE TABLE Online (
+--                        uid INT,
+--                        channelSubject TEXT,
+--
+--                        FOREIGN KEY (uid) REFERENCES Channel(uid),
+--                        PRIMARY KEY (uid)
+--);
+INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000');
+INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000');
+INSERT INTO Category VALUES('Sport');
+INSERT INTO Category VALUES('Rock');
+INSERT INTO Category VALUES('Jazz');
+INSERT INTO Category VALUES('Pop');
+INSERT INTO Category VALUES('Tjööt');
 
-    FOREIGN KEY (channelID) REFERENCES Channel(channelOwner),
-    PRIMARY KEY channelID
-);
+SELECT * FROM Account;
 
---Inserts:
-INSERT INTO User VALUES('simon@gmail.com', '123', '072-123000');
-INSERT INTO User VALUES('maxper@gmail.com', '124','072-124000');
+CREATE FUNCTION channel_update()
+    RETURNS trigger AS $$
+BEGIN
+    IF NOT EXISTS (SELECT * FROM Channel WHERE channelid = NEW.channelid) THEN
+        INSERT INTO Channel (channelid,channelname,category,isonline) VALUES (NEW.channelid,NEW.channelname,NEW.category,TRUE);
+    ELSE
+        UPDATE Channel SET isonline = true, channelname = NEW.channelname, category = NEW.category WHERE channelid = NEW.channelid;
+    END IF;
+    RETURN OLD;
+END;
+$$
+    LANGUAGE 'plpgsql';
 
---Views:
-CREATE VIEW userviews AS
-SELECT * FROM User;
+CREATE VIEW channelview AS
+SELECT * FROM Channel;
 
+CREATE TRIGGER channelTrigger
+    INSTEAD OF INSERT ON channelview
+    FOR EACH ROW
+EXECUTE PROCEDURE channel_update();
 
-SELECT * FROM User;
+-- INSERT INTO channelview VALUES('1','Rocka på','Rock',false);
+-- SELECT * FROM Channel;
+--
+--INSERT INTO channelview VALUES('1','popa på','Pop',true);
+-- SELECT * FROM Channel;
+
+--INSERT INTO channelview VALUES('1','Rockaren','Rock',true);
+--SELECT * FROM Channel;
+
+--UPDATE Channel SET isonline = false WHERE channelid = '1';
