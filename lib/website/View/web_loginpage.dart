@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -136,7 +136,7 @@ class WebLoginPage extends StatelessWidget {
                                       /// Updaterar en bool ifall man vill se lösenord eller inte.
                                       context
                                           .read<VM>()
-                                          .changePasswordVisibility();
+                                          .changePasswordVisibilityLogin();
                                     },
                                   ),
                                 ),

@@ -1,7 +1,6 @@
 import 'package:cmt_projekt/viewmodel/vm.dart';
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppMenu extends StatelessWidget {
   const AppMenu({Key? key}) : super(key: key);

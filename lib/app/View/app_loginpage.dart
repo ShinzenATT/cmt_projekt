@@ -1,9 +1,9 @@
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
@@ -34,7 +34,7 @@ class AppLoginPage extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<VM>().title.toUpperCase(),
+                context.read<VM>().title,
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -96,7 +96,7 @@ class AppLoginPage extends StatelessWidget {
                         // Update the state i.e. toogle the state of passwordVisible variable
                         context
                             .read<VM>()
-                            .changePasswordVisibility();
+                            .changePasswordVisibilityLogin();
                       },
                     ),
                   ),

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class WebChannelSettings extends StatelessWidget {
   WebChannelSettings({Key? key}) : super(key: key);

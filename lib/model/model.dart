@@ -16,4 +16,11 @@ class Model {
   TextEditingController createPhone = TextEditingController();
   TextEditingController createPassword = TextEditingController();
   TextEditingController createPassword2 = TextEditingController();
+
+  ///For Category
+  final categoryList = ['Sport', 'Rock', 'Jazz', 'Pop', 'Tjööt'];
+  String? category;
+
+  ///For Channelsettings
+  TextEditingController channelName = TextEditingController();
 }

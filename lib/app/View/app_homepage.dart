@@ -3,7 +3,7 @@ import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppHomePage extends StatefulWidget {
   const AppHomePage({Key? key}) : super(key: key);
