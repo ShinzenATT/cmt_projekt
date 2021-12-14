@@ -1,4 +1,5 @@
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,9 @@ class WebLoginPage extends StatelessWidget {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-              Colors.black,
               Colors.blueAccent,
+              Colors.greenAccent,
+              Colors.greenAccent,
             ])),
 
         ///Rad som innehåller applikationens titel samt undertext till vänster och
@@ -38,13 +40,29 @@ class WebLoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  context.read<LoginPageViewModel>().title.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                Stack(
+                  children: [
+                    Positioned(
+                      top: 3,
+                      left: 3,
+                      child: Text(
+                        context.read<VM>().title.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 80,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      context.read<VM>().title.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 80,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
                 const Text(
                   'Din moderna liveradio',
@@ -63,7 +81,7 @@ class WebLoginPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    elevation: 3,
+                    elevation: 20,
                     child: Container(
                       padding: const EdgeInsets.all(30),
                       width: 550,
@@ -90,14 +108,14 @@ class WebLoginPage extends StatelessWidget {
                               ),
                               TextFormField(
                                 controller:
-                                    context.watch<LoginPageViewModel>().login,
+                                    context.watch<VM>().login,
                                 decoration: const InputDecoration(
                                   labelText: 'E-post eller telefonnummer',
                                 ),
                               ),
                               TextFormField(
                                 controller: context
-                                    .watch<LoginPageViewModel>()
+                                    .watch<VM>()
                                     .password,
                                 decoration: InputDecoration(
                                   labelText: 'Lösenord',
@@ -108,7 +126,7 @@ class WebLoginPage extends StatelessWidget {
                                     icon: Icon(
                                       /// Ikonen ändras beroende på om man valt att se lösenord eller inte.
                                       context
-                                              .watch<LoginPageViewModel>()
+                                              .watch<VM>()
                                               .passwordVisibilityLogin
                                           ? Icons.visibility
                                           : Icons.visibility_off,
@@ -117,13 +135,13 @@ class WebLoginPage extends StatelessWidget {
                                     onPressed: () {
                                       /// Updaterar en bool ifall man vill se lösenord eller inte.
                                       context
-                                          .read<LoginPageViewModel>()
-                                          .changePasswordVisibility();
+                                          .read<VM>()
+                                          .changePasswordVisibilityLogin();
                                     },
                                   ),
                                 ),
                                 obscureText: !context
-                                    .watch<LoginPageViewModel>()
+                                    .watch<VM>()
                                     .passwordVisibilityLogin,
                               ),
                               Align(
@@ -152,15 +170,15 @@ class WebLoginPage extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     context
-                                        .read<LoginPageViewModel>()
+                                        .read<VM>()
                                         .loginAttempt(context);
                                   },
                                   gradient: const LinearGradient(
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
                                       colors: [
-                                        Colors.black,
                                         Colors.blueAccent,
+                                        Colors.greenAccent,
                                       ]),
                                 ),
                               ),
@@ -216,7 +234,7 @@ class WebLoginPage extends StatelessWidget {
                                     hoverColor: Colors.transparent,
                                     onTap: () {
                                       context
-                                          .read<LoginPageViewModel>()
+                                          .read<VM>()
                                           .changePage(context, constant.home);
                                     },
                                     child: const Text(

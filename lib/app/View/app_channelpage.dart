@@ -1,8 +1,11 @@
+import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppChannelPage extends StatefulWidget {
+  const AppChannelPage({Key? key}) : super(key: key);
+
   @override
   _AppChannelPageState createState() => _AppChannelPageState();
 }
@@ -27,7 +30,7 @@ class _AppChannelPageState extends State<AppChannelPage> {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                    Colors.black,
+                    Colors.greenAccent,
                     Colors.blueAccent,
                   ])),
             ),
@@ -39,7 +42,7 @@ class _AppChannelPageState extends State<AppChannelPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black,
+              Colors.greenAccent,
               Colors.blueAccent,
             ],
           )),
@@ -58,24 +61,54 @@ class _AppChannelPageState extends State<AppChannelPage> {
                     width: 3,
                   ),
                 ),
-                child: Text(
-                    context.watch<StreamViewModel>().smodel.recorder!.isRecording
-                        ? 'Playback to your headset!'
-                        : 'Recorder is stopped'),
+                child: Text(context
+                        .watch<StreamViewModel>()
+                        .smodel
+                        .recorder!
+                        .isRecording
+                    ? 'Playback to your headset!'
+                    : 'Recorder is stopped'),
               ),
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-              context.watch<StreamViewModel>().smodel.recorder!.isRecording
-                  ? Icons.mic
-                  : Icons.mic_off),
-          onPressed: () {
-            context.read<StreamViewModel>().getRecFn();
-          },
+        floatingActionButton: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 20),
+          child: FloatingActionButton(
+            child: Icon(
+                context.watch<StreamViewModel>().smodel.recorder!.isRecording
+                    ? Icons.mic
+                    : Icons.mic_off),
+            onPressed: () {
+              context.read<StreamViewModel>().getRecFn();
+            },
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'Sök',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.house),
+              label: 'Hem',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.mic_none),
+              label: 'Gå live!',
+            ),
+          ],
+          onTap: (value) {
+            setState(() {
+              NaviHandler().setContext(context);
+              NaviHandler().changePage(value);
+            });
+          },
+          currentIndex: NaviHandler().index,
+        ),
       ),
     );
   }

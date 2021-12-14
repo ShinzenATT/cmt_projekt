@@ -1,4 +1,5 @@
-import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
+
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 ///CreateAccountPage för hemsidan, denna skapas i en showdialog på Loginpage.
 
 class WebCreateAccountWidget extends StatelessWidget {
+  const WebCreateAccountWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -26,22 +29,22 @@ class WebCreateAccountWidget extends StatelessWidget {
             children: [
               const Text("Ange dina uppgifter för att skapa ett konto. "),
               TextFormField(
-                controller: context.watch<CreateAccountViewModel>().email,
+                controller: context.watch<VM>().email,
                 decoration: const InputDecoration(
                   labelText: 'Epost',
                 ),
               ),
               TextFormField(
-                controller: context.watch<CreateAccountViewModel>().phone,
+                controller: context.watch<VM>().phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   labelText: 'Telefonnummer',
                 ),
               ),
               TextFormField(
-                controller: context.watch<CreateAccountViewModel>().password1,
+                controller: context.watch<VM>().password1,
                 obscureText: !context
-                    .watch<CreateAccountViewModel>()
+                    .watch<VM>()
                     .passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
@@ -49,9 +52,9 @@ class WebCreateAccountWidget extends StatelessWidget {
                 keyboardType: TextInputType.visiblePassword,
               ),
               TextFormField(
-                controller: context.watch<CreateAccountViewModel>().password2,
+                controller: context.watch<VM>().password2,
                 obscureText: !context
-                    .watch<CreateAccountViewModel>()
+                    .watch<VM>()
                     .passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
@@ -64,12 +67,12 @@ class WebCreateAccountWidget extends StatelessWidget {
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     value: context
-                        .watch<CreateAccountViewModel>()
+                        .watch<VM>()
                         .passwordVisibilityCreate,
                     onChanged: (_) {
                       context
-                          .read<CreateAccountViewModel>()
-                          .changePasswordVisibility();
+                          .read<VM>()
+                          .changePasswordVisibilityCreate();
                     },
                   ),
                   InkWell(
@@ -78,8 +81,8 @@ class WebCreateAccountWidget extends StatelessWidget {
                     hoverColor: Colors.transparent,
                     onTap: () {
                       context
-                          .read<CreateAccountViewModel>()
-                          .changePasswordVisibility();
+                          .read<VM>()
+                          .changePasswordVisibilityCreate();
                     },
                     child: const Text("Visa lösenord"),
                   ),
@@ -98,14 +101,14 @@ class WebCreateAccountWidget extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    context.read<CreateAccountViewModel>().comparePw(context);
+                    context.read<VM>().comparePw(context);
                   },
                   gradient: const LinearGradient(
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                        Colors.black,
                         Colors.blueAccent,
+                        Colors.greenAccent,
                       ]),
                 ),
               ),

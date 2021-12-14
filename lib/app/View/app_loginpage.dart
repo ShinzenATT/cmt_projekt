@@ -1,8 +1,9 @@
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
@@ -24,7 +25,7 @@ class AppLoginPage extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -33,7 +34,7 @@ class AppLoginPage extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<LoginPageViewModel>().title.toUpperCase(),
+                context.read<VM>().title,
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -59,18 +60,23 @@ class AppLoginPage extends StatelessWidget {
                   'Välkommen',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-                const Text('Vänligen ange dina inloggningsuppgifter'),
+                const Text(
+                  'Vänligen ange dina inloggningsuppgifter',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
                 const SizedBox(
                   height: 40,
                 ),
                 TextFormField(
-                  controller: context.watch<LoginPageViewModel>().login,
+                  controller: context.watch<VM>().login,
                   decoration: const InputDecoration(
                     labelText: 'E-post eller telefonnummer',
                   ),
                 ),
                 TextFormField(
-                  controller: context.watch<LoginPageViewModel>().password,
+                  controller: context.watch<VM>().password,
                   decoration: InputDecoration(
                     labelText: 'Lösenord',
                     suffixIcon: IconButton(
@@ -80,7 +86,7 @@ class AppLoginPage extends StatelessWidget {
                       icon: Icon(
                         // Based on passwordVisible state choose the icon
                         context
-                                .read<LoginPageViewModel>()
+                                .read<VM>()
                                 .passwordVisibilityLogin
                             ? Icons.visibility
                             : Icons.visibility_off,
@@ -89,13 +95,13 @@ class AppLoginPage extends StatelessWidget {
                       onPressed: () {
                         // Update the state i.e. toogle the state of passwordVisible variable
                         context
-                            .read<LoginPageViewModel>()
-                            .changePasswordVisibility();
+                            .read<VM>()
+                            .changePasswordVisibilityLogin();
                       },
                     ),
                   ),
                   obscureText: !context
-                      .watch<LoginPageViewModel>()
+                      .watch<VM>()
                       .passwordVisibilityLogin,
                 ),
                 Align(
@@ -123,13 +129,13 @@ class AppLoginPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      context.read<LoginPageViewModel>().loginAttempt(context);
+                      context.read<VM>().loginAttempt(context);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                          Colors.black,
+                          Colors.greenAccent,
                           Colors.blueAccent,
                         ]),
                   ),
@@ -142,22 +148,26 @@ class AppLoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Välkommen att logga in som '),
+                    const Text(
+                      'Välkommen att logga in som ',
+                      style: TextStyle(fontSize: 16),
+                    ),
                     InkWell(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       onTap: () {
                         context
-                            .read<LoginPageViewModel>()
+                            .read<VM>()
                             .guestSign(context);
                         context
-                            .read<LoginPageViewModel>()
+                            .read<VM>()
                             .changePage(context, constant.home);
                       },
                       child: const Text(
                         "gäst",
                         style: TextStyle(
+                            fontSize: 16,
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold),
                       ),
@@ -169,19 +179,25 @@ class AppLoginPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Inget konto än? '),
+                      const Text(
+                        'Inget konto än? ',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                       InkWell(
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         hoverColor: Colors.transparent,
                         onTap: () {
                           context
-                              .read<LoginPageViewModel>()
+                              .read<VM>()
                               .changePage(context, constant.createAccount);
                         },
                         child: const Text(
                           "Registrera dig här",
                           style: TextStyle(
+                              fontSize: 16,
                               color: Colors.blueAccent,
                               fontWeight: FontWeight.bold),
                         ),

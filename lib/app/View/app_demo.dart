@@ -4,11 +4,13 @@ import 'package:cmt_projekt/viewmodel/demo_stream_view_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
 class StreamLoop extends StatefulWidget {
+  const StreamLoop({Key? key}) : super(key: key);
+
   @override
   _StreamLoopState createState() => _StreamLoopState();
 }
@@ -34,22 +36,13 @@ class _StreamLoopState extends State<StreamLoop> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.black,
-            Colors.blueAccent,
-          ],
-        )),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -91,7 +84,7 @@ class _StreamLoopState extends State<StreamLoop> {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                          Colors.black,
+                          Colors.greenAccent,
                           Colors.blueAccent,
                         ]),
                   ),
@@ -117,7 +110,7 @@ class _StreamLoopState extends State<StreamLoop> {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
-                          Colors.black,
+                          Colors.greenAccent,
                           Colors.blueAccent,
                         ]),
                   ),

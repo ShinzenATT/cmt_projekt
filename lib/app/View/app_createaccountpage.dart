@@ -1,10 +1,11 @@
-import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
+
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 ///First version of the CreateAcountPage for the website.
 
@@ -23,7 +24,7 @@ class AppCreateAccountPage extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -32,7 +33,7 @@ class AppCreateAccountPage extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<CreateAccountViewModel>().title,
+                context.read<VM>().title,
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -51,24 +52,27 @@ class AppCreateAccountPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text("Ange dina uppgifter för att skapa ett konto."),
+            const Text(
+              "Ange dina uppgifter för att skapa ett konto",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
             TextFormField(
-              controller: context.watch<CreateAccountViewModel>().email,
+              controller: context.watch<VM>().email,
               decoration: const InputDecoration(
                 labelText: 'Epost',
               ),
             ),
             TextFormField(
-              controller: context.watch<CreateAccountViewModel>().phone,
+              controller: context.watch<VM>().phone,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 labelText: 'Telefonnummer',
               ),
             ),
             TextFormField(
-              controller: context.watch<CreateAccountViewModel>().password1,
+              controller: context.watch<VM>().password1,
               obscureText: !context
-                  .watch<CreateAccountViewModel>()
+                  .watch<VM>()
                   .passwordVisibilityCreate,
               decoration: const InputDecoration(
                 labelText: 'Lösenord',
@@ -76,9 +80,9 @@ class AppCreateAccountPage extends StatelessWidget {
               keyboardType: TextInputType.visiblePassword,
             ),
             TextFormField(
-              controller: context.watch<CreateAccountViewModel>().password2,
+              controller: context.watch<VM>().password2,
               obscureText: !context
-                  .watch<CreateAccountViewModel>()
+                  .watch<VM>()
                   .passwordVisibilityCreate,
               decoration: const InputDecoration(
                 labelText: 'Bekräfta lösenord',
@@ -91,12 +95,12 @@ class AppCreateAccountPage extends StatelessWidget {
                   focusColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   value: context
-                      .watch<CreateAccountViewModel>()
+                      .watch<VM>()
                       .passwordVisibilityCreate,
                   onChanged: (_) {
                     context
-                        .read<CreateAccountViewModel>()
-                        .changePasswordVisibility();
+                        .read<VM>()
+                        .changePasswordVisibilityCreate();
                   },
                 ),
                 InkWell(
@@ -105,8 +109,8 @@ class AppCreateAccountPage extends StatelessWidget {
                   hoverColor: Colors.transparent,
                   onTap: () {
                     context
-                        .read<CreateAccountViewModel>()
-                        .changePasswordVisibility();
+                        .read<VM>()
+                        .changePasswordVisibilityCreate();
                   },
                   child: const Text("Visa lösenord"),
                 ),
@@ -125,13 +129,13 @@ class AppCreateAccountPage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  context.read<CreateAccountViewModel>().comparePw(context);
+                  context.read<VM>().comparePw(context);
                 },
                 gradient: const LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Colors.black,
+                      Colors.greenAccent,
                       Colors.blueAccent,
                     ]),
               ),

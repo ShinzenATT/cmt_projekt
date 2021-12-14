@@ -1,10 +1,9 @@
-import 'package:cmt_projekt/api/prefs.dart';
+import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppHomePage extends StatefulWidget {
   const AppHomePage({Key? key}) : super(key: key);
@@ -14,22 +13,59 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
+  Widget _horizontalListView({required Color color}) {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 5,
+        itemBuilder: (_, __) => _buildBox(color: color),
+      ),
+    );
+  }
+
+  Widget _buildBox({required Color color}) => Container(
+      margin: const EdgeInsets.all(12),
+      height: 100,
+      width: 150,
+      color: color,
+      child: IconButton(
+        onPressed: () {
+          print("Hello");
+        },
+        icon: const Icon(Icons.one_k_plus_outlined),
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(10),
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(appMenu);
-              },
-              icon: const Icon(Icons.menu),
+          leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed(appMenu);
+            },
+            child: Stack(
+              children: [
+                const Center(
+                  child: Icon(Icons.account_circle_outlined),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Positioned(
+                    child: Text(
+                      context.watch<VM>().getEmail() ?? 'Gäst',
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                    bottom: 5,
+                  ),
+                ),
+              ],
             ),
           ),
-          actions: [
+
+          /* actions: [
             Padding(
               padding: const EdgeInsets.all(10),
               child: IconButton(
@@ -42,14 +78,14 @@ class _AppHomePageState extends State<AppHomePage> {
                 iconSize: 30,
               ),
             )
-          ],
+          ], */
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -58,7 +94,7 @@ class _AppHomePageState extends State<AppHomePage> {
           title: Column(
             children: [
               Text(
-                context.read<LoginPageViewModel>().title.toUpperCase(),
+                context.read<VM>().title.toUpperCase(),
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -70,11 +106,23 @@ class _AppHomePageState extends State<AppHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: SizedBox(
-          width: 200,
-          height: 50,
-          child: GradientElevatedButton(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Text(
+            'Radiokanaler',
+            style: TextStyle(fontSize: 18),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return _horizontalListView(color: Colors.deepPurple);
+              },
+            ),
+          ),
+          GradientElevatedButton(
             child: const Text(
               'DEMO',
               style: TextStyle(
@@ -84,18 +132,17 @@ class _AppHomePageState extends State<AppHomePage> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed('/Demo');
-              // context.read<StreamViewModel>().startup(context);
+              Navigator.of(context).pushNamed(demo);
             },
             gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -108,10 +155,17 @@ class _AppHomePageState extends State<AppHomePage> {
             label: 'Hem',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.mic_none),
+            label: 'Gå live!',
           ),
         ],
+        onTap: (value) {
+          setState(() {
+            NaviHandler().setContext(context);
+            NaviHandler().changePage(value);
+          });
+        },
+        currentIndex: NaviHandler().index,
       ),
     );
   }

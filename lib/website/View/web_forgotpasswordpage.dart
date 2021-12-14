@@ -14,9 +14,9 @@ class _WebForgotPasswordPageState extends State<WebForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(),
       body: GradientElevatedButton(
-        child: Text('Hej'),
+        child: const Text('Hej'),
         onPressed: () {},
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [

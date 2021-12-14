@@ -1,7 +1,7 @@
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 ///Homepage för hemsidan.
 class WebHomePage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                Colors.black,
+                Colors.greenAccent,
                 Colors.blueAccent,
               ])),
         ),
@@ -70,7 +70,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
           ),
@@ -94,8 +94,8 @@ class _WebHomePageState extends State<WebHomePage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                    Colors.black,
                     Colors.blueAccent,
+                    Colors.greenAccent,
                   ])),
               child: Column(
                 children: [
@@ -107,7 +107,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     ),
                   ),
                   Text(
-                    context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                    context.read<VM>().getEmail() ?? 'Gäst',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -115,20 +115,96 @@ class _WebHomePageState extends State<WebHomePage> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                'Allmänt',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
             ListTile(
-              title: const Text('Profil information'),
+              title: const Text('Kontoinställningar'),
               onTap: () {
-                Navigator.pop(context);
-                context.read<HomePageViewModel>().profileInformation(context);
+                // Update the state of the app.
+                // ...
+                context.read<VM>().channelSettings(context);
               },
             ),
             ListTile(
-              title: const Text('Inställningar'),
+              title: const Text('Appinställningar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+
+                Navigator.pop(context);
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                'Mitt konto',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Kanalutseende'),
               onTap: () {
                 // Update the state of the app.
                 // ...
                 Navigator.pop(context);
               },
+            ),
+            ListTile(
+              title: const Text('Min kanal'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Streaming intällningar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                // Navigator.pop(context);
+                context.read<VM>().profileInformation(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Saldo'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Prenumerationer & följare'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
+                'Hjälplcenter',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
             ),
             ListTile(
               title: const Text('Kontakta oss'),
@@ -139,19 +215,24 @@ class _WebHomePageState extends State<WebHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Om'),
+              title: const Text('Vanliga frågor'),
               onTap: () {
                 // Update the state of the app.
                 // ...
-                showAboutDialog(context: context);
+                Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Logga ut'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-                context.read<HomePageViewModel>().logOut(context);
+            TextButton.icon(
+              icon: const Icon(Icons.logout),
+              label: const Text(
+                'Logga ut',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                context.read<VM>().logOut(context);
               },
             ),
           ],

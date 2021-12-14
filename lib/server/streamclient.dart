@@ -28,17 +28,17 @@ class Client {
           hostId: Prefs().storedData.get("joinChannelID").toString())));
     } else {
       client.sink.add(jsonEncode(StreamMessage.host(
-          uid: Prefs().storedData.get("uid").toString(),
-          channelType: "a",
-          category: 'Rock',
-          channelName: 'Dags att snacka')));
+        uid: Prefs().storedData.get("uid").toString(),
+        channelType: "a",
+        category: Prefs().storedData.getString("category"),
+        channelName: Prefs().storedData.getString("channelName"),
+      )));
     }
     foodStreamController!.stream.listen((event) {
       sendData(event);
     });
   }
   void listen(context) {
-    print("Am i listening????");
     client.stream.listen((event) {
       playSound(event);
     }, onDone: () {
@@ -52,17 +52,12 @@ class Client {
   }
 
   Future<void> playSound(event) async {
-    print("play data");
     Uint8List list = Uint8List.sublistView(event);
     _player!.foodSink!.add(FoodData(list));
   }
 
   void sendData(data) {
-    print("You alive?1");
-    //print(data.runtimeType);
     FoodData fd = data;
     client.sink.add(fd.data);
   }
 }
-
-void main() {}
