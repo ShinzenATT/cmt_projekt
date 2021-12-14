@@ -1,14 +1,9 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:cmt_projekt/api/navigation_handler.dart';
-import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppHomePage extends StatefulWidget {
   const AppHomePage({Key? key}) : super(key: key);
@@ -18,6 +13,28 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
+  Widget _horizontalListView({required Color color}) {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 5,
+        itemBuilder: (_, __) => _buildBox(color: color),
+      ),
+    );
+  }
+
+  Widget _buildBox({required Color color}) => Container(
+        margin: const EdgeInsets.all(12),
+        height: 100,
+        width: 150,
+        color: color,
+      child: IconButton(
+        onPressed: () {
+          print("Hello");
+        }, icon: const Icon(Icons.one_k_plus_outlined),
+      ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +79,7 @@ class _AppHomePageState extends State<AppHomePage> {
           title: Column(
             children: [
               Text(
-                context.read<LoginPageViewModel>().title.toUpperCase(),
+                context.read<VM>().title.toUpperCase(),
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -74,11 +91,23 @@ class _AppHomePageState extends State<AppHomePage> {
           ),
         ),
       ),
-      body: Center(
-        child: SizedBox(
-          width: 200,
-          height: 50,
-          child: GradientElevatedButton(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Text(
+            'Radiokanaler',
+            style: TextStyle(fontSize: 18),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return _horizontalListView(color: Colors.deepPurple);
+              },
+            ),
+          ),
+          GradientElevatedButton(
             child: const Text(
               'DEMO',
               style: TextStyle(
@@ -98,7 +127,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   Colors.blueAccent,
                 ]),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

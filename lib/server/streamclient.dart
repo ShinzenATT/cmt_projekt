@@ -38,10 +38,10 @@ class Client {
     });
   }
   void listen(context) {
-    print("Am i listening????");
+
     client.stream.listen((event) {
       playSound(event);
-    }, onDone: () {
+    },onDone: () {
       print(client.closeReason);
       Navigator.of(context).popUntil((route) => route.isFirst);
     });
@@ -51,16 +51,14 @@ class Client {
     await _player!.stopPlayer();
   }
 
-  Future<void> playSound(event) async {
-    print("play data");
+  Future <void> playSound(event) async {
     Uint8List list = Uint8List.sublistView(event);
     _player!.foodSink!.add(FoodData(list));
   }
 
   void sendData(data) {
-    print("You alive?1");
-    //print(data.runtimeType);
     FoodData fd = data;
     client.sink.add(fd.data);
   }
 }
+

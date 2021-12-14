@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class WebChannelSettings extends StatelessWidget {
   WebChannelSettings({Key? key}) : super(key: key);
@@ -19,7 +19,7 @@ class WebChannelSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context.watch<HomePageViewModel>().categoryList);
+    print(context.watch<VM>().categoryList);
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
@@ -40,7 +40,7 @@ class WebChannelSettings extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                        context.read<VM>().getEmail() ?? 'Gäst',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ],

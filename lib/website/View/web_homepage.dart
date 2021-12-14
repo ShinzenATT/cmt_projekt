@@ -1,7 +1,7 @@
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 ///Homepage för hemsidan.
 class WebHomePage extends StatefulWidget {
@@ -107,7 +107,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     ),
                   ),
                   Text(
-                    context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                    context.read<VM>().getEmail() ?? 'Gäst',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -131,7 +131,7 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<HomePageViewModel>().channelSettings(context);
+                context.read<VM>().channelSettings(context);
               },
             ),
             ListTile(
@@ -143,9 +143,9 @@ class _WebHomePageState extends State<WebHomePage> {
                 Navigator.pop(context);
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
                 'Mitt konto',
                 style: TextStyle(
                   color: Colors.greenAccent,
@@ -176,7 +176,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 // Update the state of the app.
                 // ...
                 // Navigator.pop(context);
-                context.read<HomePageViewModel>().profileInformation(context);
+                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -195,9 +195,9 @@ class _WebHomePageState extends State<WebHomePage> {
                 Navigator.pop(context);
               },
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
                 'Hjälplcenter',
                 style: TextStyle(
                   color: Colors.greenAccent,
@@ -232,7 +232,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 ),
               ),
               onPressed: () {
-                context.read<HomePageViewModel>().logOut(context);
+                context.read<VM>().logOut(context);
               },
             ),
           ],

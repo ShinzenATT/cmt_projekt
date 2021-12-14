@@ -4,11 +4,13 @@ import 'package:cmt_projekt/viewmodel/demo_stream_view_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
 class StreamLoop extends StatefulWidget {
+  const StreamLoop({Key? key}) : super(key: key);
+
   @override
   _StreamLoopState createState() => _StreamLoopState();
 }

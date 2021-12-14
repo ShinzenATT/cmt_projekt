@@ -1,9 +1,11 @@
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppChannelPage extends StatefulWidget {
+  const AppChannelPage({Key? key}) : super(key: key);
+
   @override
   _AppChannelPageState createState() => _AppChannelPageState();
 }

@@ -1,8 +1,6 @@
-import 'package:cmt_projekt/app/View/app_channelsettings.dart';
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppMenu extends StatelessWidget {
   const AppMenu({Key? key}) : super(key: key);
@@ -18,7 +16,7 @@ class AppMenu extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<LoginPageViewModel>().title.toUpperCase(),
+                context.read<VM>().title.toUpperCase(),
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -67,7 +65,7 @@ class AppMenu extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                    context.read<VM>().getEmail() ?? 'Gäst',
                     style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -108,7 +106,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<HomePageViewModel>().channelSettings(context);
+                context.read<VM>().channelSettings(context);
               },
             ),
             ListTile(
@@ -149,7 +147,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<HomePageViewModel>().profileInformation(context);
+                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -202,7 +200,7 @@ class AppMenu extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                context.read<HomePageViewModel>().logOut(context);
+                context.read<VM>().logOut(context);
               },
             ),
           ],

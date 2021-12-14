@@ -118,8 +118,6 @@ class StreamViewModel with ChangeNotifier {
       stop();
     } else {
       record();
-    }
-
-    ;
+    };
   }
 }
