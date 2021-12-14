@@ -25,14 +25,15 @@ class _AppHomePageState extends State<AppHomePage> {
   }
 
   Widget _buildBox({required Color color}) => Container(
-        margin: const EdgeInsets.all(12),
-        height: 100,
-        width: 150,
-        color: color,
+      margin: const EdgeInsets.all(12),
+      height: 100,
+      width: 150,
+      color: color,
       child: IconButton(
         onPressed: () {
           print("Hello");
-        }, icon: const Icon(Icons.one_k_plus_outlined),
+        },
+        icon: const Icon(Icons.one_k_plus_outlined),
       ));
 
   @override
@@ -41,15 +42,29 @@ class _AppHomePageState extends State<AppHomePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80.0),
         child: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(10),
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(appMenu);
-              },
-              icon: const Icon(Icons.account_circle_outlined),
+          leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pushNamed(appMenu);
+            },
+            child: Stack(
+              children: [
+                const Center(
+                  child: Icon(Icons.account_circle_outlined),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Positioned(
+                    child: Text(
+                      context.watch<VM>().getEmail() ?? 'Gäst',
+                      style: const TextStyle(fontSize: 13.0),
+                    ),
+                    bottom: 5,
+                  ),
+                ),
+              ],
             ),
           ),
+
           /* actions: [
             Padding(
               padding: const EdgeInsets.all(10),

@@ -9,7 +9,6 @@ class AppChannelSettings extends StatelessWidget {
   AppChannelSettings({Key? key}) : super(key: key);
   final categoryList = ['Sport', 'Rock', 'Jazz', 'Pop', 'Tjööt'];
 
-
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
         value: item,
         child: Text(
@@ -78,7 +77,7 @@ class AppChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
-                      context.read<VM>().printChannelName();
+                      context.read<VM>().setChannelSettings();
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,

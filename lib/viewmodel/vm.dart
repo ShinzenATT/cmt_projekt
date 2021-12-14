@@ -37,9 +37,11 @@ class VM with ChangeNotifier {
 
   TextEditingController get channelName => lm.channelName;
 
-  void printChannelName() {
+  void setChannelSettings() {
     print(channelName.value.text);
     print(getCategory);
+    Prefs().storedData.setString("channelName", channelName.value.text);
+    Prefs().storedData.setString("category", getCategory);
   }
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
@@ -156,7 +158,6 @@ class VM with ChangeNotifier {
     lm.passwordVisibilityCreate = !lm.passwordVisibilityCreate;
     notifyListeners();
   }
-
 
   /// From createaccountviewmodel
   void comparePw(var context) {
