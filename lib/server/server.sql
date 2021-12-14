@@ -30,24 +30,24 @@ CREATE TABLE Favorite (
 );
 
 CREATE TABLE Channel (
-                         uid INT,
+                         channelid INT,
                          channelName TEXT NOT NULL,
                          category   TEXT NOT NULL,
-
-                         FOREIGN KEY (uid) REFERENCES Account(uid),
+                         isonline BOOLEAN NOT NULL,
+                         FOREIGN KEY (channelid) REFERENCES Account(uid),
                          FOREIGN KEY (category) REFERENCES Category(category),
 
-                         UNIQUE(channelName),
-                         PRIMARY KEY (uid)
+    -- UNIQUE(channelName),
+                         PRIMARY KEY (channelid)
 );
 
-CREATE TABLE Online (
-                        uid INT,
-                        channelSubject TEXT,
-
-                        FOREIGN KEY (uid) REFERENCES Channel(uid),
-                        PRIMARY KEY (uid)
-);
+--CREATE TABLE Online (
+--                        uid INT,
+--                        channelSubject TEXT,
+--
+--                        FOREIGN KEY (uid) REFERENCES Channel(uid),
+--                        PRIMARY KEY (uid)
+--);
 INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000');
 INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000');
 INSERT INTO Category VALUES('Sport');
@@ -61,14 +61,15 @@ SELECT * FROM Account;
 CREATE FUNCTION channel_update()
     RETURNS trigger AS $$
 BEGIN
-	IF NOT EXISTS (SELECT * FROM Channel WHERE uid = NEW.uid) THEN
-	INSERT INTO Channel (uid,channelname,category) VALUES (NEW.uid,NEW.channelname,NEW.category);
-END IF;
-INSERT INTO Online (uid) VALUES (NEW.uid);
-RETURN OLD;
+    IF NOT EXISTS (SELECT * FROM Channel WHERE channelid = NEW.channelid) THEN
+        INSERT INTO Channel (channelid,channelname,category,isonline) VALUES (NEW.channelid,NEW.channelname,NEW.category,TRUE);
+    ELSE
+        UPDATE Channel SET isonline = true, channelname = NEW.channelname, category = NEW.category WHERE channelid = NEW.channelid;
+    END IF;
+    RETURN OLD;
 END;
-	$$
-LANGUAGE 'plpgsql';
+$$
+    LANGUAGE 'plpgsql';
 
 CREATE VIEW channelview AS
 SELECT * FROM Channel;
@@ -76,4 +77,15 @@ SELECT * FROM Channel;
 CREATE TRIGGER channelTrigger
     INSTEAD OF INSERT ON channelview
     FOR EACH ROW
-    EXECUTE PROCEDURE channel_update();
+EXECUTE PROCEDURE channel_update();
+
+-- INSERT INTO channelview VALUES('1','Rocka på','Rock',false);
+-- SELECT * FROM Channel;
+--
+--INSERT INTO channelview VALUES('1','popa på','Pop',true);
+-- SELECT * FROM Channel;
+
+--INSERT INTO channelview VALUES('1','Rockaren','Rock',true);
+--SELECT * FROM Channel;
+
+--UPDATE Channel SET isonline = false WHERE channelid = '1';

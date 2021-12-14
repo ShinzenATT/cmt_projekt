@@ -120,7 +120,8 @@ class DatabaseQueries {
       var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
           username: "pi", password: "Kastalagatan22");
       await connection.open();
-      await connection.query("DELETE FROM Online WHERE channelid = '$uid'");
+      await connection.query(
+          "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
     } on PostgreSQLException {
       print(PostgreSQLException);
     }
