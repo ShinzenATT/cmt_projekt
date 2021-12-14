@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AppChannelSettings extends StatelessWidget {
   AppChannelSettings({Key? key}) : super(key: key);
@@ -47,18 +47,10 @@ class AppChannelSettings extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      //controller: Ska spara namnet på radiokanalen
-                      decoration: InputDecoration(
+                      controller: context.watch<VM>().channelName,
+                      decoration: const InputDecoration(
                         labelText: 'Namn på radiokanal',
-                        suffixIcon: IconButton(
-                          hoverColor: Colors.transparent,
-                          splashRadius: null,
-                          splashColor: Colors.transparent,
-                          icon: const Icon(
-                            Icons.note_alt_outlined,
-                          ),
-                          onPressed: () {},
-                        ),
+                        suffixIcon: Icon(Icons.note_alt_outlined),
                       ),
                     ),
                   ),
@@ -69,13 +61,13 @@ class AppChannelSettings extends StatelessWidget {
                         labelText: 'Kategori',
                         border: OutlineInputBorder(),
                       ),
-                      value: category,
+                      value: context.watch<VM>().getCategory,
                       isExpanded: true,
                       validator: (value) => null,
                       autovalidateMode: AutovalidateMode.always,
                       items: categoryList.map(categoryItem).toList(),
                       onChanged: (value) {
-                        category = value;
+                        context.read<VM>().setCategory(value);
                       },
                     ),
                   ),
@@ -86,6 +78,7 @@ class AppChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
+                      context.read<VM>().printChannelname();
                       // Här ska funktionalitet för att starta radiokanal läggas in.
                     },
                     gradient: const LinearGradient(

@@ -4,16 +4,19 @@ import 'package:flutter/cupertino.dart';
 class Model {
   DatabaseApi databaseAPI = DatabaseApi();
 
-  ///For LoginPageViewModel
+  ///For LoginPage
   bool passwordVisibilityLogin = false; // Controlls the hide-password feature.
   String title = 'Comment'; //The website logotype.
   TextEditingController login = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  ///For CreateAccountViewModel
+  ///For CreateAccount
   bool passwordVisibilityCreate = false; // Controlls the hide-password feature.
   TextEditingController createEmail = TextEditingController();
   TextEditingController createPhone = TextEditingController();
   TextEditingController createPassword = TextEditingController();
   TextEditingController createPassword2 = TextEditingController();
+
+  ///For Channelsettings
+  TextEditingController channelName = TextEditingController();
 }

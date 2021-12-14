@@ -95,6 +95,13 @@ class VM with ChangeNotifier {
     cmodel.category = item;
   }
 
+  TextEditingController get channelName => lm.channelName;
+
+  void printChannelname() {
+    print(channelName.value.text);
+    print(getCategory);
+  }
+
   /*
     From loginpageviewmodel
    */
@@ -102,6 +109,7 @@ class VM with ChangeNotifier {
     lm.passwordVisibilityLogin = !lm.passwordVisibilityLogin;
     notifyListeners();
   }
+
   /*
     From loginpageviewmodel
    */
