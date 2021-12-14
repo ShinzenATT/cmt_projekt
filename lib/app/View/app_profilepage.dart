@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
 ///Widget för sidan med profilinformation.
-class WebProfileWidget extends StatelessWidget {
-  const WebProfileWidget({Key? key}) : super(key: key);
+class AppProfileWidget extends StatelessWidget {
+  const AppProfileWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.4,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.8,
         child: Card(
           child: Padding(
@@ -20,8 +20,7 @@ class WebProfileWidget extends StatelessWidget {
                 const Text(
                   'Profil information',
                   style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
                   ),
                 ),
                 const Padding(
@@ -67,12 +66,12 @@ class WebProfileWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
+                      Text(
                       context.read<HomePageViewModel>().getUid().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
-                    ),
+                    ), 
                   ],
                 ),
               ],

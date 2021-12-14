@@ -23,7 +23,7 @@ class AppCreateAccountPage extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -51,7 +51,10 @@ class AppCreateAccountPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Text("Ange dina uppgifter för att skapa ett konto."),
+            const Text(
+              "Ange dina uppgifter för att skapa ett konto",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
             TextFormField(
               controller: context.watch<CreateAccountViewModel>().email,
               decoration: const InputDecoration(
@@ -131,7 +134,7 @@ class AppCreateAccountPage extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                      Colors.black,
+                      Colors.greenAccent,
                       Colors.blueAccent,
                     ]),
               ),
