@@ -13,18 +13,22 @@ import '../constants.dart';
 class Client {
   late WebSocketChannel client;
   late FlutterSoundPlayer? _player;
-  StreamController<Food>? foodStreamController = StreamController<Food>.broadcast();
+  StreamController<Food>? foodStreamController =
+      StreamController<Food>.broadcast();
 
   Client(FlutterSoundPlayer? player) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
 
-    if(Prefs().getIntent() == "j") {
+    if (Prefs().getIntent() == "j") {
       print(Prefs().getIntent().toString());
       client.sink.add(jsonEncode(StreamMessage.join(
-          uid: Prefs().storedData.get("uid").toString(), channelType: "a", hostId: Prefs().storedData.get("joinChannelID").toString())));
+          uid: Prefs().storedData.get("uid").toString(),
+          channelType: "a",
+          hostId: Prefs().storedData.get("joinChannelID").toString())));
     } else {
-      client.sink.add(jsonEncode(StreamMessage.host(uid: Prefs().storedData.get("uid").toString(), channelType: "a")));
+      client.sink.add(jsonEncode(StreamMessage.host(
+          uid: Prefs().storedData.get("uid").toString(), channelType: "a")));
     }
     foodStreamController!.stream.listen((event) {
       sendData(event);
@@ -36,19 +40,19 @@ class Client {
       playSound(event);
     },onDone: () {
       print(client.closeReason);
-      Navigator.popUntil(context, ModalRoute.withName(demo));
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
     });
   }
 
   Future<void> stopSound() async {
-   await _player!.stopPlayer();
+    await _player!.stopPlayer();
   }
 
   Future <void> playSound(event) async {
     Uint8List list = Uint8List.sublistView(event);
     _player!.foodSink!.add(FoodData(list));
   }
-
 
   void sendData(data) {
     FoodData fd = data;

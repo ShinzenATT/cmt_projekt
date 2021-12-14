@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
@@ -45,10 +49,10 @@ class _AppHomePageState extends State<AppHomePage> {
               onPressed: () {
                 Navigator.of(context).pushNamed(appMenu);
               },
-              icon: const Icon(Icons.menu),
+              icon: const Icon(Icons.account_circle_outlined),
             ),
           ),
-          actions: [
+          /* actions: [
             Padding(
               padding: const EdgeInsets.all(10),
               child: IconButton(
@@ -60,14 +64,14 @@ class _AppHomePageState extends State<AppHomePage> {
                 iconSize: 30,
               ),
             )
-          ],
+          ], */
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ])),
           ),
@@ -114,14 +118,13 @@ class _AppHomePageState extends State<AppHomePage> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed('/Demo');
-              // context.read<StreamViewModel>().startup(context);
+              Navigator.of(context).pushNamed(demo);
             },
             gradient: const LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Colors.black,
+                  Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
           ),
@@ -138,10 +141,17 @@ class _AppHomePageState extends State<AppHomePage> {
             label: 'Hem',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.mic_none),
+            label: 'Gå live!',
           ),
         ],
+        onTap: (value) {
+          setState(() {
+            NaviHandler().setContext(context);
+            NaviHandler().changePage(value);
+          });
+        },
+        currentIndex: NaviHandler().index,
       ),
     );
   }
