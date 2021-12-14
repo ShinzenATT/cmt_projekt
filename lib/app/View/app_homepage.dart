@@ -51,7 +51,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 const Center(
                   child: Icon(Icons.account_circle_outlined),
                 ),
-                Align(
+                /*Align(
                   alignment: Alignment.bottomCenter,
                   child: Positioned(
                     child: Text(
@@ -60,7 +60,7 @@ class _AppHomePageState extends State<AppHomePage> {
                     ),
                     bottom: 5,
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

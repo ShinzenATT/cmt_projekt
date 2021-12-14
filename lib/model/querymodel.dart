@@ -5,9 +5,11 @@ class QueryModel {
   String? phone;
   String? password;
   String? uid;
+  String? channelid;
   String? code;
   String? channelName;
   String? category;
+  bool? isonline;
 
   ///En Querymodel som försöker skapa ett konto utifrån givna parametrar.
   QueryModel.account(
@@ -33,14 +35,20 @@ class QueryModel {
     code = dbChannelOffline;
   }
 
+  QueryModel.getChannels() {
+    code = dbGetOnlineChannels;
+  }
+
   QueryModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
         phone = json['phone'],
         password = json['password'],
         uid = json['uid'],
         code = json['code'],
-        channelName = json['channelName'],
-        category = json['category'];
+        channelName = json['channelname'],
+        category = json['category'],
+        channelid = json['channelid'],
+        isonline = json['isonline'];
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -50,9 +58,13 @@ class QueryModel {
         'code': code,
         'channelName': channelName,
         'category': category,
+        'channelid': channelid,
+        'isonline': isonline,
       };
   @override
   String toString() {
-    return "email: $email phone: $phone password: $password";
+    return "email: $email phone: $phone password: $password uid: $uid code: $code channelName: $channelName category: $category channelid: $channelid isonline: $isonline";
   }
 }
+
+

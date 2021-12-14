@@ -150,6 +150,7 @@ class VM with ChangeNotifier {
       Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
       //Navigator.of(context)
       //    .pushReplacementNamed('/Home'); // Byter till homepage.
+      lm.databaseAPI.sendRequest(QueryModel.getChannels());
     });
   }
 
@@ -181,6 +182,7 @@ class VM with ChangeNotifier {
 
       Navigator.of(_context)
           .pushReplacementNamed('/Home'); // Byter till homepage.
+      lm.databaseAPI.sendRequest(QueryModel.getChannels());
     });
   }
 
