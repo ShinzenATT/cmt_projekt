@@ -37,13 +37,13 @@ class LoginPageViewModel with ChangeNotifier {
 
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStream(context) {
-    lm.databaseAPI.streamController.stream.listen((value) {
-      if (value) {
-        // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-        Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
-        //Navigator.of(context)
-        //    .pushReplacementNamed('/Home'); // Byter till homepage.
-      }
+    lm.databaseAPI.streamController.stream.listen((QueryModel message) async {
+      await Prefs().storedData.setString("uid", message.uid!);
+      await Prefs().storedData.setString("email", message.email!);
+      // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
+      Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
+      //Navigator.of(context)
+      //    .pushReplacementNamed('/Home'); // Byter till homepage.
     });
   }
 }
