@@ -25,8 +25,9 @@ class WebLoginPage extends StatelessWidget {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-              Colors.black,
               Colors.blueAccent,
+              Colors.greenAccent,
+              Colors.greenAccent,
             ])),
 
         ///Rad som innehåller applikationens titel samt undertext till vänster och
@@ -38,13 +39,29 @@ class WebLoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  context.read<LoginPageViewModel>().title.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 80,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                Stack(
+                  children: [
+                    Positioned(
+                      top: 3,
+                      left: 3,
+                      child: Text(
+                        context.read<LoginPageViewModel>().title.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 80,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      context.read<LoginPageViewModel>().title.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 80,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
                 const Text(
                   'Din moderna liveradio',
@@ -63,7 +80,7 @@ class WebLoginPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    elevation: 3,
+                    elevation: 20,
                     child: Container(
                       padding: const EdgeInsets.all(30),
                       width: 550,
@@ -159,8 +176,8 @@ class WebLoginPage extends StatelessWidget {
                                       begin: Alignment.centerLeft,
                                       end: Alignment.centerRight,
                                       colors: [
-                                        Colors.black,
                                         Colors.blueAccent,
+                                        Colors.greenAccent,
                                       ]),
                                 ),
                               ),

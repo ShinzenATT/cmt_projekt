@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
@@ -17,6 +18,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Prefs();
+  NaviHandler();
   await Prefs().setUp();
   runApp(MultiProvider(
     providers: [

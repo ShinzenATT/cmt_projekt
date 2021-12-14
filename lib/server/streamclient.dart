@@ -64,5 +64,3 @@ class Client {
     client.sink.add(fd.data);
   }
 }
-
-void main() {}
