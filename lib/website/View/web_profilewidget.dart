@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -48,7 +48,7 @@ class WebProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<HomePageViewModel>().getEmail().toString(),
+                      context.read<VM>().getEmail().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -68,7 +68,7 @@ class WebProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<HomePageViewModel>().getUid().toString(),
+                      context.read<VM>().getUid().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),

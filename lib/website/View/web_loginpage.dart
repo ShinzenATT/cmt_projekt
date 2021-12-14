@@ -1,4 +1,5 @@
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class WebLoginPage extends StatelessWidget {
                       top: 3,
                       left: 3,
                       child: Text(
-                        context.read<LoginPageViewModel>().title.toUpperCase(),
+                        context.read<VM>().title.toUpperCase(),
                         style: const TextStyle(
                           fontSize: 80,
                           fontWeight: FontWeight.bold,
@@ -54,7 +55,7 @@ class WebLoginPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<LoginPageViewModel>().title.toUpperCase(),
+                      context.read<VM>().title.toUpperCase(),
                       style: const TextStyle(
                         fontSize: 80,
                         fontWeight: FontWeight.bold,
@@ -107,14 +108,14 @@ class WebLoginPage extends StatelessWidget {
                               ),
                               TextFormField(
                                 controller:
-                                    context.watch<LoginPageViewModel>().login,
+                                    context.watch<VM>().login,
                                 decoration: const InputDecoration(
                                   labelText: 'E-post eller telefonnummer',
                                 ),
                               ),
                               TextFormField(
                                 controller: context
-                                    .watch<LoginPageViewModel>()
+                                    .watch<VM>()
                                     .password,
                                 decoration: InputDecoration(
                                   labelText: 'Lösenord',
@@ -125,7 +126,7 @@ class WebLoginPage extends StatelessWidget {
                                     icon: Icon(
                                       /// Ikonen ändras beroende på om man valt att se lösenord eller inte.
                                       context
-                                              .watch<LoginPageViewModel>()
+                                              .watch<VM>()
                                               .passwordVisibilityLogin
                                           ? Icons.visibility
                                           : Icons.visibility_off,
@@ -134,13 +135,13 @@ class WebLoginPage extends StatelessWidget {
                                     onPressed: () {
                                       /// Updaterar en bool ifall man vill se lösenord eller inte.
                                       context
-                                          .read<LoginPageViewModel>()
+                                          .read<VM>()
                                           .changePasswordVisibility();
                                     },
                                   ),
                                 ),
                                 obscureText: !context
-                                    .watch<LoginPageViewModel>()
+                                    .watch<VM>()
                                     .passwordVisibilityLogin,
                               ),
                               Align(
@@ -169,7 +170,7 @@ class WebLoginPage extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     context
-                                        .read<LoginPageViewModel>()
+                                        .read<VM>()
                                         .loginAttempt(context);
                                   },
                                   gradient: const LinearGradient(
@@ -233,7 +234,7 @@ class WebLoginPage extends StatelessWidget {
                                     hoverColor: Colors.transparent,
                                     onTap: () {
                                       context
-                                          .read<LoginPageViewModel>()
+                                          .read<VM>()
                                           .changePage(context, constant.home);
                                     },
                                     child: const Text(

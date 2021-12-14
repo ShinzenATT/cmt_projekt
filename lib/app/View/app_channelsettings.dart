@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
@@ -39,7 +39,7 @@ class AppChannelSettings extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        context.read<HomePageViewModel>().getEmail() ?? 'Gäst',
+                        context.read<VM>().getEmail() ?? 'Gäst',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ],

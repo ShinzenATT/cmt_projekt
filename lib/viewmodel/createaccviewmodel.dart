@@ -1,12 +1,12 @@
 import 'package:cmt_projekt/api/database_api.dart';
-import 'package:cmt_projekt/model/loginmodel.dart';
+import 'package:cmt_projekt/model/model.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 ///View model for CreateAccountwidget and page.
 class CreateAccountViewModel with ChangeNotifier {
-  LoginModel lm = LoginModel();
+  Model lm = Model();
 
   void changePasswordVisibility() {
     lm.passwordVisibilityCreate = !lm.passwordVisibilityCreate;

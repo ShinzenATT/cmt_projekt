@@ -1,11 +1,6 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:cmt_projekt/api/navigation_handler.dart';
-import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/src/provider.dart';
@@ -18,12 +13,13 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
-  Widget _horizontalListView() {
+  Widget _horizontalListView({required Color color}) {
     return SizedBox(
       height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemBuilder: (_, __) => _buildBox(color: Colors.orange),
+        itemCount: 5,
+        itemBuilder: (_, __) => _buildBox(color: color),
       ),
     );
   }
@@ -34,7 +30,9 @@ class _AppHomePageState extends State<AppHomePage> {
         width: 150,
         color: color,
       child: IconButton(
-        onPressed: ,
+        onPressed: () {
+          print("Hello");
+        }, icon: const Icon(Icons.one_k_plus_outlined),
       ));
 
   @override
@@ -80,7 +78,7 @@ class _AppHomePageState extends State<AppHomePage> {
           title: Column(
             children: [
               Text(
-                context.read<LoginPageViewModel>().title.toUpperCase(),
+                context.read<VM>().title.toUpperCase(),
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -102,9 +100,9 @@ class _AppHomePageState extends State<AppHomePage> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: 5,
+              itemCount: 3,
               itemBuilder: (BuildContext context, int index) {
-                return _horizontalListView();
+                return _horizontalListView(color: Colors.deepPurple);
               },
             ),
           ),

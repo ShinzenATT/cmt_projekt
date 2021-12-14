@@ -1,12 +1,13 @@
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/model/loginmodel.dart';
+import 'package:cmt_projekt/model/model.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class LoginPageViewModel with ChangeNotifier {
-  LoginModel lm = LoginModel();
+  /*
+  Model lm = Model();
 
   void changePasswordVisibility() {
     lm.passwordVisibilityLogin = !lm.passwordVisibilityLogin;
@@ -46,4 +47,6 @@ class LoginPageViewModel with ChangeNotifier {
       }
     });
   }
+
+   */
 }

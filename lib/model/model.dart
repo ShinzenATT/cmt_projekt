@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:flutter/cupertino.dart';
 
-class LoginModel {
+class Model {
   DatabaseApi databaseAPI = DatabaseApi();
 
   ///For LoginPageViewModel

@@ -4,7 +4,7 @@ import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
 import 'package:cmt_projekt/viewmodel/createaccviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/demo_stream_view_model.dart';
-import 'package:cmt_projekt/viewmodel/homepageviewmodel.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
 import 'package:cmt_projekt/viewmodel/page_navigator_viewmodel.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
@@ -25,7 +25,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => LoginPageViewModel()),
       ChangeNotifierProvider(create: (_) => CreateAccountViewModel()),
       ChangeNotifierProvider(create: (_) => StreamViewModel()),
-      ChangeNotifierProvider(create: (_) => HomePageViewModel()),
+      ChangeNotifierProvider(create: (_) => VM()),
       ChangeNotifierProvider(create: (_) => DemoStreamViewModel()),
     ],
     child: const MyApp(),

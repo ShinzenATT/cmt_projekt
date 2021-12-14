@@ -1,4 +1,5 @@
-import 'package:cmt_projekt/viewmodel/loginpageviewmodel.dart';
+
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -35,7 +36,7 @@ class AppWelcomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    context.read<LoginPageViewModel>().title.toUpperCase(),
+                    context.read<VM>().title.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 50,

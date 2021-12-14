@@ -8,6 +8,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// Låter applikationen hämta och skicka data till databasen.
 class DatabaseApi {
+
   //En ström som skickar ut en bool till alla lyssnare.
   StreamController<bool> streamController = StreamController<bool>.broadcast();
   //Ansluter till server med ipadress och port
