@@ -115,20 +115,96 @@ class _WebHomePageState extends State<WebHomePage> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                'Allmänt',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
             ListTile(
-              title: const Text('Profil information'),
+              title: const Text('Kontoinställningar'),
               onTap: () {
-                Navigator.pop(context);
-                context.read<HomePageViewModel>().profileInformation(context);
+                // Update the state of the app.
+                // ...
+                context.read<HomePageViewModel>().channelSettings(context);
               },
             ),
             ListTile(
-              title: const Text('Inställningar'),
+              title: const Text('Appinställningar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+
+                Navigator.pop(context);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                'Mitt konto',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Kanalutseende'),
               onTap: () {
                 // Update the state of the app.
                 // ...
                 Navigator.pop(context);
               },
+            ),
+            ListTile(
+              title: const Text('Min kanal'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Streaming intällningar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                // Navigator.pop(context);
+                context.read<HomePageViewModel>().profileInformation(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Saldo'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Prenumerationer & följare'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+                Navigator.pop(context);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text(
+                'Hjälplcenter',
+                style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
             ),
             ListTile(
               title: const Text('Kontakta oss'),
@@ -139,18 +215,23 @@ class _WebHomePageState extends State<WebHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Om'),
+              title: const Text('Vanliga frågor'),
               onTap: () {
                 // Update the state of the app.
                 // ...
-                showAboutDialog(context: context);
+                Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: const Text('Logga ut'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
+            TextButton.icon(
+              icon: const Icon(Icons.logout),
+              label: const Text(
+                'Logga ut',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
                 context.read<HomePageViewModel>().logOut(context);
               },
             ),

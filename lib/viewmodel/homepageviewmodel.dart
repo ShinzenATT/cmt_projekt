@@ -2,6 +2,7 @@ import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelsettings.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/categorymodel.dart';
+import 'package:cmt_projekt/website/View/web_channelsettings.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,9 @@ class HomePageViewModel with ChangeNotifier {
 
   /// Skapar en showdialog med webprofilewidget.
   void profileInformation(context) {
+    /* if (getEmail() == null) {
+      return;
+    } */
     showDialog(
         context: context,
         builder: (context) {
@@ -42,11 +46,22 @@ class HomePageViewModel with ChangeNotifier {
   }
 
   void channelSettings(context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AppChannelSettings();
-        });
+    /*    if (getEmail() == null) {
+      return;
+    } */
+    if (kIsWeb) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return WebChannelSettings();
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AppChannelSettings();
+          });
+    }
   }
 
   void logOut(context) {
