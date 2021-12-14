@@ -12,6 +12,7 @@ class NaviHandler {
 
   ///Index starts at number one because the home page is at index one in the naviagtion bar
   int index = 1;
+  late int previousIndex;
 
   ///context from the current active page in order to swap page correctly.
   late BuildContext _context;
@@ -32,13 +33,21 @@ class NaviHandler {
     if (i == index) {
       return;
     } else if (i == 0) {
-      //Navigator.of(_context).pushReplacementNamed('/exercise');
+      if (previousIndex == 2) {
+        _context.read<StreamViewModel>().closeClient();
+      }
+      previousIndex = i;
     } else if (i == 1) {
+      if (previousIndex == 2) {
+        _context.read<StreamViewModel>().closeClient();
+      }
+      previousIndex = i;
       Navigator.of(_context).pushReplacementNamed(home);
     } else {
+      previousIndex = i;
       Prefs().storedData.setString("intent", "h");
       _context.read<StreamViewModel>().startup(_context);
-      Navigator.of(_context).pushNamed(appChannel);
+      Navigator.of(_context).pushReplacementNamed(appChannel);
     }
     index = i;
   }
