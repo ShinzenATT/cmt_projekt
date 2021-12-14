@@ -66,12 +66,12 @@ class AppProfileWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    /*  Text(
+                      Text(
                       context.read<HomePageViewModel>().getUid().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
-                    ), */
+                    ), 
                   ],
                 ),
               ],
