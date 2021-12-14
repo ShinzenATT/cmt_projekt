@@ -6,7 +6,7 @@ import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-///A static singleton class to handle navigation to different pages.
+///A static singleton class to handle bottomnavigationbar for the app.
 class NaviHandler {
   static final NaviHandler _navi = NaviHandler._internal();
 
@@ -24,7 +24,7 @@ class NaviHandler {
 
   ///Takes in the context of the current page.
   void setContext(var contexts) {
-    this._context = contexts;
+    _context = contexts;
   }
 
   /// Takes an index as indicator of which page that corresponds to the same button.

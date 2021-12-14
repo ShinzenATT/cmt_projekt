@@ -33,7 +33,7 @@ class _AppHomePageState extends State<AppHomePage> {
               icon: const Icon(Icons.account_circle_outlined),
             ),
           ),
-          actions: [
+          /* actions: [
             Padding(
               padding: const EdgeInsets.all(10),
               child: IconButton(
@@ -45,7 +45,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 iconSize: 30,
               ),
             )
-          ],
+          ], */
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -87,8 +87,7 @@ class _AppHomePageState extends State<AppHomePage> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed('/Demo');
-              // context.read<StreamViewModel>().startup(context);
+              Navigator.of(context).pushNamed(demo);
             },
             gradient: const LinearGradient(
                 begin: Alignment.centerLeft,

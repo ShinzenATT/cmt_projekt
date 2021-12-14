@@ -1,5 +1,7 @@
+import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelsettings.dart';
+import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/categorymodel.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
@@ -38,11 +40,19 @@ class HomePageViewModel with ChangeNotifier {
     /* if (getEmail() == null) {
       return;
     } */
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const WebProfileWidget();
-        });
+    if (kIsWeb) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const WebProfileWidget();
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const AppProfileWidget();
+          });
+    }
   }
 
   void channelSettings(context) {
@@ -66,6 +76,7 @@ class HomePageViewModel with ChangeNotifier {
 
   void logOut(context) {
     Prefs().storedData.clear();
+    NaviHandler().index = 1;
     if (kIsWeb) {
       Navigator.of(context).pushReplacementNamed(login);
     } else {

@@ -149,7 +149,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
+                context.read<HomePageViewModel>().profileInformation(context);
               },
             ),
             ListTile(

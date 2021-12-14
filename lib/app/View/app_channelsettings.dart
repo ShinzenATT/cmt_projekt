@@ -19,7 +19,6 @@ class AppChannelSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context.watch<HomePageViewModel>().categoryList);
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
