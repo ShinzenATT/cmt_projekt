@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 class WebChannelSettings extends StatelessWidget {
   WebChannelSettings({Key? key}) : super(key: key);
   final categoryList = ['Sport', 'Rock', 'Jazz', 'Pop', 'Tjööt'];
-  var category;
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
         value: item,
@@ -48,7 +47,7 @@ class WebChannelSettings extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      //controller: Ska spara namnet på radiokanalen
+                      controller: context.watch<VM>().channelName,
                       decoration: InputDecoration(
                         labelText: 'Namn på radiokanal',
                         suffixIcon: IconButton(
@@ -70,13 +69,13 @@ class WebChannelSettings extends StatelessWidget {
                         labelText: 'Kategori',
                         border: OutlineInputBorder(),
                       ),
-                      value: category,
+                      value: context.watch<VM>().getCategory,
                       isExpanded: true,
                       validator: (value) => null,
                       autovalidateMode: AutovalidateMode.always,
                       items: categoryList.map(categoryItem).toList(),
                       onChanged: (value) {
-                        category = value;
+                        context.read<VM>().setCategory(value);
                       },
                     ),
                   ),
@@ -87,6 +86,7 @@ class WebChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
+                      context.read<VM>().setChannelSettings();
                       // Här ska funktionalitet för att starta radiokanal läggas in.
                     },
                     gradient: const LinearGradient(
