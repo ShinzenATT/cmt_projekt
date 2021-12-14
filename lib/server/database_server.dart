@@ -56,6 +56,12 @@ class DatabaseServer {
             db.goOffline(query.uid!);
           }
           break;
+        case dbGetOnlineChannels:
+          {
+            String response = await db.getOnlineChannels(query.uid!);
+            client.add(response);
+          }
+          break;
         default:
           {
             break;
@@ -111,7 +117,7 @@ class DatabaseQueries {
     ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
     ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
     String message =
-        '{"uid": "${results.first[0].values.elementAt(0)}", "email": "${results.first[0].values.elementAt(1)}", "phone": "${results.first[0].values.elementAt(2)}"}';
+        '{"uid": "${results.first[0].values.elementAt(0)}", "email": "${results.first[0].values.elementAt(1)}", "phone": "${results.first[0].values.elementAt(2)}, "code": "$dbGetInfo"}';
     return message;
   }
 
@@ -137,5 +143,29 @@ class DatabaseQueries {
     } on PostgreSQLException {
       print(PostgreSQLException);
     }
+  }
+
+  Future<String> getOnlineChannels(String login) async {
+    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+        username: "pi", password: "Kastalagatan22");
+    await connection.open();
+
+    List<List<dynamic>> results = await connection
+        .query("SELECT jsonb_build_object('uid',uid) FROM Online ");
+
+    if (results.isEmpty) {
+      return "";
+    }
+
+    ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
+    ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+    //  String message =
+    //     '{"uid": "${results.first[0].values.elementAt(0)}", "code": "$dbGetInfo"}';
+    var list = [];
+    for (final row in results) {
+      list.add('{"uid": "${row[0]}", "code": "$dbGetInfo"}');
+    }
+    print(list);
+    return list.toString();
   }
 }
