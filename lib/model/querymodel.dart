@@ -67,20 +67,4 @@ class QueryModel {
   }
 }
 
-class Tag {
-  String? channelid;
-  String? channelName;
-  String? category;
 
-  Tag(this.channelid, this.channelName, this.category);
-
-  factory Tag.fromJson(dynamic json) {
-    return Tag(json['channelid'] as String, json['channelName'] as String,
-        json['category'] as String);
-  }
-
-  @override
-  String toString() {
-    return '{ $channelid, $channelName, $category }';
-  }
-}
