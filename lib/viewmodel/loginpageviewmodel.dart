@@ -27,6 +27,7 @@ class LoginPageViewModel with ChangeNotifier {
     setUpResponseStream(context);
     lm.databaseAPI.sendRequest(QueryModel.login(
         email: login.value.text, password: password.value.text));
+    lm.databaseAPI.sendRequest(QueryModel.getChannels());
   }
 
   void guestSign(context) async {

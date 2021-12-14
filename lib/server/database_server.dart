@@ -58,7 +58,7 @@ class DatabaseServer {
           break;
         case dbGetOnlineChannels:
           {
-            String response = await db.getOnlineChannels(query.uid!);
+            String response = await db.getOnlineChannels();
             client.add(response);
           }
           break;
@@ -76,16 +76,21 @@ class DatabaseQueries {
   //Database host ip
 
   Future<String> compareCredentials(String login, String pass) async {
-    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-        username: "pi", password: "Kastalagatan22");
-    await connection.open();
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
 
-    List<List<dynamic>> results = await connection.query(
-        "SELECT email, phone FROM Account WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
-    if (results.isEmpty) {
+      List<List<dynamic>> results = await connection.query(
+          "SELECT email, phone FROM Account WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
+      if (results.isEmpty) {
+        return "";
+      }
+      return getInfo(login);
+    } on PostgreSQLException {
+      print("an error in compareCredentials");
       return "";
     }
-    return getInfo(login);
   }
 
   Future<String> createAccount(String email, String pass, String phone) async {
@@ -98,27 +103,39 @@ class DatabaseQueries {
           .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
       return (getInfo(email));
     } on PostgreSQLException {
+      print("an error in createAccount");
       return ("");
     }
   }
 
   Future<String> getInfo(String login) async {
-    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-        username: "pi", password: "Kastalagatan22");
-    await connection.open();
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
 
-    List<List<dynamic>> results = await connection.query(
-        "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
+      List<List<dynamic>> results = await connection.query(
+          "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
 
-    if (results.isEmpty) {
+      if (results.isEmpty) {
+        return "";
+      }
+
+      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
+      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      Map mapOfQueries = {};
+      mapOfQueries['code'] = [dbGetInfo];
+      mapOfQueries['result'] = [];
+      List listOfChannels = mapOfQueries['result'];
+      for (final row in results) {
+        listOfChannels.add(row[0]);
+      }
+      print(jsonEncode(mapOfQueries));
+      return jsonEncode(mapOfQueries);
+    } on PostgreSQLException {
+      print("error in createChannel");
       return "";
     }
-
-    ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-    ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
-    String message =
-        '{"uid": "${results.first[0].values.elementAt(0)}", "email": "${results.first[0].values.elementAt(1)}", "phone": "${results.first[0].values.elementAt(2)}, "code": "$dbGetInfo"}';
-    return message;
   }
 
   void goOffline(String uid) async {
@@ -129,7 +146,7 @@ class DatabaseQueries {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
     } on PostgreSQLException {
-      print(PostgreSQLException);
+      print("error in goOffline");
     }
   }
 
@@ -142,31 +159,38 @@ class DatabaseQueries {
       List<List<dynamic>> results = await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
     } on PostgreSQLException {
-      print(PostgreSQLException);
+      print("error in createChannel");
     }
   }
 
-  Future<String> getOnlineChannels(String login) async {
-    var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-        username: "pi", password: "Kastalagatan22");
-    await connection.open();
+  Future<String> getOnlineChannels() async {
+    try {
+      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+          username: "pi", password: "Kastalagatan22");
+      await connection.open();
 
-    List<List<dynamic>> results = await connection
-        .query("SELECT jsonb_build_object('uid',uid) FROM Online ");
+      List<List<dynamic>> results = await connection.query(
+          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelname',channelname,'isonline',isonline) FROM Channel ");
 
-    if (results.isEmpty) {
+      if (results.isEmpty) {
+        return "";
+      }
+
+      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
+      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      Map mapOfQueries = {};
+      mapOfQueries['code'] = [dbGetOnlineChannels];
+      mapOfQueries['result'] = [];
+      List listOfChannels = mapOfQueries['result'];
+      for (final row in results) {
+        listOfChannels.add(row[0]);
+      }
+      print(jsonEncode(mapOfQueries));
+      return jsonEncode(mapOfQueries);
+    } catch (PostgreSQLException) {
+      print("error in createChannel");
+      print(PostgreSQLException);
       return "";
     }
-
-    ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-    ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
-    //  String message =
-    //     '{"uid": "${results.first[0].values.elementAt(0)}", "code": "$dbGetInfo"}';
-    var list = [];
-    for (final row in results) {
-      list.add('{"uid": "${row[0]}", "code": "$dbGetInfo"}');
-    }
-    print(list);
-    return list.toString();
   }
 }

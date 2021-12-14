@@ -6,10 +6,12 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../constants.dart';
 
 /// Låter applikationen hämta och skicka data till databasen.
+
 class DatabaseApi {
   //En ström som skickar ut en bool till alla lyssnare.
   StreamController<QueryModel> streamController =
       StreamController<QueryModel>.broadcast();
+  StreamController<List> channelController = StreamController<List>.broadcast();
   //Ansluter till server med ipadress och port
   var channel =
       WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
@@ -21,18 +23,30 @@ class DatabaseApi {
 
   ///Skickar en QueryModel till servern
   void sendRequest(QueryModel message) {
-    print(jsonEncode(message));
+    //print(jsonEncode(message));
     channel.sink.add(jsonEncode(message));
   }
 
   ///Metod som hanterar inkommande meddelanden från servern.
   void onMessage(String message) async {
-    //Skriver ut meddelandet.
     print(message);
     if (message == "") {
-    } else if (QueryModel.fromJson(jsonDecode(message)).code == dbGetInfo) {
-      streamController.add(QueryModel.fromJson(jsonDecode(message)));
-    } else if (QueryModel.fromJson(jsonDecode(message)).code ==
-        dbGetOnlineChannels) {}
+      return;
+    }
+    print((jsonDecode(message)['code'] as List)[0]);
+    String QueryCode = (jsonDecode(message)['code'] as List)[0];
+    if (QueryCode == dbGetInfo) {
+      streamController
+          .add(QueryModel.fromJson((jsonDecode(message)['result'] as List)[0]));
+    } else if (QueryCode == dbGetOnlineChannels) {
+      channelController.add(jsonDecode(message)['result'] as List);
+
+      ///Kolla här för tips om hur man kan konvertera alla json queries i listan till enskilda objekt.
+      /* List<QueryModel> listOfChannels = [];
+      for (int i = 0; i < (jsonDecode(message)['result'] as List).length; i++) {
+        listOfChannels.add(
+            (QueryModel.fromJson((jsonDecode(message)['result'] as List)[i]))); */
+
+    }
   }
 }

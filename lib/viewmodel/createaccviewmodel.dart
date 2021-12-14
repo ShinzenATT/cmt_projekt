@@ -51,5 +51,6 @@ class CreateAccountViewModel with ChangeNotifier {
           phone: phone.value.text,
           password: password1.value.text),
     );
+    lm.databaseAPI.sendRequest(QueryModel.getChannels());
   }
 }
