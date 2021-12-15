@@ -45,7 +45,7 @@ class QueryModel {
         password = json['password'],
         uid = json['uid'],
         code = json['code'],
-        channelName = json['channelname'],
+        channelName = json['channelName'],
         category = json['category'],
         channelid = json['channelid'],
         isonline = json['isonline'];
