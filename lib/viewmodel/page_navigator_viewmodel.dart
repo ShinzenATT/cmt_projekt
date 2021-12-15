@@ -1,6 +1,7 @@
 import 'package:cmt_projekt/app/View/app_channelpage.dart';
 import 'package:cmt_projekt/app/View/app_createaccountpage.dart';
 import 'package:cmt_projekt/app/View/app_demo.dart';
+import 'package:cmt_projekt/app/View/app_golive.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:cmt_projekt/app/View/app_meny.dart';
@@ -24,7 +25,8 @@ class PageNavigator {
     constant.appChannel: (BuildContext context) => AppChannelPage(),
     constant.appMenu: (BuildContext context) => const AppMenu(),
     constant.appWelcome: (BuildContext context) => const AppWelcomePage(),
-
+    constant.goLive: (BuildContext context) => const AppGoLive(),
+    constant.goLive2: (BuildContext context) => const AppGoLive2(),
   };
 
   get routes => _routes;

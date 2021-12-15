@@ -37,11 +37,13 @@ class VM with ChangeNotifier {
 
   TextEditingController get channelName => lm.channelName;
 
-  void setChannelSettings() {
+  void setChannelSettings(context) {
     print(channelName.value.text);
     print(getCategory);
     Prefs().storedData.setString("channelName", channelName.value.text);
     Prefs().storedData.setString("category", getCategory);
+    Prefs().storedData.setString("intent", "h");
+    //Navigator.of(context).pushReplacementNamed(appChannel);
   }
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(

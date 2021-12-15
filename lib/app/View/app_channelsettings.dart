@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
@@ -77,7 +79,8 @@ class AppChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
-                      context.read<VM>().setChannelSettings();
+                      context.read<StreamViewModel>().startup(context);
+                      Navigator.of(context).pushReplacementNamed(appChannel);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
