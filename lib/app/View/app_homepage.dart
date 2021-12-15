@@ -16,10 +16,24 @@ class _AppHomePageState extends State<AppHomePage> {
   Widget _horizontalListView({required Color color}) {
     return SizedBox(
       height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 5,
-        itemBuilder: (_, __) => _buildBox(color: color),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
+            child: const Text(
+              'Kategori',
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (_, __) => _buildBox(color: color),
+            ),
+          ),
+        ],
       ),
     );
   }
