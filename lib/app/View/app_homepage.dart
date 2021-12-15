@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/model/querymodel.dart';
+import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
@@ -13,7 +17,7 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
-  Widget _horizontalListView({required Color color}) {
+  Widget _horizontalListView({required Color color, required List<QueryModel> channelList}) {
     return SizedBox(
       height: 120,
       child: Column(
@@ -29,8 +33,8 @@ class _AppHomePageState extends State<AppHomePage> {
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (_, __) => _buildBox(color: color),
+              itemCount: channelList.length,
+              itemBuilder: (BuildContext context, int index) => _buildBox(color: color, channel: channelList[index], context: context),
             ),
           ),
         ],
@@ -38,14 +42,15 @@ class _AppHomePageState extends State<AppHomePage> {
     );
   }
 
-  Widget _buildBox({required Color color}) => Container(
+  Widget _buildBox({required Color color, required QueryModel channel, required BuildContext context}) => Container(
       margin: const EdgeInsets.all(12),
       height: 100,
       width: 150,
       color: color,
       child: IconButton(
         onPressed: () {
-          print("Hello");
+          context.read<VM>().setJoinPrefs(channel.channelid!);
+          context.read<StreamViewModel>().startup(context);
         },
         icon: const Icon(Icons.one_k_plus_outlined),
       ));
@@ -127,15 +132,39 @@ class _AppHomePageState extends State<AppHomePage> {
             'Radiokanaler',
             style: TextStyle(fontSize: 18),
           ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 3,
-              itemBuilder: (BuildContext context, int index) {
-                return _horizontalListView(color: Colors.deepPurple);
-              },
-            ),
-          ),
+          StreamBuilder(
+              stream: context.watch<VM>().databaseAPI.channelController.stream,
+              initialData: 0,
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.connectionState == ConnectionState.active ||
+                    snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return const Text("error");
+                  } else if (snapshot.hasData) {
+
+                   List<QueryModel> channels = snapshot.data;
+
+
+                    return Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 5,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _horizontalListView(
+                              color: Colors.deepPurple,
+                              channelList: channels);
+                        },
+                      ),
+                    );
+                  }else{
+                    return const Text("No active channels");
+                  }
+                }else{
+                  return Text("State: ${snapshot.connectionState}");
+                }
+              }),
           GradientElevatedButton(
             child: const Text(
               'DEMO',

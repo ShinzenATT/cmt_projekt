@@ -11,6 +11,7 @@ import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../../constants.dart' as constant;
 
 ///View model för Homepage och profilewidget.
 class VM with ChangeNotifier {
@@ -22,13 +23,14 @@ class VM with ChangeNotifier {
     lm.category = item;
   }
 
-  get passwordVisibilityLogin => lm.passwordVisibilityLogin;
-  get login => lm.login;
-  get password => lm.password;
-  get databaseAPI => lm.databaseAPI;
+  bool get passwordVisibilityLogin => lm.passwordVisibilityLogin;
+  TextEditingController get login => lm.login;
+  TextEditingController get password => lm.password;
+
+  DatabaseApi get databaseAPI => lm.databaseAPI;
 
   bool get passwordVisibilityCreate => lm.passwordVisibilityCreate;
-  get title => lm.title.toUpperCase();
+  String get title => lm.title.toUpperCase();
   TextEditingController get email => lm.createEmail;
   TextEditingController get phone => lm.createPhone;
   TextEditingController get password1 => lm.createPassword;
@@ -111,15 +113,15 @@ class VM with ChangeNotifier {
     Prefs().storedData.clear();
     NaviHandler().index = 1;
     if (kIsWeb) {
-      Navigator.of(context).pushReplacementNamed(login);
+      Navigator.of(context).pushReplacementNamed(constant.login);
     } else {
-      Navigator.of(context).pushReplacementNamed(appWelcome);
+      Navigator.of(context).pushReplacementNamed(constant.appWelcome);
     }
   }
 
   /// From loginpageviewmodel
   void changePasswordVisibilityLogin() {
-    lm.passwordVisibilityLogin = !lm.passwordVisibilityLogin;
+    lm.passwordVisibilityLogin = !passwordVisibilityLogin;
     notifyListeners();
   }
 
@@ -131,7 +133,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   void loginAttempt(context) async {
     setUpResponseStreamLogin(context);
-    lm.databaseAPI.sendRequest(QueryModel.login(
+    databaseAPI.sendRequest(QueryModel.login(
         email: login.value.text, password: password.value.text));
   }
 
@@ -145,7 +147,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStreamLogin(context) {
-    lm.databaseAPI.streamController.stream.listen((QueryModel message) async {
+    databaseAPI.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
@@ -184,7 +186,7 @@ class VM with ChangeNotifier {
 
       Navigator.of(_context)
           .pushReplacementNamed('/Home'); // Byter till homepage.
-      lm.databaseAPI.sendRequest(QueryModel.getChannels());
+      databaseAPI.sendRequest(QueryModel.getChannels());
     });
   }
 
@@ -197,4 +199,11 @@ class VM with ChangeNotifier {
           password: password1.value.text),
     );
   }
+
+  void setJoinPrefs(String channelId){
+    Prefs().storedData.setString("joinChannelID", channelId);
+    Prefs().storedData.setString("intent", "j");
+
+  }
+
 }
