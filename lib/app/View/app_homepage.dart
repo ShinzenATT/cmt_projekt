@@ -46,22 +46,22 @@ class _AppHomePageState extends State<AppHomePage> {
             onTap: () {
               Navigator.of(context).pushNamed(appMenu);
             },
-            child: Stack(
-              children: [
-                const Center(
-                  child: Icon(Icons.account_circle_outlined),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Positioned(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                    child: Icon(Icons.account_circle_outlined),
+                  ),
+                  Center(
                     child: Text(
                       context.watch<VM>().getEmail() ?? 'Gäst',
                       style: const TextStyle(fontSize: 13.0),
                     ),
-                    bottom: 5,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
