@@ -37,7 +37,7 @@ class VM with ChangeNotifier {
 
   TextEditingController get channelName => lm.channelName;
 
-  void setChannelSettings(context) {
+  void setChannelSettings() {
     print(channelName.value.text);
     print(getCategory);
     Prefs().storedData.setString("channelName", channelName.value.text);
