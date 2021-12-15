@@ -79,7 +79,7 @@ class AppChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
-                      context.read<VM>().setChannelSettings(context);
+                      context.read<VM>().setChannelSettings();
                       context.read<StreamViewModel>().startup(context);
                       Navigator.of(context).pushReplacementNamed(channel);
                     },
