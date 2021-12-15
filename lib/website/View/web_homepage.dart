@@ -115,9 +115,9 @@ class _WebHomePageState extends State<WebHomePage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text(
                 'Allmänt',
                 style: TextStyle(
                   color: Colors.greenAccent,

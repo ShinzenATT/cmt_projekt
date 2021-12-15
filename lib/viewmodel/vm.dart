@@ -2,15 +2,18 @@ import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelsettings.dart';
+import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/model.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
+import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../../constants.dart' as constant;
 
 ///View model för Homepage och profilewidget.
 class VM with ChangeNotifier {
@@ -70,9 +73,14 @@ class VM with ChangeNotifier {
 
   /// Skapar en showdialog med webprofilewidget.
   void profileInformation(context) {
-    /* if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -89,9 +97,14 @@ class VM with ChangeNotifier {
   }
 
   void channelSettings(context) {
-    /*    if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -107,13 +120,29 @@ class VM with ChangeNotifier {
     }
   }
 
+  void createAccountPrompt(context) {
+    Prefs().storedData.clear();
+    NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    if (kIsWeb) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const WebCreateAccountWidget();
+          });
+    } else {
+      Navigator.of(context).pushNamed(constant.createAcc);
+    }
+  }
+
   void logOut(context) {
     Prefs().storedData.clear();
     NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
     if (kIsWeb) {
-      Navigator.of(context).pushReplacementNamed(login);
+      Navigator.of(context).pushReplacementNamed(constant.login);
     } else {
-      Navigator.of(context).pushReplacementNamed(appWelcome);
+      Navigator.of(context).pushReplacementNamed(constant.welcome);
     }
   }
 
@@ -125,7 +154,7 @@ class VM with ChangeNotifier {
 
   /// From loginpageviewmodel
   void changePage(var context, String route) {
-    Navigator.of(context).pushReplacementNamed(route);
+    Navigator.of(context).pushNamed(route);
   }
 
   /// From loginpageviewmodel

@@ -1,4 +1,3 @@
-
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +67,7 @@ class AppWelcomePage extends StatelessWidget {
                               side: const BorderSide(
                                   color: Colors.white, width: 3))),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(constant.createAccount);
+                        Navigator.of(context).pushNamed(constant.createAcc);
                       },
                       child: const Text(
                         'Skapa konto',

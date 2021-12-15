@@ -86,7 +86,7 @@ class WebChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
-                      //context.read<VM>().setChannelSettings();
+                      context.read<VM>().setChannelSettings(context);
                       // Här ska funktionalitet för att starta radiokanal läggas in.
                     },
                     gradient: const LinearGradient(

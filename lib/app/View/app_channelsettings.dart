@@ -81,7 +81,7 @@ class AppChannelSettings extends StatelessWidget {
                     onPressed: () {
                       context.read<VM>().setChannelSettings();
                       context.read<StreamViewModel>().startup(context);
-                      Navigator.of(context).pushReplacementNamed(appChannel);
+                      Navigator.of(context).pushReplacementNamed(channel);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,

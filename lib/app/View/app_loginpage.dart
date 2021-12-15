@@ -1,4 +1,3 @@
-
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -85,24 +84,18 @@ class AppLoginPage extends StatelessWidget {
                       splashColor: Colors.transparent,
                       icon: Icon(
                         // Based on passwordVisible state choose the icon
-                        context
-                                .read<VM>()
-                                .passwordVisibilityLogin
+                        context.read<VM>().passwordVisibilityLogin
                             ? Icons.visibility
                             : Icons.visibility_off,
                         color: Theme.of(context).primaryColorDark,
                       ),
                       onPressed: () {
                         // Update the state i.e. toogle the state of passwordVisible variable
-                        context
-                            .read<VM>()
-                            .changePasswordVisibilityLogin();
+                        context.read<VM>().changePasswordVisibilityLogin();
                       },
                     ),
                   ),
-                  obscureText: !context
-                      .watch<VM>()
-                      .passwordVisibilityLogin,
+                  obscureText: !context.watch<VM>().passwordVisibilityLogin,
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
@@ -157,12 +150,8 @@ class AppLoginPage extends StatelessWidget {
                       highlightColor: Colors.transparent,
                       hoverColor: Colors.transparent,
                       onTap: () {
-                        context
-                            .read<VM>()
-                            .guestSign(context);
-                        context
-                            .read<VM>()
-                            .changePage(context, constant.home);
+                        context.read<VM>().guestSign(context);
+                        context.read<VM>().changePage(context, constant.home);
                       },
                       child: const Text(
                         "gäst",
@@ -192,7 +181,7 @@ class AppLoginPage extends StatelessWidget {
                         onTap: () {
                           context
                               .read<VM>()
-                              .changePage(context, constant.createAccount);
+                              .changePage(context, constant.createAcc);
                         },
                         child: const Text(
                           "Registrera dig här",

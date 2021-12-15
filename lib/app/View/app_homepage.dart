@@ -58,7 +58,7 @@ class _AppHomePageState extends State<AppHomePage> {
         child: AppBar(
           leading: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(appMenu);
+              Navigator.of(context).pushNamed(menu);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 15),
@@ -181,6 +181,34 @@ class _AppHomePageState extends State<AppHomePage> {
         },
         currentIndex: NaviHandler().index,
       ),
+    );
+  }
+}
+
+///AlertMessage då man är inloggad som gäst. Gäst får förfrågan om att skapa konto för att få tillgång till funktionalitet.
+class AlertMessage extends StatelessWidget {
+  const AlertMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Du har inget konto"),
+      content: const Text(
+          "Den här funktionen är bara tillgänglig om man är inloggad, var vänlig skapa ett konto."),
+      actions: <Widget>[
+        TextButton(
+          child: const Text("Stäng"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text("OK"),
+          onPressed: () {
+            context.read<VM>().createAccountPrompt(context);
+          },
+        ),
+      ],
     );
   }
 }
