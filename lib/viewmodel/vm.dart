@@ -2,6 +2,7 @@ import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelsettings.dart';
+import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/model.dart';
@@ -70,9 +71,14 @@ class VM with ChangeNotifier {
 
   /// Skapar en showdialog med webprofilewidget.
   void profileInformation(context) {
-    /* if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -89,9 +95,14 @@ class VM with ChangeNotifier {
   }
 
   void channelSettings(context) {
-    /*    if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -107,9 +118,17 @@ class VM with ChangeNotifier {
     }
   }
 
+  void createAccountPrompt(context) {
+    Prefs().storedData.clear();
+    NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushNamed(createAcc);
+  }
+
   void logOut(context) {
     Prefs().storedData.clear();
     NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
     if (kIsWeb) {
       Navigator.of(context).pushReplacementNamed(login);
     } else {
@@ -125,7 +144,7 @@ class VM with ChangeNotifier {
 
   /// From loginpageviewmodel
   void changePage(var context, String route) {
-    Navigator.of(context).pushReplacementNamed(route);
+    Navigator.of(context).pushNamed(route);
   }
 
   /// From loginpageviewmodel

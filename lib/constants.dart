@@ -1,6 +1,6 @@
 /// All the constants used throughout the project.
 const String home = '/Home';
-const String createAccount = '/CreateAccount';
+const String createAcc = '/CreateAccount';
 const String demo = '/Demo';
 const String appChannel = '/AppChannel';
 const String goLive = '/goLive';

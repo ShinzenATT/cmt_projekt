@@ -17,8 +17,7 @@ class PageNavigator {
   final Map _routes = <String, WidgetBuilder>{
     constant.home: (BuildContext context) =>
         kIsWeb ? const WebHomePage() : const AppHomePage(),
-    constant.createAccount: (BuildContext context) =>
-        const AppCreateAccountPage(),
+    constant.createAcc: (BuildContext context) => const AppCreateAccountPage(),
     constant.demo: (BuildContext context) => StreamLoop(),
     constant.login: (BuildContext context) =>
         kIsWeb ? const WebLoginPage() : const AppLoginPage(),

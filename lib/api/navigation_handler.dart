@@ -1,6 +1,7 @@
 //package imports
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelpage.dart';
+import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,14 @@ class NaviHandler {
         previousIndex = i;
       }
     } else {
+      if (Prefs().getEmail() == null) {
+        showDialog(
+            context: _context,
+            builder: (context) {
+              return AlertMessage();
+            });
+        return;
+      }
       previousIndex = i;
       Navigator.of(_context).pushReplacementNamed(goLive);
       // Prefs().storedData.setString("intent", "h");
