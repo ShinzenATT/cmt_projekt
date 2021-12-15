@@ -17,7 +17,7 @@ class AppGoLive extends StatelessWidget {
         child: AppBar(
           leading: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(appMenu);
+              Navigator.of(context).pushNamed(menu);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 15),
@@ -165,7 +165,7 @@ class AppGoLive2 extends StatelessWidget {
         child: AppBar(
           leading: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(appMenu);
+              Navigator.of(context).pushNamed(menu);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 15),

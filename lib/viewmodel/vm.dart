@@ -8,10 +8,12 @@ import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/model.dart';
 import 'package:cmt_projekt/model/querymodel.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
+import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../../constants.dart' as constant;
 
 ///View model för Homepage och profilewidget.
 class VM with ChangeNotifier {
@@ -122,7 +124,15 @@ class VM with ChangeNotifier {
     Prefs().storedData.clear();
     NaviHandler().index = 1;
     Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.of(context).pushNamed(createAcc);
+    if (kIsWeb) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const WebCreateAccountWidget();
+          });
+    } else {
+      Navigator.of(context).pushNamed(constant.createAcc);
+    }
   }
 
   void logOut(context) {
@@ -130,9 +140,9 @@ class VM with ChangeNotifier {
     NaviHandler().index = 1;
     Navigator.of(context).popUntil((route) => route.isFirst);
     if (kIsWeb) {
-      Navigator.of(context).pushReplacementNamed(login);
+      Navigator.of(context).pushReplacementNamed(constant.login);
     } else {
-      Navigator.of(context).pushReplacementNamed(appWelcome);
+      Navigator.of(context).pushReplacementNamed(constant.welcome);
     }
   }
 

@@ -58,7 +58,7 @@ class _AppHomePageState extends State<AppHomePage> {
         child: AppBar(
           leading: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed(appMenu);
+              Navigator.of(context).pushNamed(menu);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 15),
