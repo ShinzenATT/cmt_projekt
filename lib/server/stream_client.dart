@@ -42,7 +42,9 @@ class Client {
     client.stream.listen((event) {
       playSound(event);
     }, onDone: () {
-      Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
     });
   }
 
