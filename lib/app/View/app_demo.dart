@@ -76,7 +76,7 @@ class _StreamLoopState extends State<StreamLoop> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushNamed(appChannel);
+                      Navigator.of(context).pushNamed(channel);
                       Prefs().storedData.setString("intent", "h");
                       context.read<StreamViewModel>().startup(context);
                     },
@@ -102,7 +102,7 @@ class _StreamLoopState extends State<StreamLoop> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushNamed(appChannel);
+                      Navigator.of(context).pushNamed(channel);
                       context.read<DemoStreamViewModel>().demoJoin();
                       context.read<StreamViewModel>().startup(context);
                     },

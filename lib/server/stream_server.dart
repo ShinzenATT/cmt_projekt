@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/model/radio_channel.dart';
 import 'package:cmt_projekt/model/stream_message.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
@@ -14,16 +16,29 @@ void main() async {
   ///En map med alla rum
   Map<String, RadioChannel> rooms = {};
 
+  ///Instans av DatabaseApi för att möjligöra kommunikation med databasen.
+  DatabaseApi database = DatabaseApi();
+
   ///Meddelar att en host har anslutit till ett rum och skapar detta rummet med hostens Id.
   ///Sätter även upp en extra intern ström som varje Host-websocket har enskilt för att kunna göra flera listen funktioner.
-  void initHostStream(message, webSocket) {
+  void initHostStream(StreamMessage message, webSocket) {
     print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
 
     ///Skapar en radiokanal.
-    RadioChannel channel = RadioChannel(webSocket, message.hostId);
+    RadioChannel channel = RadioChannel(webSocket, message.hostId!);
 
     ///Lägger till radiokanalen i listan av alla radiokanaler.
-    rooms[message.hostId] = channel;
+    rooms[message.hostId!] = channel;
+
+    ///Lägger till kanalen i databasen om den inte finns där. Sedan sätts den til "isOnline".
+    print("ChannelName: " + message.channelName!);
+    print("ChannelType: " + message.category!);
+
+    ///
+    database.sendRequest(QueryModel.createChannel(
+        uid: message.uid,
+        channelName: message.channelName,
+        category: message.category));
 
     ///Sätter upp en listen funktion specifikt för en host. Denna ström låter hosten skicka meddelade till alla klienter anslutna på dennes kanal.
     ///OnDone disconnectar alla anslutna klienter till rummet och tar bort kanalen från listan
@@ -40,6 +55,7 @@ void main() async {
       }
       print("Kanal ${channel.channelId} tas bort");
       rooms.remove(channel.channelId);
+      database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
       connectedUsers.remove(webSocket);
     });
   }

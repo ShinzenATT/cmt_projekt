@@ -66,5 +66,3 @@ class QueryModel {
     return "email: $email phone: $phone password: $password uid: $uid code: $code channelName: $channelName category: $category channelid: $channelid isonline: $isonline";
   }
 }
-
-

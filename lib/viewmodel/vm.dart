@@ -1,12 +1,14 @@
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/app/View/app_channelsettings.dart';
+import 'package:cmt_projekt/app/View/app_golivesettings.dart';
+import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/main_model.dart';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
+import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +41,7 @@ class VM with ChangeNotifier {
 
   TextEditingController get channelName => lm.channelName;
 
-  void setChannelSettings(context) {
+  void setChannelSettings() {
     print(channelName.value.text);
     print(getCategory);
     Prefs().storedData.setString("channelName", channelName.value.text);
@@ -60,6 +62,12 @@ class VM with ChangeNotifier {
     return categoryList.mapList(categoryItem).toList();
   }
 
+  Future<bool> willPopCallback() async {
+    NaviHandler().index = 1;
+    notifyListeners();
+    return true;
+  }
+
   ///Returnerar användarens email.
   String? getEmail() {
     return Prefs().storedData.getString("email");
@@ -72,9 +80,14 @@ class VM with ChangeNotifier {
 
   /// Skapar en showdialog med webprofilewidget.
   void profileInformation(context) {
-    /* if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -91,9 +104,14 @@ class VM with ChangeNotifier {
   }
 
   void channelSettings(context) {
-    /*    if (getEmail() == null) {
+    if (getEmail() == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertMessage();
+          });
       return;
-    } */
+    }
     if (kIsWeb) {
       showDialog(
           context: context,
@@ -104,18 +122,34 @@ class VM with ChangeNotifier {
       showDialog(
           context: context,
           builder: (context) {
-            return AppChannelSettings();
+            return GoLiveSettings();
           });
+    }
+  }
+
+  void createAccountPrompt(context) {
+    Prefs().storedData.clear();
+    NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    if (kIsWeb) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const WebCreateAccountWidget();
+          });
+    } else {
+      Navigator.of(context).pushNamed(constant.createAcc);
     }
   }
 
   void logOut(context) {
     Prefs().storedData.clear();
     NaviHandler().index = 1;
+    Navigator.of(context).popUntil((route) => route.isFirst);
     if (kIsWeb) {
       Navigator.of(context).pushReplacementNamed(constant.login);
     } else {
-      Navigator.of(context).pushReplacementNamed(constant.appWelcome);
+      Navigator.of(context).pushReplacementNamed(constant.welcome);
     }
   }
 
@@ -127,7 +161,7 @@ class VM with ChangeNotifier {
 
   /// From loginpageviewmodel
   void changePage(var context, String route) {
-    Navigator.of(context).pushReplacementNamed(route);
+    Navigator.of(context).pushNamed(route);
   }
 
   /// From loginpageviewmodel
@@ -200,27 +234,25 @@ class VM with ChangeNotifier {
     );
   }
 
-  void updateChannels(){
+  void updateChannels() {
     databaseAPI.sendRequest(QueryModel.getChannels());
   }
 
-  Map<String,List<QueryModel>> getCategoryNumber(List<QueryModel> l){
-    Map<String,List<QueryModel>> categories = {};
-    for(QueryModel qm in l){
-      if(qm.isonline!) {
-      if(!categories.containsKey(qm.category)){
-        categories[qm.category!] = [];
-      }
+  Map<String, List<QueryModel>> getCategoryNumber(List<QueryModel> l) {
+    Map<String, List<QueryModel>> categories = {};
+    for (QueryModel qm in l) {
+      if (qm.isonline!) {
+        if (!categories.containsKey(qm.category)) {
+          categories[qm.category!] = [];
+        }
         categories[qm.category!]!.add(qm);
       }
     }
     return categories;
   }
 
-  void setJoinPrefs(String channelId){
+  void setJoinPrefs(String channelId) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
-
   }
-
 }

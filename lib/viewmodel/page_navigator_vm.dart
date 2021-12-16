@@ -5,7 +5,9 @@ import 'package:cmt_projekt/app/View/app_golive.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:cmt_projekt/app/View/app_meny.dart';
+
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
+import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_homepage.dart';
 import 'package:cmt_projekt/website/View/web_loginpage.dart';
 import 'package:flutter/foundation.dart';
@@ -17,14 +19,13 @@ class PageNavigator {
   final Map _routes = <String, WidgetBuilder>{
     constant.home: (BuildContext context) =>
         kIsWeb ? const WebHomePage() : const AppHomePage(),
-    constant.createAccount: (BuildContext context) =>
-        const AppCreateAccountPage(),
+    constant.createAcc: (BuildContext context) => const AppCreateAccountPage(),
     constant.demo: (BuildContext context) => StreamLoop(),
     constant.login: (BuildContext context) =>
         kIsWeb ? const WebLoginPage() : const AppLoginPage(),
-    constant.appChannel: (BuildContext context) => AppChannelPage(),
-    constant.appMenu: (BuildContext context) => const AppMenu(),
-    constant.appWelcome: (BuildContext context) => const AppWelcomePage(),
+    constant.channel: (BuildContext context) => AppChannelPage(),
+    constant.menu: (BuildContext context) => const AppMenu(),
+    constant.welcome: (BuildContext context) => const AppWelcomePage(),
     constant.goLive: (BuildContext context) => const AppGoLive(),
     constant.goLive2: (BuildContext context) => const AppGoLive2(),
   };

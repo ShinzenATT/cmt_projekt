@@ -42,8 +42,7 @@ class Client {
     client.stream.listen((event) {
       playSound(event);
     }, onDone: () {
-      //print(client.closeReason);
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.pop(context);
     });
   }
 

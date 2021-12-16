@@ -1,5 +1,6 @@
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +12,15 @@ class AppChannelPage extends StatefulWidget {
 }
 
 class _AppChannelPageState extends State<AppChannelPage> {
+  Future<bool> willPopCallback() async {
+    context.read<StreamViewModel>().closeClient();
+    return context.read<VM>().willPopCallback();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: context.read<StreamViewModel>().closeClient,
+      onWillPop: willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0),
