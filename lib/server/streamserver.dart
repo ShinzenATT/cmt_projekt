@@ -32,8 +32,12 @@ void main() async {
     ///Lägger till kanalen i databasen om den inte finns där. Sedan sätts den til "isOnline".
     print("ChannelName: " + message.channelName!);
     print("ChannelType: " + message.category!);
+
     ///
-    database.sendRequest(QueryModel.createChannel(uid: message.uid, channelName: message.channelName, category: message.category));
+    database.sendRequest(QueryModel.createChannel(
+        uid: message.uid,
+        channelName: message.channelName,
+        category: message.category));
 
     ///Sätter upp en listen funktion specifikt för en host. Denna ström låter hosten skicka meddelade till alla klienter anslutna på dennes kanal.
     ///OnDone disconnectar alla anslutna klienter till rummet och tar bort kanalen från listan
@@ -106,7 +110,7 @@ void main() async {
       }
     });
   });
-  shelf_io.serve(handler, '10.0.222.221', 5605).then((server) {
+  shelf_io.serve(handler, '192.168.0.2', 5605).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
 }

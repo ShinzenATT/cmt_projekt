@@ -9,20 +9,24 @@ class StreamViewModel with ChangeNotifier {
   StreamModel smodel = StreamModel();
 
   void startup(context) {
+    smodel.player = FlutterSoundPlayer();
+    smodel.recorder = FlutterSoundRecorder();
     smodel.c = Client(smodel.player);
     init().then((value) {
       smodel.isInited = true;
-      smodel.c.listen(context);
+      smodel.c!.listen(context);
     });
   }
 
   Future<bool> closeClient() async {
-    smodel.player!.stopPlayer();
-    smodel.recorder!.stopRecorder();
-    smodel.c.stopSound();
-    smodel.isInited = false;
-
-    smodel.c.client.sink.close();
+    if (smodel.c != null) {
+      smodel.player!.stopPlayer();
+      smodel.recorder!.stopRecorder();
+      smodel.c!.stopSound();
+      smodel.isInited = false;
+      smodel.c!.client.sink.close();
+      smodel.c = null;
+    }
     return true;
   }
 
@@ -74,25 +78,11 @@ class StreamViewModel with ChangeNotifier {
     return null;
   }
 
-  Future<void> addStream() async {
-    Stream<Food> stream;
-  }
-
-  //Placeholder för funktion som tar in channelID när man trycker på enskild kanal
-  /*
-  void hostJoin() {
-    Prefs().storedData.setString("joinChannelID", tx.value.text);
-    print("HostID/Value/Text: " +
-        tx.value.text);
-    Prefs().storedData.setString("intent", "j");
-  }
-   */
-
   Future<void> record() async {
     await smodel.recorder!.startRecorder(
       codec: Codec.pcm16,
       toStream: smodel
-          .c.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
+          .c!.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
       sampleRate: 44000,
       numChannels: 1,
     );
@@ -118,6 +108,7 @@ class StreamViewModel with ChangeNotifier {
       stop();
     } else {
       record();
-    };
+    }
+    ;
   }
 }

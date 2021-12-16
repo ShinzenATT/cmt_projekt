@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/app/View/app_channelsettings.dart';
+import 'package:cmt_projekt/app/View/app_golivesettings.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
@@ -61,6 +61,12 @@ class VM with ChangeNotifier {
     return categoryList.mapList(categoryItem).toList();
   }
 
+  Future<bool> willPopCallback() async {
+    NaviHandler().index = 1;
+    notifyListeners();
+    return true;
+  }
+
   ///Returnerar användarens email.
   String? getEmail() {
     return Prefs().storedData.getString("email");
@@ -115,7 +121,7 @@ class VM with ChangeNotifier {
       showDialog(
           context: context,
           builder: (context) {
-            return AppChannelSettings();
+            return GoLiveSettings();
           });
     }
   }
