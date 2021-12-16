@@ -4,6 +4,7 @@ import 'package:cmt_projekt/app/View/app_channelpage.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,17 +35,15 @@ class NaviHandler {
     if (i == index) {
       return;
     } else if (i == 0) {
-      if (previousIndex == 2) {
-        _context.read<StreamViewModel>().closeClient();
-      }
-      previousIndex = i;
+      return;
+      //TODO implementera detta då det finns en fungerande sök-sida.
+
     } else if (i == 1) {
+      print(previousIndex);
       if (previousIndex == 2) {
         _context.read<StreamViewModel>().closeClient();
-        previousIndex = i;
-        Navigator.of(_context).pushReplacementNamed(home);
-      }
-      if (previousIndex == 0) {
+        _context.read<VM>().willPopCallback();
+        Navigator.pop(_context);
         previousIndex = i;
       }
     } else {
@@ -57,7 +56,7 @@ class NaviHandler {
         return;
       }
       previousIndex = i;
-      Navigator.of(_context).pushReplacementNamed(goLive);
+      Navigator.of(_context).pushNamed(goLive);
       // Prefs().storedData.setString("intent", "h");
       // _context.read<StreamViewModel>().startup(_context);
       // Navigator.of(_context).pushReplacementNamed(appChannel);
