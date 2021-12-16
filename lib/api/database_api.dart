@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cmt_projekt/model/querymodel.dart';
+import 'package:cmt_projekt/model/query_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants.dart';

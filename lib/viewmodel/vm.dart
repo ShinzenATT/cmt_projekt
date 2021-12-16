@@ -4,8 +4,8 @@ import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_channelsettings.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/model/model.dart';
-import 'package:cmt_projekt/model/querymodel.dart';
+import 'package:cmt_projekt/model/main_model.dart';
+import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
@@ -198,6 +198,23 @@ class VM with ChangeNotifier {
           phone: phone.value.text,
           password: password1.value.text),
     );
+  }
+
+  void updateChannels(){
+    databaseAPI.sendRequest(QueryModel.getChannels());
+  }
+
+  Map<String,List<QueryModel>> getCategoryNumber(List<QueryModel> l){
+    Map<String,List<QueryModel>> categories = {};
+    for(QueryModel qm in l){
+      if(qm.isonline!) {
+      if(!categories.containsKey(qm.category)){
+        categories[qm.category!] = [];
+      }
+        categories[qm.category!]!.add(qm);
+      }
+    }
+    return categories;
   }
 
   void setJoinPrefs(String channelId){

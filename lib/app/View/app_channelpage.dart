@@ -1,5 +1,5 @@
 import 'package:cmt_projekt/api/navigation_handler.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

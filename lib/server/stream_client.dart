@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/model/streammessage.dart';
+import 'package:cmt_projekt/model/stream_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -42,7 +42,7 @@ class Client {
     client.stream.listen((event) {
       playSound(event);
     }, onDone: () {
-      print(client.closeReason);
+      //print(client.closeReason);
       Navigator.of(context).popUntil((route) => route.isFirst);
     });
   }

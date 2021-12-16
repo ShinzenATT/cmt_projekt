@@ -44,6 +44,6 @@ class RadioChannel {
 
   //Probably needs more
   stopHosting() {
-    print('Maybe implement in future');
+    //print('Maybe implement in future');
   }
 }
