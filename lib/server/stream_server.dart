@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cmt_projekt/model/querymodel.dart';
-import 'package:cmt_projekt/model/radiochannel.dart';
-import 'package:cmt_projekt/model/streammessage.dart';
+
+import 'package:cmt_projekt/model/query_model.dart';
+import 'package:cmt_projekt/model/radio_channel.dart';
+import 'package:cmt_projekt/model/stream_message.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';

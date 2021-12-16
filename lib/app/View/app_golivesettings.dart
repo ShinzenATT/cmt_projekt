@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cmt_projekt/app/View/app_golive.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';

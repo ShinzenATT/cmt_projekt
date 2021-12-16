@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/model/querymodel.dart';
+import 'package:cmt_projekt/model/query_model.dart';
 
 import 'package:postgres/postgres.dart';
 

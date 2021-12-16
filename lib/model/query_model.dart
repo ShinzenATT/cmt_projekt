@@ -45,7 +45,7 @@ class QueryModel {
         password = json['password'],
         uid = json['uid'],
         code = json['code'],
-        channelName = json['channelName'],
+        channelName = json['channelname'],
         category = json['category'],
         channelid = json['channelid'],
         isonline = json['isonline'];
@@ -66,5 +66,3 @@ class QueryModel {
     return "email: $email phone: $phone password: $password uid: $uid code: $code channelName: $channelName category: $category channelid: $channelid isonline: $isonline";
   }
 }
-
-

@@ -5,8 +5,8 @@ import 'package:cmt_projekt/app/View/app_golivesettings.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/model/model.dart';
-import 'package:cmt_projekt/model/querymodel.dart';
+import 'package:cmt_projekt/model/main_model.dart';
+import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
 import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
@@ -25,13 +25,14 @@ class VM with ChangeNotifier {
     lm.category = item;
   }
 
-  get passwordVisibilityLogin => lm.passwordVisibilityLogin;
-  get login => lm.login;
-  get password => lm.password;
-  get databaseAPI => lm.databaseAPI;
+  bool get passwordVisibilityLogin => lm.passwordVisibilityLogin;
+  TextEditingController get login => lm.login;
+  TextEditingController get password => lm.password;
+
+  DatabaseApi get databaseAPI => lm.databaseAPI;
 
   bool get passwordVisibilityCreate => lm.passwordVisibilityCreate;
-  get title => lm.title.toUpperCase();
+  String get title => lm.title.toUpperCase();
   TextEditingController get email => lm.createEmail;
   TextEditingController get phone => lm.createPhone;
   TextEditingController get password1 => lm.createPassword;
@@ -154,7 +155,7 @@ class VM with ChangeNotifier {
 
   /// From loginpageviewmodel
   void changePasswordVisibilityLogin() {
-    lm.passwordVisibilityLogin = !lm.passwordVisibilityLogin;
+    lm.passwordVisibilityLogin = !passwordVisibilityLogin;
     notifyListeners();
   }
 
@@ -166,7 +167,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   void loginAttempt(context) async {
     setUpResponseStreamLogin(context);
-    lm.databaseAPI.sendRequest(QueryModel.login(
+    databaseAPI.sendRequest(QueryModel.login(
         email: login.value.text, password: password.value.text));
   }
 
@@ -180,7 +181,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStreamLogin(context) {
-    lm.databaseAPI.streamController.stream.listen((QueryModel message) async {
+    databaseAPI.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
@@ -219,7 +220,7 @@ class VM with ChangeNotifier {
 
       Navigator.of(_context)
           .pushReplacementNamed('/Home'); // Byter till homepage.
-      lm.databaseAPI.sendRequest(QueryModel.getChannels());
+      databaseAPI.sendRequest(QueryModel.getChannels());
     });
   }
 
@@ -231,5 +232,27 @@ class VM with ChangeNotifier {
           phone: phone.value.text,
           password: password1.value.text),
     );
+  }
+
+  void updateChannels() {
+    databaseAPI.sendRequest(QueryModel.getChannels());
+  }
+
+  Map<String, List<QueryModel>> getCategoryNumber(List<QueryModel> l) {
+    Map<String, List<QueryModel>> categories = {};
+    for (QueryModel qm in l) {
+      if (qm.isonline!) {
+        if (!categories.containsKey(qm.category)) {
+          categories[qm.category!] = [];
+        }
+        categories[qm.category!]!.add(qm);
+      }
+    }
+    return categories;
+  }
+
+  void setJoinPrefs(String channelId) {
+    Prefs().storedData.setString("joinChannelID", channelId);
+    Prefs().storedData.setString("intent", "j");
   }
 }

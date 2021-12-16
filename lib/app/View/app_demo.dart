@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/demo_stream_view_model.dart';
-import 'package:cmt_projekt/viewmodel/stream_view_model.dart';
+import 'package:cmt_projekt/viewmodel/demo_stream_vm.dart';
+import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';

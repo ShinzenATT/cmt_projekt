@@ -1,5 +1,6 @@
-import 'package:cmt_projekt/model/streammodel.dart';
-import 'package:cmt_projekt/server/streamclient.dart';
+import 'package:cmt_projekt/api/prefs.dart';
+import 'package:cmt_projekt/model/stream_model.dart';
+import 'package:cmt_projekt/server/stream_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 
@@ -13,7 +14,7 @@ class StreamViewModel with ChangeNotifier {
     smodel.recorder = FlutterSoundRecorder();
     smodel.c = Client(smodel.player);
     init().then((value) {
-      smodel.isInited = true;
+      smodel.isInitiated = true;
       smodel.c!.listen(context);
     });
   }
@@ -23,10 +24,11 @@ class StreamViewModel with ChangeNotifier {
       smodel.player!.stopPlayer();
       smodel.recorder!.stopRecorder();
       smodel.c!.stopSound();
-      smodel.isInited = false;
+      smodel.isInitiated = false;
       smodel.c!.client.sink.close();
       smodel.c = null;
     }
+
     return true;
   }
 
@@ -100,7 +102,7 @@ class StreamViewModel with ChangeNotifier {
   }
 
   void getRecFn() {
-    if (!smodel.isInited) {
+    if (!smodel.isInitiated) {
       return null;
     }
     print("hello" + " " + "${smodel.recorder!.isRecording}");
