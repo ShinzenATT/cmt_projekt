@@ -21,7 +21,7 @@ class DatabaseServer {
 
   void initServer() async {
     //Öppnar server på port och ip.
-    HttpServer server = await HttpServer.bind('192.168.0.7', 5604);
+    HttpServer server = await HttpServer.bind(dbConnection, 5604);
     //ställer in i att ifall man får ett meddelande ska onMessage köras.
     server.transform(WebSocketTransformer()).listen(onMessage);
   }
