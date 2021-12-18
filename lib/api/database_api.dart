@@ -8,26 +8,29 @@ import '../constants.dart';
 /// Låter applikationen hämta och skicka data till databasen.
 
 class DatabaseApi {
-
   //En ström som skickar ut en bool till alla lyssnare.
   StreamController<QueryModel> streamController =
-  StreamController<QueryModel>.broadcast();
-  StreamController<List<QueryModel>> channelController = StreamController<
-      List<QueryModel>>.broadcast();
+      StreamController<QueryModel>.broadcast();
+  StreamController<List<QueryModel>> channelController =
+      StreamController<List<QueryModel>>.broadcast();
 
   //Ansluter till server med ipadress och port
-  var channel =
-  WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
+  late WebSocketChannel channel;
 
   DatabaseApi() {
+    init();
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
+  }
+  void init() {
+    channel = WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
     channel.stream.listen((message) => onMessage(message));
   }
 
   ///Skickar en QueryModel till servern
   void sendRequest(QueryModel message) {
     //print(jsonEncode(message));
+    init();
     channel.sink.add(jsonEncode(message));
   }
 
@@ -53,5 +56,6 @@ class DatabaseApi {
       }
       channelController.add(listOfChannels);
     }
+    channel.sink.close();
   }
 }
