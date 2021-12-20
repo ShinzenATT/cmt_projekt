@@ -9,6 +9,8 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:cmt_projekt/api/database_api.dart';
 
+import '../constants.dart';
+
 void main() async {
   ///En map med alla anslutna användare.
   Map<WebSocketChannel, StreamController> connectedUsers = {};
@@ -111,7 +113,7 @@ void main() async {
       }
     });
   });
-  shelf_io.serve(handler, '192.168.0.2', 5605).then((server) {
+  shelf_io.serve(handler, localServer, 5605).then((server) {
     print('Serving at ws://${server.address.host}:${server.port}');
   });
 }

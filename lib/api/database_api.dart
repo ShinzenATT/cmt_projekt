@@ -17,7 +17,7 @@ class DatabaseApi {
 
   //Ansluter till server med ipadress och port
   var channel =
-  WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
+  WebSocketChannel.connect(Uri.parse(serverConnection));
 
   DatabaseApi() {
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
