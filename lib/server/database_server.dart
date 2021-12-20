@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/query_model.dart';
 
 import 'package:postgres/postgres.dart';
+import 'package:shelf_web_socket/shelf_web_socket.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() async {
   DatabaseServer();
@@ -14,60 +17,96 @@ void main() async {
 class DatabaseServer {
   DatabaseQueries db = DatabaseQueries();
   late HttpServer server;
+  Map<WebSocketChannel, StreamController> connectedClients = {};
 
   DatabaseServer() {
     initServer();
   }
 
   void initServer() async {
+    var handler = webSocketHandler((WebSocketChannel webSocket) {
+      ///Sätter upp så att alla klienter som ansluter får en egen StreamController och läggs till i mapen connectedUsers.
+      connectedClients[webSocket] = StreamController.broadcast();
+
+      ///Sätter upp en listen funktion som skickar vidare all inkommande data från websocketen till StreamControllern.
+      ///Ondone funktionen websocketens StreamController vilket i sin tur gör host/client stängningsmetoder.
+      webSocket.stream.listen((event) {
+        connectedClients[webSocket]!.sink.add(event);
+      }, onDone: () {
+        connectedClients[webSocket]!.close();
+      });
+
+      ///Sätter upp första listen funktionen till StreamControllern. Här kollas ifall den anslutna användaren är en host eller klient
+      ///och sätter sedan upp rätt funktioner beroende på vad den är.
+      connectedClients[webSocket]!.stream.asBroadcastStream().listen((data) {
+        onMessage(webSocket, data);
+      }, onDone: () {
+        connectedClients.remove(webSocket);
+      });
+    });
+
     //Öppnar server på port och ip.
-    HttpServer server = await HttpServer.bind('192.168.0.7', 5604);
-    //ställer in i att ifall man får ett meddelande ska onMessage köras.
-    server.transform(WebSocketTransformer()).listen(onMessage);
+    shelf_io.serve(handler, '192.168.0.7', 5604).then((server) {
+      print('Serving at ws://${server.address.host}:${server.port}');
+    });
   }
 
-  void onMessage(var client) {
-    client.listen((data) async {
-      print(jsonDecode(data));
-      QueryModel query = QueryModel.fromJson(jsonDecode(data));
-      print(query.code);
-      switch (query.code) {
-        case dbAccount:
-          {
-            String response = await db.createAccount(
-                query.email!, query.password!, query.phone!);
-            client.add(response);
+  void onMessage(WebSocketChannel client, data) async {
+    QueryModel query = QueryModel.fromJson(jsonDecode(data));
+    if (query.code == dbPing) {
+      Map mapOfQueries = {};
+      mapOfQueries['code'] = [dbPing];
+      client.sink.add(jsonEncode(mapOfQueries));
+      return;
+    }
+    print(query.code);
+    switch (query.code) {
+      case dbAccount:
+        {
+          String response = await db.createAccount(
+              query.email!, query.password!, query.phone!);
+          client.sink.add(response);
+        }
+        break;
+      case dbLogin:
+        {
+          String response =
+              await db.compareCredentials(query.email!, query.password!);
+          client.sink.add(response);
+        }
+        break;
+      case dbCreateChannel:
+        {
+          db.createChannel(query.channelName!, query.uid!, query.category!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
           }
+        }
+        break;
+      case dbChannelOffline:
+        {
+          db.goOffline(query.uid!);
+          String response = await db.getOnlineChannels();
+          client.sink.add(response);
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
+        }
+        break;
+      case dbGetOnlineChannels:
+        {
+          String response = await db.getOnlineChannels();
+          client.sink.add(response);
+        }
+        break;
+      default:
+        {
           break;
-        case dbLogin:
-          {
-            String response =
-                await db.compareCredentials(query.email!, query.password!);
-            client.add(response);
-          }
-          break;
-        case dbCreateChannel:
-          {
-            db.createChannel(query.channelName!, query.uid!, query.category!);
-          }
-          break;
-        case dbChannelOffline:
-          {
-            db.goOffline(query.uid!);
-          }
-          break;
-        case dbGetOnlineChannels:
-          {
-            String response = await db.getOnlineChannels();
-            client.add(response);
-          }
-          break;
-        default:
-          {
-            break;
-          }
-      }
-    });
+        }
+    }
   }
 }
 

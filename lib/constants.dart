@@ -14,3 +14,4 @@ const String dbGetInfo = "2";
 const String dbCreateChannel = "3";
 const String dbChannelOffline = "4";
 const String dbGetOnlineChannels = "5";
+const String dbPing = "6";

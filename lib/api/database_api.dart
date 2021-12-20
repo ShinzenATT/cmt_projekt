@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -13,12 +14,14 @@ class DatabaseApi {
       StreamController<QueryModel>.broadcast();
   StreamController<List<QueryModel>> channelController =
       StreamController<List<QueryModel>>.broadcast();
+  bool pollingBool = false;
 
   //Ansluter till server med ipadress och port
   late WebSocketChannel channel;
 
   DatabaseApi() {
     init();
+    poller();
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
   }
@@ -27,25 +30,41 @@ class DatabaseApi {
     channel.stream.listen((message) => onMessage(message));
   }
 
+  void poller() async {
+    while (true) {
+      pollingBool = false;
+      await Future.delayed(const Duration(seconds: 5), () {
+        try {
+          channel.sink.add(jsonEncode(QueryModel.polling()));
+        } catch (WebSocketChannelException) {}
+        if (!pollingBool) {
+          channel.sink.close();
+          init();
+        }
+      });
+    }
+  }
+
   ///Skickar en QueryModel till servern
   void sendRequest(QueryModel message) {
-    //print(jsonEncode(message));
-    init();
-    channel.sink.add(jsonEncode(message));
+    try {
+      channel.sink.close();
+      init();
+      print(jsonEncode(message));
+      channel.sink.add(jsonEncode(message));
+    } catch (WebSocketChannelException) {}
   }
 
   ///Metod som hanterar inkommande meddelanden från servern.
   void onMessage(String message) async {
-    print(message);
     if (message == "") {
       return;
     }
-    print((jsonDecode(message)['code'] as List)[0]);
-    String QueryCode = (jsonDecode(message)['code'] as List)[0];
-    if (QueryCode == dbGetInfo) {
+    String queryCode = (jsonDecode(message)['code'] as List)[0];
+    if (queryCode == dbGetInfo) {
       streamController
           .add(QueryModel.fromJson((jsonDecode(message)['result'] as List)[0]));
-    } else if (QueryCode == dbGetOnlineChannels) {
+    } else if (queryCode == dbGetOnlineChannels) {
       //channelController.add(jsonDecode(message)['result'] as List);
 
       ///Kolla här för tips om hur man kan konvertera alla json queries i listan till enskilda objekt.
@@ -55,7 +74,9 @@ class DatabaseApi {
             (QueryModel.fromJson((jsonDecode(message)['result'] as List)[i])));
       }
       channelController.add(listOfChannels);
+    } else if (queryCode == dbPing) {
+      pollingBool = true;
     }
-    channel.sink.close();
+    //  channel.sink.close();
   }
 }
