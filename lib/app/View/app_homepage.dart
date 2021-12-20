@@ -86,12 +86,12 @@ class _AppHomePageState extends State<AppHomePage> {
                   const Center(
                     child: Icon(Icons.account_circle_outlined),
                   ),
-                  Center(
+                  /*  Center(
                     child: Text(
                       context.watch<VM>().getEmail() ?? 'Gäst',
                       style: const TextStyle(fontSize: 13.0),
                     ),
-                  ),
+                  ), */
                 ],
               ),
             ),
@@ -167,7 +167,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   return Text("State: ${snapshot.connectionState}");
                 }
               }),
-          GradientElevatedButton(
+          /* GradientElevatedButton(
             child: const Text(
               'DEMO',
               style: TextStyle(
@@ -186,7 +186,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
-          ),
+          ), */
           GradientElevatedButton(
             child: const Text(
               'Refresh',
