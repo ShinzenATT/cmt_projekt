@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:shelf/shelf_io.dart' as shelf_io;
-import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/query_model.dart';
+import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:postgres/postgres.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import '../constants.dart';
 
 void main() async {
   DatabaseServer();
@@ -78,22 +79,25 @@ class DatabaseServer {
       case dbCreateChannel:
         {
           db.createChannel(query.channelName!, query.uid!, query.category!);
-          String response = await db.getOnlineChannels();
-          for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
-            client.sink.add(response);
-          }
+          Future.delayed(const Duration(milliseconds: 500), () async {
+            String response = await db.getOnlineChannels();
+            for (WebSocketChannel client in connectedClients.keys) {
+              print(client);
+              client.sink.add(response);
+            }
+          });
         }
         break;
       case dbChannelOffline:
         {
           db.goOffline(query.uid!);
-          String response = await db.getOnlineChannels();
-          client.sink.add(response);
-          for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
-            client.sink.add(response);
-          }
+          Future.delayed(const Duration(milliseconds: 500), () async {
+            String response = await db.getOnlineChannels();
+            for (WebSocketChannel client in connectedClients.keys) {
+              print(client);
+              client.sink.add(response);
+            }
+          });
         }
         break;
       case dbGetOnlineChannels:
@@ -113,13 +117,18 @@ class DatabaseServer {
 /// Skapar queries och kommunicerar med databasen.
 class DatabaseQueries {
   //Database host ip
+  var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
+      username: "pi", password: "Kastalagatan22");
+  DatabaseQueries() {
+    init();
+  }
+
+  void init() async {
+    await connection.open();
+  }
 
   Future<String> compareCredentials(String login, String pass) async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
       List<List<dynamic>> results = await connection.query(
           "SELECT email, phone FROM Account WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
       if (results.isEmpty) {
@@ -134,10 +143,6 @@ class DatabaseQueries {
 
   Future<String> createAccount(String email, String pass, String phone) async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
       List<List<dynamic>> results = await connection
           .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
       return (getInfo(email));
@@ -149,10 +154,6 @@ class DatabaseQueries {
 
   Future<String> getInfo(String login) async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
       List<List<dynamic>> results = await connection.query(
           "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
 
@@ -179,9 +180,6 @@ class DatabaseQueries {
 
   void goOffline(String uid) async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
     } on PostgreSQLException {
@@ -191,10 +189,6 @@ class DatabaseQueries {
 
   void createChannel(String channelName, String uid, String category) async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
       List<List<dynamic>> results = await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
     } on PostgreSQLException {
@@ -204,10 +198,6 @@ class DatabaseQueries {
 
   Future<String> getOnlineChannels() async {
     try {
-      var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
-          username: "pi", password: "Kastalagatan22");
-      await connection.open();
-
       List<List<dynamic>> results = await connection.query(
           "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelname',channelname,'isonline',isonline) FROM Channel ");
 

@@ -9,6 +9,15 @@ import '../constants.dart';
 /// Låter applikationen hämta och skicka data till databasen.
 
 class DatabaseApi {
+  static final DatabaseApi _databaseApi = DatabaseApi._internal();
+  factory DatabaseApi() {
+    return _databaseApi;
+  }
+  DatabaseApi._internal() {
+    init();
+    poller();
+    sendRequest(QueryModel.getChannels());
+  }
   //En ström som skickar ut en bool till alla lyssnare.
   StreamController<QueryModel> streamController =
       StreamController<QueryModel>.broadcast();
@@ -19,27 +28,30 @@ class DatabaseApi {
   //Ansluter till server med ipadress och port
   late WebSocketChannel channel;
 
-  DatabaseApi() {
+/*  DatabaseApi() {
     init();
     poller();
+    sendRequest(QueryModel.getChannels());
     //ställer in så att ifall man får ett meddelande tillbaka skall funktionen
     //onMessage köras.
-  }
+  }*/
   void init() {
     channel = WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
     channel.stream.listen((message) => onMessage(message));
+    // sendRequest(QueryModel.getChannels());
   }
 
   void poller() async {
     while (true) {
       pollingBool = false;
-      await Future.delayed(const Duration(seconds: 5), () {
+      await Future.delayed(const Duration(seconds: 7), () {
         try {
           channel.sink.add(jsonEncode(QueryModel.polling()));
         } catch (WebSocketChannelException) {}
         if (!pollingBool) {
           channel.sink.close();
           init();
+          sendRequest(QueryModel.getChannels());
         }
       });
     }
@@ -48,8 +60,8 @@ class DatabaseApi {
   ///Skickar en QueryModel till servern
   void sendRequest(QueryModel message) {
     try {
-      channel.sink.close();
-      init();
+/*      channel.sink.close();
+      init();*/
       print(jsonEncode(message));
       channel.sink.add(jsonEncode(message));
     } catch (WebSocketChannelException) {}
