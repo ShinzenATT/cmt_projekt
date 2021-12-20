@@ -187,7 +187,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   Colors.blueAccent,
                 ]),
           ), */
-          GradientElevatedButton(
+          /* GradientElevatedButton(
             child: const Text(
               'Refresh',
               style: TextStyle(
@@ -206,7 +206,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   Colors.greenAccent,
                   Colors.blueAccent,
                 ]),
-          )
+          ) */
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
