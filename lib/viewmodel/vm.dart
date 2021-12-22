@@ -12,6 +12,7 @@ import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 
@@ -254,5 +255,17 @@ class VM with ChangeNotifier {
   void setJoinPrefs(String channelId) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
+  }
+
+  Future<bool> checkMicPermssion() async {
+    if (await Permission.microphone.isGranted) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> grantMicPermsission() async {
+    await Permission.microphone.request();
+    notifyListeners();
   }
 }

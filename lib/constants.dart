@@ -21,6 +21,6 @@ const String dbGetOnlineChannels = "5";
 const String dbPing = "6";
 
 //Connection-logic
-const String serverConnection = "ws://188.150.156.238:5604";
-const String localServer = "192.168.0.2";  //IP of hostServer port 5605
+const String serverConnection = "ws://188.150.156.238:5605";
+const String localServer = "192.168.0.2"; //IP of hostServer port 5605
 const String dbConnection = '192.168.0.7'; //IP of raspberyPi port 5604
