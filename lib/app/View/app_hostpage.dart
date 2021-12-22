@@ -61,19 +61,27 @@ class _AppHostPageState extends State<AppHostPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      context.watch<VM>().channelName.value.text,
-                      style: const TextStyle(
-                        color: Colors.greenAccent,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          context.watch<VM>().channelName.value.text,
+                          style: const TextStyle(
+                            color: Colors.greenAccent,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                    Text(
-                      context.watch<VM>().getEmail().toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        context.watch<VM>().getEmail().toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
