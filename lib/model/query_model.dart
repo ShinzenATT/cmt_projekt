@@ -38,6 +38,9 @@ class QueryModel {
   QueryModel.getChannels() {
     code = dbGetOnlineChannels;
   }
+  QueryModel.polling() {
+    code = dbPing;
+  }
 
   QueryModel.fromJson(Map<String, dynamic> json)
       : email = json['email'],
