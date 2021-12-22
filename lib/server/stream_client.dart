@@ -18,7 +18,7 @@ class Client {
 
   Client(FlutterSoundPlayer? player) {
     _player = player;
-    client = WebSocketChannel.connect(Uri.parse("ws://188.150.156.238:5605"));
+    client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
     if (Prefs().getIntent() == "j") {
       print(Prefs().getIntent().toString());
