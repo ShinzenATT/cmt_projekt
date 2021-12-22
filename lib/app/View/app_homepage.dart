@@ -95,12 +95,12 @@ class _AppHomePageState extends State<AppHomePage> {
                   const Center(
                     child: Icon(Icons.account_circle_outlined),
                   ),
-                  /*  Center(
+                  Center(
                     child: Text(
-                      context.watch<VM>().getEmail() ?? 'Gäst',
+                      context.watch<VM>().getUsername() ?? 'Gäst',
                       style: const TextStyle(fontSize: 13.0),
                     ),
-                  ), */
+                  ),
                 ],
               ),
             ),
