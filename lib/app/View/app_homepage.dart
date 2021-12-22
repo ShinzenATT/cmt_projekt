@@ -64,7 +64,15 @@ class _AppHomePageState extends State<AppHomePage> {
                 },
                 icon: const Icon(Icons.one_k_plus_outlined),
               ),
-              Text(channel.channelName!),
+              Expanded(
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          channel.channelName!,
+                        ),
+                      ))),
             ],
           ));
 
