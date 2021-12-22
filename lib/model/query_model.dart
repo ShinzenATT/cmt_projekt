@@ -11,6 +11,23 @@ class QueryModel {
   String? category;
   bool? isonline;
 
+  ///En Querymodel för att lägga till lyssnare
+  QueryModel.addViewers({required this.channelid, required this.uid}){
+    code = dbAddViewers;
+  }
+
+  QueryModel.getViewers({required this.channelid}){
+    code = dbGetViewers;
+  }
+
+  QueryModel.delViewer({required this.channelid, required this.uid}){
+    code = dbDelViewer;
+  }
+
+  QueryModel.delViewers({required this.channelid}){
+    code = dbDelViewers;
+  }
+
   ///En Querymodel som försöker skapa ett konto utifrån givna parametrar.
   QueryModel.account(
       {required this.email, required this.phone, required this.password}) {

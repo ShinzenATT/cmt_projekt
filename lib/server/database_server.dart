@@ -47,7 +47,7 @@ class DatabaseServer {
     });
 
     //Öppnar server på port och ip.
-    shelf_io.serve(handler, '192.168.0.7', 5604).then((server) {
+    shelf_io.serve(handler, dbConnection, 5604).then((server) {
       print('Serving at ws://${server.address.host}:${server.port}');
     });
   }
@@ -104,6 +104,26 @@ class DatabaseServer {
         {
           String response = await db.getOnlineChannels();
           client.sink.add(response);
+        }
+        break;
+      case dbAddViewers:
+        {
+          await db.insertViewer(query.uid!, query.channelid!);
+        }
+        break;
+      case dbDelViewers:
+        {
+
+        }
+        break;
+      case dbDelViewer:
+        {
+
+        }
+        break;
+      case dbGetViewers:
+        {
+
         }
         break;
       default:
@@ -220,6 +240,24 @@ class DatabaseQueries {
       print("error in createChannel");
       print(PostgreSQLException);
       return "";
+    }
+  }
+
+  Future<void> insertViewer(String uid, String channelId) async{
+    try {
+      await connection.query(
+          "INSERT INTO channelview VALUES('$uid','$channelId')");
+    } on PostgreSQLException {
+      print("error in insertViewer");
+    }
+  }
+
+  Future<void> delViewer(String uid, String channelId) async{
+    try {
+      await connection.query(
+          "DELETE FROM Viewers WHERE('viewer' = )");
+    } on PostgreSQLException {
+      print("error in insertViewer");
     }
   }
 }
