@@ -20,7 +20,7 @@ import '../../constants.dart' as constant;
 class VM with ChangeNotifier {
   Model lm = Model();
 
-  get categoryList => lm.categoryList;
+  Map<String, String> get categoryList => lm.categoryAndStandardImg;
   get getCategory => lm.category;
   void setCategory(var item) {
     lm.category = item;
@@ -59,9 +59,8 @@ class VM with ChangeNotifier {
         ),
       );
 
-  List<DropdownMenuItem<String>>? getItems() {
-    notifyListeners();
-    return categoryList.mapList(categoryItem).toList();
+  dynamic categoryToDropdownMenuItemList() {
+    return lm.categoryAndStandardImg.keys.map(categoryItem).toList();
   }
 
   Future<bool> willPopCallback() async {
