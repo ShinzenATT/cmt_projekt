@@ -204,7 +204,7 @@ class DatabaseQueries {
   Future<String> getOnlineChannels() async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelname',channelname,'isonline',isonline,'username',username) FROM Channel, Account WHERE uid = channelid ");
+          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username) FROM Channel, Account WHERE uid = channelid ");
 
       if (results.isEmpty) {
         return "";
