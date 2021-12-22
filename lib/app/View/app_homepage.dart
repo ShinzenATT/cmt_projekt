@@ -16,11 +16,11 @@ class AppHomePage extends StatefulWidget {
 
 class _AppHomePageState extends State<AppHomePage> {
   Widget _horizontalListView(
-      {required Color color,
+      {required String image,
       required List<QueryModel> channelList,
       required String categoryName}) {
     return SizedBox(
-      height: 120,
+      height: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,7 +29,6 @@ class _AppHomePageState extends State<AppHomePage> {
                 EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               categoryName,
-              style: const TextStyle(color: Colors.white),
             ),
           ),
           Expanded(
@@ -37,7 +36,9 @@ class _AppHomePageState extends State<AppHomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: channelList.length,
               itemBuilder: (BuildContext context, int index) => _buildBox(
-                  color: color, channel: channelList[index], context: context),
+                  image: context.read<VM>().categoryList[categoryName]!,
+                  channel: channelList[index],
+                  context: context),
             ),
           ),
         ],
@@ -46,26 +47,72 @@ class _AppHomePageState extends State<AppHomePage> {
   }
 
   Widget _buildBox(
-          {required Color color,
+          {required String image,
           required QueryModel channel,
           required BuildContext context}) =>
-      Container(
-          margin: const EdgeInsets.all(12),
-          height: 100,
-          width: 150,
-          color: color,
-          child: Column(
-            children: [
-              IconButton(
-                onPressed: () {
-                  context.read<VM>().setJoinPrefs(channel.channelid!);
-                  context.read<StreamViewModel>().startup(context);
-                  Navigator.pushNamed(context, constants.channel);
-                },
-                icon: const Icon(Icons.one_k_plus_outlined),
+      InkWell(
+          onTap: () {
+            context.read<VM>().setJoinPrefs(channel.channelid!);
+            context.read<StreamViewModel>().startup(context);
+            Navigator.pushNamed(context, constants.channel);
+          },
+          child: Card(
+            elevation: 10,
+            child: Stack(
+              children: [
+                Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                ),
+                Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                Container(
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      channel.channelName!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+/*            child: Container(
+              margin: const EdgeInsets.all(12),
+              height: 100,
+              width: 150,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                      'https://images.unsplash.com/photo-1459305272254-33a7d593a851?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'),
+                  fit: BoxFit.cover,
+                ),
               ),
-              Text(channel.channelName!),
-            ],
+              child: Column(
+                children: [
+                  Text(
+                    channel.channelName!,
+                    style: TextStyle(
+                      color: Colors.white,
+                      shadows: <Shadow>[
+                        Shadow(
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 3.0,
+                          color: Color.fromARGB(0, 0, 0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),*/
           ));
 
   @override
@@ -153,7 +200,7 @@ class _AppHomePageState extends State<AppHomePage> {
                         itemCount: categories.length,
                         itemBuilder: (BuildContext context, int index) {
                           return _horizontalListView(
-                              color: Colors.deepPurple,
+                              image: "ds",
                               channelList:
                                   categories[categories.keys.elementAt(index)]!,
                               categoryName: categories.keys.elementAt(index));
