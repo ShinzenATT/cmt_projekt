@@ -90,7 +90,7 @@ class GoLiveSettings extends StatelessWidget {
                         context.read<VM>().setChannelSettings();
                         context.read<StreamViewModel>().startup(context);
                         Navigator.pop(context);
-                        Navigator.of(context).popAndPushNamed(channel);
+                        Navigator.of(context).popAndPushNamed(hostChannel);
                       },
                       gradient: const LinearGradient(
                           begin: Alignment.centerLeft,

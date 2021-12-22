@@ -29,7 +29,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               categoryName,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
             ),
           ),
           Expanded(
@@ -60,7 +60,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 onPressed: () {
                   context.read<VM>().setJoinPrefs(channel.channelid!);
                   context.read<StreamViewModel>().startup(context);
-                  Navigator.pushNamed(context, constants.channel);
+                  Navigator.pushNamed(context, constants.joinChannel);
                 },
                 icon: const Icon(Icons.one_k_plus_outlined),
               ),
