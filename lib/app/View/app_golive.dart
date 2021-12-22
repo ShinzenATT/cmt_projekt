@@ -4,6 +4,7 @@ import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class AppGoLive extends StatelessWidget {
@@ -248,26 +249,57 @@ class AppGoLive2 extends StatelessWidget {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.1,
-              child: GradientElevatedButton.icon(
-                onPressed: () {},
-                gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.greenAccent,
-                      Colors.blueAccent,
-                    ]),
-                icon: Icon(
-                  Icons.mic,
-                  size: MediaQuery.of(context).size.height * 0.07,
-                ),
-                label: const Text(
-                  'Aktivera din mikrofon',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
-                ),
+              child: FutureBuilder<bool>(
+                future: context.read<VM>().checkMicPermssion(),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null || !snapshot.data!) {
+                    return GradientElevatedButton.icon(
+                      onPressed: () {
+                        context.read<VM>().grantMicPermsission();
+                      },
+                      gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Colors.greenAccent,
+                            Colors.blueAccent,
+                          ]),
+                      icon: Icon(
+                        Icons.mic,
+                        size: MediaQuery.of(context).size.height * 0.07,
+                      ),
+                      label: const Text(
+                        'Aktivera din mikrofon',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return GradientElevatedButton.icon(
+                      onPressed: null,
+                      gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Colors.greenAccent,
+                            Colors.blueAccent,
+                          ]),
+                      icon: Icon(
+                        Icons.check,
+                        size: MediaQuery.of(context).size.height * 0.07,
+                      ),
+                      label: const Text(
+                        'Din mikrofon är aktiverad',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
             Padding(
@@ -279,7 +311,10 @@ class AppGoLive2 extends StatelessWidget {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(primary: Colors.black),
                   onPressed: () {
-                    context.read<VM>().channelSettings(context);
+                    context.read<VM>().checkMicPermssion().then((value) => {
+                          if (value)
+                            {context.read<VM>().channelSettings(context)}
+                        });
                     // context.read<StreamViewModel>().startup(context);
                   },
                   icon: const Padding(

@@ -3,13 +3,13 @@ SET client_min_messages TO WARNING; -- Less talk please.
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
-
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 --Tables:
 CREATE TABLE Account (
                          email varchar(255) NOT NULL,
                          password TEXT NOT NULL,
                          phone char(10) NOT NULL CHECK(char_length(phone) = 10),
-                         uid SERIAL,
+                         uid uuid DEFAULT uuid_generate_v4() NOT NULL,
                          UNIQUE(phone),
                          UNIQUE(email),
                          PRIMARY KEY(uid)
@@ -21,7 +21,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE Favorite (
-                          users INT,
+                          users uuid,
                           category TEXT,
 
                           FOREIGN KEY (users) REFERENCES Account(uid),
@@ -30,7 +30,7 @@ CREATE TABLE Favorite (
 );
 
 CREATE TABLE Channel (
-                         channelid INT,
+                         channelid uuid,
                          channelName TEXT NOT NULL,
                          category   TEXT NOT NULL,
                          isonline BOOLEAN NOT NULL,
