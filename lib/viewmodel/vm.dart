@@ -230,9 +230,11 @@ class VM with ChangeNotifier {
   void createAccount() {
     client.sendRequest(
       QueryModel.account(
-          email: email.value.text,
-          phone: phone.value.text,
-          password: password1.value.text),
+        email: email.value.text,
+        phone: phone.value.text,
+        password: password1.value.text,
+        username: username.value.text,
+      ),
     );
   }
 

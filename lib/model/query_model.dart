@@ -14,7 +14,10 @@ class QueryModel {
 
   ///En Querymodel som försöker skapa ett konto utifrån givna parametrar.
   QueryModel.account(
-      {required this.email, required this.phone, required this.password}) {
+      {required this.email,
+      required this.phone,
+      required this.password,
+      required this.username}) {
     code = dbAccount;
   }
 
