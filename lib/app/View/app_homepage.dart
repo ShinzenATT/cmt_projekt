@@ -58,7 +58,9 @@ class _AppHomePageState extends State<AppHomePage> {
             children: [
               IconButton(
                 onPressed: () {
-                  context.read<VM>().setJoinPrefs(channel.channelid!);
+                  context
+                      .read<VM>()
+                      .setJoinPrefs(channel.channelid!, channel.channelName!);
                   context.read<StreamViewModel>().startup(context);
                   Navigator.pushNamed(context, constants.joinChannel);
                 },

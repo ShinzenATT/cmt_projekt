@@ -16,6 +16,7 @@ class Model {
   TextEditingController createPhone = TextEditingController();
   TextEditingController createPassword = TextEditingController();
   TextEditingController createPassword2 = TextEditingController();
+  TextEditingController createUsername = TextEditingController();
 
   ///For Category
   final categoryList = ['Sport', 'Rock', 'Jazz', 'Pop', 'Tjööt'];

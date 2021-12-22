@@ -38,6 +38,7 @@ class VM with ChangeNotifier {
   TextEditingController get phone => lm.createPhone;
   TextEditingController get password1 => lm.createPassword;
   TextEditingController get password2 => lm.createPassword2;
+  TextEditingController get username => lm.createUsername;
   DatabaseApi get client => lm.databaseAPI;
 
   TextEditingController get channelName => lm.channelName;
@@ -252,9 +253,10 @@ class VM with ChangeNotifier {
     return categories;
   }
 
-  void setJoinPrefs(String channelId) {
+  void setJoinPrefs(String channelId, String channelName) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
+    Prefs().storedData.setString("channelName", channelName);
   }
 
   Future<bool> checkMicPermssion() async {

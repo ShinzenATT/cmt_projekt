@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -46,10 +47,10 @@ class AppListenPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
-                    ('Kanalens namn'),
-                    style: TextStyle(
+                    (Prefs().storedData.getString("channelName")!),
+                    style: const TextStyle(
                       color: Colors.greenAccent,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
