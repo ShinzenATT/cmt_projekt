@@ -253,10 +253,11 @@ class VM with ChangeNotifier {
     return categories;
   }
 
-  void setJoinPrefs(String channelId, String channelName) {
+  void setJoinPrefs(String channelId, String channelName, String username) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
     Prefs().storedData.setString("channelName", channelName);
+    Prefs().storedData.setString("username", username);
   }
 
   Future<bool> checkMicPermssion() async {

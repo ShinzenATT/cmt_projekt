@@ -57,8 +57,8 @@ class AppListenPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Kanelens host',
-                    style: TextStyle(
+                    (Prefs().storedData.getString("username")!),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),
