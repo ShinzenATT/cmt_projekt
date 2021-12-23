@@ -191,7 +191,7 @@ class VM with ChangeNotifier {
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStreamLogin(context) {
     databaseAPI.streamController.stream.listen((QueryModel message) async {
-      print(message);
+    
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       await Prefs().storedData.setString("phone", message.phone!);
