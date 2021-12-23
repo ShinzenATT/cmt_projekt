@@ -32,7 +32,7 @@ class AppGoLive extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        context.watch<VM>().getEmail() ?? 'Gäst',
+                        context.watch<VM>().getUsername() ?? 'Gäst',
                         style: const TextStyle(fontSize: 13.0),
                       ),
                     ),
@@ -184,7 +184,7 @@ class AppGoLive2 extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        context.watch<VM>().getEmail() ?? 'Gäst',
+                        context.watch<VM>().getUsername() ?? 'Gäst',
                         style: const TextStyle(fontSize: 13.0),
                       ),
                     ),

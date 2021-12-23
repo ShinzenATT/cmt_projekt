@@ -1,8 +1,9 @@
-import 'package:cmt_projekt/app/View/app_channelpage.dart';
+import 'package:cmt_projekt/app/View/app_hostpage.dart';
 import 'package:cmt_projekt/app/View/app_createaccountpage.dart';
 import 'package:cmt_projekt/app/View/app_demo.dart';
 import 'package:cmt_projekt/app/View/app_golive.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
+import 'package:cmt_projekt/app/View/app_listenpage.dart';
 import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:cmt_projekt/app/View/app_meny.dart';
 
@@ -23,7 +24,8 @@ class PageNavigator {
     constant.demo: (BuildContext context) => StreamLoop(),
     constant.login: (BuildContext context) =>
         kIsWeb ? const WebLoginPage() : const AppLoginPage(),
-    constant.channel: (BuildContext context) => AppChannelPage(),
+    constant.hostChannel: (BuildContext context) => const AppHostPage(),
+    constant.joinChannel: (BuildContext context) => const AppListenPage(),
     constant.menu: (BuildContext context) => const AppMenu(),
     constant.welcome: (BuildContext context) => const AppWelcomePage(),
     constant.goLive: (BuildContext context) => const AppGoLive(),

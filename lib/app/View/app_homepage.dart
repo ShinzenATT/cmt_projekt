@@ -29,6 +29,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               categoryName,
+              style: const TextStyle(color: Colors.black),
             ),
           ),
           Expanded(
@@ -52,9 +53,13 @@ class _AppHomePageState extends State<AppHomePage> {
           required BuildContext context}) =>
       InkWell(
           onTap: () {
-            context.read<VM>().setJoinPrefs(channel.channelid!);
+            context.read<VM>().setJoinPrefs(
+                  channel.channelid!,
+                  channel.channelName!,
+                  channel.username!,
+                );
             context.read<StreamViewModel>().startup(context);
-            Navigator.pushNamed(context, constants.channel);
+            Navigator.pushNamed(context, constants.joinChannel);
           },
           child: Card(
             elevation: 10,
@@ -84,35 +89,6 @@ class _AppHomePageState extends State<AppHomePage> {
                 ),
               ],
             ),
-/*            child: Container(
-              margin: const EdgeInsets.all(12),
-              height: 100,
-              width: 150,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://images.unsplash.com/photo-1459305272254-33a7d593a851?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    channel.channelName!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 3.0,
-                          color: Color.fromARGB(0, 0, 0, 0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),*/
           ));
 
   @override
@@ -133,12 +109,12 @@ class _AppHomePageState extends State<AppHomePage> {
                   const Center(
                     child: Icon(Icons.account_circle_outlined),
                   ),
-                  /*  Center(
+                  Center(
                     child: Text(
-                      context.watch<VM>().getEmail() ?? 'Gäst',
+                      context.watch<VM>().getUsername() ?? 'Gäst',
                       style: const TextStyle(fontSize: 13.0),
                     ),
-                  ), */
+                  ),
                 ],
               ),
             ),

@@ -106,7 +106,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<VM>().channelSettings(context);
+                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -114,8 +114,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-
-                Navigator.pop(context);
               },
             ),
             const Text(
@@ -131,7 +129,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -139,7 +136,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -147,7 +143,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -155,7 +150,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -163,7 +157,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             const Text(
@@ -179,7 +172,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -187,7 +179,6 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             TextButton.icon(

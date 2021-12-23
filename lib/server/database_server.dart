@@ -135,8 +135,9 @@ class DatabaseQueries {
         return "";
       }
       return getInfo(login);
-    } on PostgreSQLException {
+    } catch (PostgreSQLException) {
       print("an error in compareCredentials");
+      print(PostgreSQLException);
       return "";
     }
   }
@@ -146,8 +147,9 @@ class DatabaseQueries {
       List<List<dynamic>> results = await connection
           .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
       return (getInfo(email));
-    } on PostgreSQLException {
+    } catch (PostgreSQLException) {
       print("an error in createAccount");
+      print(PostgreSQLException);
       return ("");
     }
   }
@@ -155,7 +157,7 @@ class DatabaseQueries {
   Future<String> getInfo(String login) async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
+          "SELECT jsonb_build_object('email',email,'phone',phone,'uid',uid,'username',username) FROM Account WHERE ((email = '$login' OR phone = '$login'))");
 
       if (results.isEmpty) {
         return "";
@@ -172,8 +174,9 @@ class DatabaseQueries {
       }
       print(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
-    } on PostgreSQLException {
-      print("error in createChannel");
+    } catch (PostgreSQLException) {
+      print("error in getInfo");
+      print(PostgreSQLException);
       return "";
     }
   }
@@ -182,8 +185,9 @@ class DatabaseQueries {
     try {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
-    } on PostgreSQLException {
+    } catch (PostgreSQLException) {
       print("error in goOffline");
+      print(PostgreSQLException);
     }
   }
 
@@ -191,15 +195,16 @@ class DatabaseQueries {
     try {
       List<List<dynamic>> results = await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
-    } on PostgreSQLException {
+    } catch (PostgreSQLException) {
       print("error in createChannel");
+      print(PostgreSQLException);
     }
   }
 
   Future<String> getOnlineChannels() async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelname',channelname,'isonline',isonline) FROM Channel ");
+          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username) FROM Channel, Account WHERE uid = channelid ");
 
       if (results.isEmpty) {
         return "";
@@ -217,7 +222,7 @@ class DatabaseQueries {
       print(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
     } catch (PostgreSQLException) {
-      print("error in createChannel");
+      print("error in getOnlineChannels");
       print(PostgreSQLException);
       return "";
     }

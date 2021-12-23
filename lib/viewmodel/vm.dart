@@ -38,6 +38,7 @@ class VM with ChangeNotifier {
   TextEditingController get phone => lm.createPhone;
   TextEditingController get password1 => lm.createPassword;
   TextEditingController get password2 => lm.createPassword2;
+  TextEditingController get username => lm.createUsername;
   DatabaseApi get client => lm.databaseAPI;
 
   TextEditingController get channelName => lm.channelName;
@@ -71,6 +72,14 @@ class VM with ChangeNotifier {
   ///Returnerar användarens email.
   String? getEmail() {
     return Prefs().storedData.getString("email");
+  }
+
+  String? getPhone() {
+    return Prefs().storedData.getString("phone");
+  }
+
+  String? getUsername() {
+    return Prefs().storedData.getString("username");
   }
 
   ///Returnerar användarens uID.
@@ -182,8 +191,11 @@ class VM with ChangeNotifier {
   ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
   void setUpResponseStreamLogin(context) {
     databaseAPI.streamController.stream.listen((QueryModel message) async {
+    
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
+      await Prefs().storedData.setString("phone", message.phone!);
+      await Prefs().storedData.setString("username", message.username!);
       // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
       Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
       //Navigator.of(context)
@@ -213,6 +225,8 @@ class VM with ChangeNotifier {
       var _context = context;
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
+      await Prefs().storedData.setString("phone", message.phone!);
+      await Prefs().storedData.setString("username", message.username!);
       if (kIsWeb) {
         // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
         Navigator.of(_context, rootNavigator: true).pop();
@@ -228,9 +242,11 @@ class VM with ChangeNotifier {
   void createAccount() {
     client.sendRequest(
       QueryModel.account(
-          email: email.value.text,
-          phone: phone.value.text,
-          password: password1.value.text),
+        email: email.value.text,
+        phone: phone.value.text,
+        password: password1.value.text,
+        username: username.value.text,
+      ),
     );
   }
 
@@ -251,9 +267,11 @@ class VM with ChangeNotifier {
     return categories;
   }
 
-  void setJoinPrefs(String channelId) {
+  void setJoinPrefs(String channelId, String channelName, String username) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
+    Prefs().storedData.setString("channelName", channelName);
+    Prefs().storedData.setString("hostUsername", username);
   }
 
   Future<bool> checkMicPermssion() async {

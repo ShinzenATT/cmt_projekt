@@ -4,7 +4,8 @@
 const String home = '/Home';
 const String createAcc = '/CreateAccount';
 const String demo = '/Demo';
-const String channel = '/AppChannel';
+const String hostChannel = '/HostChannel';
+const String joinChannel = '/JoinChannel';
 const String goLive = '/goLive';
 const String goLive2 = '/goLive2';
 const String login = '/login';

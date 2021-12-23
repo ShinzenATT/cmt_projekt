@@ -1,6 +1,6 @@
 //package imports
 import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/app/View/app_channelpage.dart';
+import 'package:cmt_projekt/app/View/app_hostpage.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
