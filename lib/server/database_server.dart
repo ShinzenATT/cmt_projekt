@@ -78,26 +78,35 @@ class DatabaseServer {
         break;
       case dbCreateChannel:
         {
-          db.createChannel(query.channelName!, query.uid!, query.category!);
+          await db.createChannel(query.channelName!, query.uid!, query.category!);
+          /*
           Future.delayed(const Duration(milliseconds: 500), () async {
-            String response = await db.getOnlineChannels();
-            for (WebSocketChannel client in connectedClients.keys) {
-              print(client);
-              client.sink.add(response);
+
             }
           });
+           */
+
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
       case dbChannelOffline:
         {
-          db.goOffline(query.uid!);
+          await db.goOffline(query.uid!);
+          /*
           Future.delayed(const Duration(milliseconds: 500), () async {
-            String response = await db.getOnlineChannels();
-            for (WebSocketChannel client in connectedClients.keys) {
-              print(client);
-              client.sink.add(response);
-            }
+
           });
+
+           */
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
       case dbGetOnlineChannels:
@@ -109,16 +118,32 @@ class DatabaseServer {
       case dbAddViewers:
         {
           await db.insertViewer(query.uid!, query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
+
         }
         break;
       case dbDelViewers:
         {
           await db.delViewers(query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
       case dbDelViewer:
         {
           await db.delViewer(query.uid!, query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
 
@@ -197,7 +222,7 @@ class DatabaseQueries {
     }
   }
 
-  void goOffline(String uid) async {
+  Future<void> goOffline(String uid) async {
     try {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
@@ -207,7 +232,7 @@ class DatabaseQueries {
     }
   }
 
-  void createChannel(String channelName, String uid, String category) async {
+  Future<void> createChannel(String channelName, String uid, String category) async {
     try {
       List<List<dynamic>> results = await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
