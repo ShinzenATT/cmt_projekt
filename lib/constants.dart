@@ -21,9 +21,8 @@ const String dbChannelOffline = "4";
 const String dbGetOnlineChannels = "5";
 const String dbPing = "6";
 const String dbAddViewers = "7";
-const String dbGetViewers = "8";
-const String dbDelViewers = "9";
-const String dbDelViewer = "10";
+const String dbDelViewers = "8";
+const String dbDelViewer = "9";
 
 //Connection-logic
 const String serverConnection = "ws://188.150.156.238:5605";

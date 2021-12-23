@@ -54,7 +54,7 @@ class _AppHomePageState extends State<AppHomePage> {
       InkWell(
           onTap: () {
             context.read<VM>().setJoinPrefs(channel.channelid!,
-                      channel.channelName!, channel.username!)
+                      channel.channelName!, channel.username!);
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
           },
@@ -166,6 +166,9 @@ class _AppHomePageState extends State<AppHomePage> {
                     List<QueryModel> channels = snapshot.data;
                     Map<String, List<QueryModel>> categories =
                         context.read<VM>().getCategoryNumber(channels);
+                    for(QueryModel qm in channels){
+                      print("total count: ${qm.total}");
+                    }
 
                     return Expanded(
                       child: ListView.builder(

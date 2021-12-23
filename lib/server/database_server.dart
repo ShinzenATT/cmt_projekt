@@ -113,19 +113,15 @@ class DatabaseServer {
         break;
       case dbDelViewers:
         {
-
+          await db.delViewers(query.channelid!);
         }
         break;
       case dbDelViewer:
         {
-
+          await db.delViewer(query.uid!, query.channelid!);
         }
         break;
-      case dbGetViewers:
-        {
 
-        }
-        break;
       default:
         {
           break;
@@ -224,7 +220,7 @@ class DatabaseQueries {
   Future<String> getOnlineChannels() async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username) FROM Channel, Account WHERE uid = channelid ");
+          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username, (SELECT COUNT(jsonb_build_object('viewer',viewer)) as total FROM Viewers WHERE channel = channelid)) FROM Channel, Account WHERE uid = channelid ");
 
       if (results.isEmpty) {
         return "";
@@ -260,9 +256,19 @@ class DatabaseQueries {
   Future<void> delViewer(String uid, String channelId) async{
     try {
       await connection.query(
-          "DELETE FROM Viewers WHERE('viewer' = )");
+          "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
     } on PostgreSQLException {
-      print("error in insertViewer");
+      print("error in delViewer");
     }
   }
+
+  Future<void> delViewers(String channelId) async{
+    try {
+      await connection.query(
+          "DELETE FROM Viewers WHERE(channel = '$channelId')");
+    } on PostgreSQLException {
+      print("error in delViewers");
+    }
+  }
+
 }
