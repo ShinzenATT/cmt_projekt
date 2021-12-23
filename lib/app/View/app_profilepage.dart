@@ -47,6 +47,26 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
+                      context.read<VM>().getUsername().toString(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Text(
+                        'Email: ',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    Text(
                       context.read<VM>().getEmail().toString(),
                       style: const TextStyle(
                         fontSize: 18,
@@ -60,18 +80,18 @@ class AppProfileWidget extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(right: 10),
                       child: Text(
-                        'User ID: ',
+                        'Telefonnummer: ',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
                     ),
-                      Text(
-                      context.read<VM>().getUid().toString(),
+                    Text(
+                      context.read<VM>().getPhone().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
-                    ), 
+                    ),
                   ],
                 ),
               ],

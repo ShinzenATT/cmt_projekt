@@ -9,9 +9,11 @@ CREATE TABLE Account (
                          email varchar(255) NOT NULL,
                          password TEXT NOT NULL,
                          phone char(10) NOT NULL CHECK(char_length(phone) = 10),
-                         uid uuid DEFAULT uuid_generate_v4() NOT NULL,
+                         username TEXT NOT NULL,
+                         uid uuid DEFAULT uuid_generate_v4(),
                          UNIQUE(phone),
                          UNIQUE(email),
+                         UNIQUE(username),
                          PRIMARY KEY(uid)
 );
 
@@ -55,8 +57,8 @@ CREATE TABLE Viewers
 --                        FOREIGN KEY (uid) REFERENCES Channel(uid),
 --                        PRIMARY KEY (uid)
 --);
-INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000');
-INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000');
+INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000','Sambach');
+INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000','MaxPers');
 INSERT INTO Category VALUES('Sport');
 INSERT INTO Category VALUES('Rock');
 INSERT INTO Category VALUES('Jazz');
