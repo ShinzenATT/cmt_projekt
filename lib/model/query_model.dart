@@ -11,7 +11,7 @@ class QueryModel {
   String? category;
   String? username;
   bool? isonline;
-  String? total;
+  int? total;
 
   ///En Querymodel för att lägga till lyssnare
   QueryModel.addViewers({required this.channelid, required this.uid}){

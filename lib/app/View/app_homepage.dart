@@ -166,8 +166,10 @@ class _AppHomePageState extends State<AppHomePage> {
                     List<QueryModel> channels = snapshot.data;
                     Map<String, List<QueryModel>> categories =
                         context.read<VM>().getCategoryNumber(channels);
+                    int i = 0;
                     for(QueryModel qm in channels){
-                      print("total count: ${qm.total}");
+                      print("total count $i: ${qm.total}");
+                      i++;
                     }
 
                     return Expanded(
