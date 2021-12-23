@@ -53,8 +53,11 @@ class _AppHomePageState extends State<AppHomePage> {
           required BuildContext context}) =>
       InkWell(
           onTap: () {
-            context.read<VM>().setJoinPrefs(channel.channelid!,
-                      channel.channelName!, channel.username!)
+            context.read<VM>().setJoinPrefs(
+                  channel.channelid!,
+                  channel.channelName!,
+                  channel.username!,
+                );
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
           },
