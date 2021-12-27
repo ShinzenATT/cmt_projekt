@@ -6,6 +6,7 @@ import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class AppHomePage extends StatefulWidget {
   const AppHomePage({Key? key}) : super(key: key);
@@ -54,8 +55,10 @@ class _AppHomePageState extends State<AppHomePage> {
       InkWell(
           onTap: () {
             context.read<VM>().setJoinPrefs(
-
-                channel.channelid!, channel.channelName!, channel.username!,);
+                  channel.channelid!,
+                  channel.channelName!,
+                  channel.username!,
+                );
 
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
@@ -80,10 +83,9 @@ class _AppHomePageState extends State<AppHomePage> {
                     child: Text(
                       channel.channelName!,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
                     ),
                   ),
                 ),
@@ -105,7 +107,6 @@ class _AppHomePageState extends State<AppHomePage> {
               ],
             ),
           ));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,16 +186,28 @@ class _AppHomePageState extends State<AppHomePage> {
                     Map<String, List<QueryModel>> categories =
                         context.read<VM>().getCategoryNumber(channels);
                     return Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: categories.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _horizontalListView(
-                              image: "ds",
-                              channelList:
-                                  categories[categories.keys.elementAt(index)]!,
-                              categoryName: categories.keys.elementAt(index));
+                      child: SmartRefresher(
+                        header: const ClassicHeader(
+                          releaseText: "Släpp för att uppdatera",
+                          refreshingText: "Uppdaterar radiokanaler",
+                          completeText: 'Radiokanaler uppdaterade',
+                          idleText: "Dra ner för att uppdatera radiokanaler",
+                        ),
+                        controller: context.watch<VM>().refreshController,
+                        onRefresh: () async {
+                          context.read<VM>().refresh();
                         },
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: categories.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return _horizontalListView(
+                                image: "ds",
+                                channelList: categories[
+                                    categories.keys.elementAt(index)]!,
+                                categoryName: categories.keys.elementAt(index));
+                          },
+                        ),
                       ),
                     );
                   } else {
@@ -204,7 +217,6 @@ class _AppHomePageState extends State<AppHomePage> {
                   return Text("State: ${snapshot.connectionState}");
                 }
               }),
-    
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
