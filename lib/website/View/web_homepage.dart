@@ -20,7 +20,7 @@ class _WebHomePageState extends State<WebHomePage> {
       required List<QueryModel> channelList,
       required String categoryName}) {
     return SizedBox(
-      height: 150,
+      height: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
