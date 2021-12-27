@@ -45,6 +45,7 @@ dependencies:
   shared_preferences:
   google_fonts:
   gradient_ui_widgets: ^1.0.2-nullsafety
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_test:
