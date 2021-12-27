@@ -167,7 +167,7 @@ class _AppHomePageState extends State<AppHomePage> {
         children: <Widget>[
           const Text(
             'Live just nu',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 20),
           ),
 
           /// Used to fetch live channels and display them in a list.

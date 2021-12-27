@@ -21,13 +21,6 @@ class Model {
   TextEditingController createUsername = TextEditingController();
 
   ///For Category
-/*  List<DropdownMenuItem<String>>? categoryList = [
-    DropdownMenuItem(child: Text('Sport')),
-    DropdownMenuItem(child: Text('Rock')),
-    DropdownMenuItem(child: Text('Jazz')),
-    DropdownMenuItem(child: Text('Pop')),
-    DropdownMenuItem(child: Text('Tjööt')),
-  ];*/
   final categoryAndStandardImg = {
     'Rock':
         'https://images.unsplash.com/photo-1459305272254-33a7d593a851?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',

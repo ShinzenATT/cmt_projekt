@@ -1,4 +1,3 @@
-
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +34,12 @@ class WebCreateAccountWidget extends StatelessWidget {
                 ),
               ),
               TextFormField(
+                controller: context.watch<VM>().username,
+                decoration: const InputDecoration(
+                  labelText: 'Användarnamn',
+                ),
+              ),
+              TextFormField(
                 controller: context.watch<VM>().phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
@@ -43,9 +48,7 @@ class WebCreateAccountWidget extends StatelessWidget {
               ),
               TextFormField(
                 controller: context.watch<VM>().password1,
-                obscureText: !context
-                    .watch<VM>()
-                    .passwordVisibilityCreate,
+                obscureText: !context.watch<VM>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
                 ),
@@ -53,9 +56,7 @@ class WebCreateAccountWidget extends StatelessWidget {
               ),
               TextFormField(
                 controller: context.watch<VM>().password2,
-                obscureText: !context
-                    .watch<VM>()
-                    .passwordVisibilityCreate,
+                obscureText: !context.watch<VM>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
                 ),
@@ -66,13 +67,9 @@ class WebCreateAccountWidget extends StatelessWidget {
                     splashRadius: 0,
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    value: context
-                        .watch<VM>()
-                        .passwordVisibilityCreate,
+                    value: context.watch<VM>().passwordVisibilityCreate,
                     onChanged: (_) {
-                      context
-                          .read<VM>()
-                          .changePasswordVisibilityCreate();
+                      context.read<VM>().changePasswordVisibilityCreate();
                     },
                   ),
                   InkWell(
@@ -80,9 +77,7 @@ class WebCreateAccountWidget extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     onTap: () {
-                      context
-                          .read<VM>()
-                          .changePasswordVisibilityCreate();
+                      context.read<VM>().changePasswordVisibilityCreate();
                     },
                     child: const Text("Visa lösenord"),
                   ),
