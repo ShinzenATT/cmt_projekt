@@ -44,7 +44,6 @@ class VM with ChangeNotifier {
   TextEditingController get password2 => lm.createPassword2;
   TextEditingController get username => lm.createUsername;
   DatabaseApi get client => lm.databaseAPI;
-  RefreshController get refreshController => lm.refreshController;
 
   TextEditingController get channelName => lm.channelName;
 
@@ -190,7 +189,7 @@ class VM with ChangeNotifier {
     setUpResponseStreamLogin(context);
     Prefs().storedData.setString("uid", const Uuid().v4());
     Prefs().storedData.get("uid");
-    updateChannels();
+    Navigator.pushNamedAndRemoveUntil(context, home, (route) => route.isFirst);
   }
 
   /// From loginpageviewmodel
@@ -303,10 +302,5 @@ class VM with ChangeNotifier {
   Future<void> grantMicPermsission() async {
     await Permission.microphone.request();
     notifyListeners();
-  }
-
-  void refresh() {
-    updateChannels();
-    refreshController.refreshCompleted();
   }
 }

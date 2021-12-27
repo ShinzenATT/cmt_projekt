@@ -37,7 +37,4 @@ class Model {
 
   ///For Channelsettings
   TextEditingController channelName = TextEditingController();
-
-  ///For App_homepage
-  var refreshController = RefreshController(initialRefresh: false);
 }

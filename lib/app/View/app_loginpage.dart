@@ -151,7 +151,6 @@ class AppLoginPage extends StatelessWidget {
                       hoverColor: Colors.transparent,
                       onTap: () {
                         context.read<VM>().guestSign(context);
-                        context.read<VM>().changePage(context, constant.home);
                       },
                       child: const Text(
                         "gäst",
