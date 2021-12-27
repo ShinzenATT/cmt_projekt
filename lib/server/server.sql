@@ -43,6 +43,13 @@ CREATE TABLE Channel (
                          PRIMARY KEY (channelid)
 );
 
+CREATE TABLE Viewers
+(
+    viewer  uuid,
+    channel uuid,
+    PRIMARY KEY (viewer, channel)
+);
+
 --CREATE TABLE Online (
 --                        uid INT,
 --                        channelSubject TEXT,

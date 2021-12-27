@@ -16,7 +16,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 
-///View model för Homepage och profilewidget.
+/*
+  The main ViewModel used by the main Model and
+  the majority of Views
+ */
 class VM with ChangeNotifier {
   Model lm = Model();
 
@@ -69,7 +72,7 @@ class VM with ChangeNotifier {
     return true;
   }
 
-  ///Returnerar användarens email.
+  ///Returns the users email.
   String? getEmail() {
     return Prefs().storedData.getString("email");
   }
@@ -82,12 +85,12 @@ class VM with ChangeNotifier {
     return Prefs().storedData.getString("username");
   }
 
-  ///Returnerar användarens uID.
+  ///Returns the users uID.
   String? getUid() {
     return Prefs().storedData.get("uid").toString();
   }
 
-  /// Skapar en showdialog med webprofilewidget.
+  ///Creates a showdialog with webprofilewidget.
   void profileInformation(context) {
     if (getEmail() == null) {
       showDialog(
@@ -188,7 +191,7 @@ class VM with ChangeNotifier {
   }
 
   /// From loginpageviewmodel
-  ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
+  ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
     databaseAPI.streamController.stream.listen((QueryModel message) async {
     
@@ -219,7 +222,7 @@ class VM with ChangeNotifier {
   }
 
   /// From createaccountviewmodel
-  ///Sätter upp funktionen som skall köras när ett nytt värde kommer ut ifrån response strömmmen.
+  ///Initiates a function that runs when a new value comes from the response stream for the client.
   void setUpResponseStreamCA(context) {
     client.streamController.stream.listen((QueryModel message) async {
       var _context = context;
@@ -253,7 +256,8 @@ class VM with ChangeNotifier {
   void updateChannels() {
     databaseAPI.sendRequest(QueryModel.getChannels());
   }
-
+  /// Organizes a list of all channels into a map where each
+  /// category references a list of channels.
   Map<String, List<QueryModel>> getCategoryNumber(List<QueryModel> l) {
     Map<String, List<QueryModel>> categories = {};
     for (QueryModel qm in l) {
@@ -265,6 +269,17 @@ class VM with ChangeNotifier {
       }
     }
     return categories;
+  }
+  /// Given a name and a list of QueryModel returns the QueryModel
+  /// that corresponds with the name.
+  /// Can return null
+  QueryModel? getChannel(List<QueryModel> l, String channelName){
+    for(QueryModel qm in l){
+      if(qm.channelName == channelName){
+        return qm;
+      }
+    }
+    return null;
   }
 
   void setJoinPrefs(String channelId, String channelName, String username) {

@@ -58,6 +58,7 @@ void main() async {
       print("Kanal ${channel.channelId} tas bort");
       rooms.remove(channel.channelId);
       database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
+      database.sendRequest(QueryModel.delViewers(channelid: message.hostId));
       connectedUsers.remove(webSocket);
     });
   }
@@ -74,10 +75,14 @@ void main() async {
     ///Lägger till klienten till rummets lista av anslutna klienter.
     room!.connectedAudioClients.add(webSocket);
 
+    ///Lägger även till användaren till table av lyssnare till nämnda kanal
+    database.sendRequest(QueryModel.addViewers(channelid: message.hostId, uid: message.uid));
+
     ///Sätter upp en ström enbart för klienter där en onDone funktion skall disconnecta klienten.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
         onDone: () {
       print("Klient ${webSocket.hashCode} lämnade");
+      database.sendRequest(QueryModel.delViewer(channelid: message.hostId, uid: message.uid)); // -
       room.disconnectAudioViewer(webSocket);
       webSocket.sink.close(10006, "lämnade servern");
       connectedUsers.remove(webSocket);

@@ -29,7 +29,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               categoryName,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black, fontSize: 20),
             ),
           ),
           Expanded(
@@ -54,10 +54,9 @@ class _AppHomePageState extends State<AppHomePage> {
       InkWell(
           onTap: () {
             context.read<VM>().setJoinPrefs(
-                  channel.channelid!,
-                  channel.channelName!,
-                  channel.username!,
-                );
+
+                channel.channelid!, channel.channelName!, channel.username!,);
+
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
           },
@@ -83,9 +82,25 @@ class _AppHomePageState extends State<AppHomePage> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 20
                       ),
                     ),
                   ),
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      child: Text(channel.total.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    )
+                  ],
                 ),
               ],
             ),
@@ -150,7 +165,7 @@ class _AppHomePageState extends State<AppHomePage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const Text(
-            'Radiokanaler',
+            'Live just nu',
             style: TextStyle(fontSize: 18),
           ),
 
@@ -169,7 +184,6 @@ class _AppHomePageState extends State<AppHomePage> {
                     List<QueryModel> channels = snapshot.data;
                     Map<String, List<QueryModel>> categories =
                         context.read<VM>().getCategoryNumber(channels);
-
                     return Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -190,46 +204,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   return Text("State: ${snapshot.connectionState}");
                 }
               }),
-          /* GradientElevatedButton(
-            child: const Text(
-              'DEMO',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamed(constants.demo);
-            },
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ]),
-          ), */
-          /* GradientElevatedButton(
-            child: const Text(
-              'Refresh',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              context.read<VM>().updateChannels();
-            },
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ]),
-          ) */
+    
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -259,7 +234,8 @@ class _AppHomePageState extends State<AppHomePage> {
   }
 }
 
-///AlertMessage då man är inloggad som gäst. Gäst får förfrågan om att skapa konto för att få tillgång till funktionalitet.
+///AlertMessage when you are logged in as a guest.
+///The guest is asked to create an account to get access to the functionality.
 class AlertMessage extends StatelessWidget {
   const AlertMessage({Key? key}) : super(key: key);
 

@@ -47,7 +47,7 @@ class DatabaseServer {
     });
 
     //Öppnar server på port och ip.
-    shelf_io.serve(handler, '192.168.0.7', 5604).then((server) {
+    shelf_io.serve(handler, dbConnection, 5604).then((server) {
       print('Serving at ws://${server.address.host}:${server.port}');
     });
   }
@@ -78,26 +78,35 @@ class DatabaseServer {
         break;
       case dbCreateChannel:
         {
-          db.createChannel(query.channelName!, query.uid!, query.category!);
+          await db.createChannel(query.channelName!, query.uid!, query.category!);
+          /*
           Future.delayed(const Duration(milliseconds: 500), () async {
-            String response = await db.getOnlineChannels();
-            for (WebSocketChannel client in connectedClients.keys) {
-              print(client);
-              client.sink.add(response);
+
             }
           });
+           */
+
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
       case dbChannelOffline:
         {
-          db.goOffline(query.uid!);
+          await db.goOffline(query.uid!);
+          /*
           Future.delayed(const Duration(milliseconds: 500), () async {
-            String response = await db.getOnlineChannels();
-            for (WebSocketChannel client in connectedClients.keys) {
-              print(client);
-              client.sink.add(response);
-            }
+
           });
+
+           */
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
         }
         break;
       case dbGetOnlineChannels:
@@ -106,6 +115,38 @@ class DatabaseServer {
           client.sink.add(response);
         }
         break;
+      case dbAddViewers:
+        {
+          await db.insertViewer(query.uid!, query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
+
+        }
+        break;
+      case dbDelViewers:
+        {
+          await db.delViewers(query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
+        }
+        break;
+      case dbDelViewer:
+        {
+          await db.delViewer(query.uid!, query.channelid!);
+          String response = await db.getOnlineChannels();
+          for (WebSocketChannel client in connectedClients.keys) {
+            print(client);
+            client.sink.add(response);
+          }
+        }
+        break;
+
       default:
         {
           break;
@@ -181,7 +222,7 @@ class DatabaseQueries {
     }
   }
 
-  void goOffline(String uid) async {
+  Future<void> goOffline(String uid) async {
     try {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
@@ -191,7 +232,7 @@ class DatabaseQueries {
     }
   }
 
-  void createChannel(String channelName, String uid, String category) async {
+  Future<void> createChannel(String channelName, String uid, String category) async {
     try {
       List<List<dynamic>> results = await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
@@ -204,7 +245,7 @@ class DatabaseQueries {
   Future<String> getOnlineChannels() async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username) FROM Channel, Account WHERE uid = channelid ");
+          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username, 'total',(SELECT COUNT(jsonb_build_object('viewer',viewer)) as total FROM Viewers WHERE channel = channelid)) FROM Channel, Account WHERE uid = channelid ");
 
       if (results.isEmpty) {
         return "";
@@ -227,4 +268,33 @@ class DatabaseQueries {
       return "";
     }
   }
+
+  Future<void> insertViewer(String uid, String channelId) async{
+    try {
+      await connection.query(
+          "INSERT INTO Viewers VALUES('$uid','$channelId')");
+    } catch (PostgreSQLException) {
+      print("error in insertViewer");
+    }
+  }
+
+  Future<void> delViewer(String uid, String channelId) async{
+
+    try {
+      await connection.query(
+          "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
+    } catch (PostgreSQLException) {
+      print("error in delViewer");
+    }
+  }
+
+  Future<void> delViewers(String channelId) async{
+    try {
+      await connection.query(
+          "DELETE FROM Viewers WHERE(channel = '$channelId')");
+    } on PostgreSQLException {
+      print("error in delViewers");
+    }
+  }
+
 }
