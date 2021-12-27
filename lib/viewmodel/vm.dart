@@ -190,6 +190,7 @@ class VM with ChangeNotifier {
     setUpResponseStreamLogin(context);
     Prefs().storedData.setString("uid", const Uuid().v4());
     Prefs().storedData.get("uid");
+    updateChannels();
   }
 
   /// From loginpageviewmodel

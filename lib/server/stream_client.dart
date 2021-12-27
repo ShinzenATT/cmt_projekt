@@ -43,7 +43,7 @@ class Client {
       playSound(event);
     }, onDone: () {
       if (Navigator.canPop(context)) {
-        Navigator.pop(context);
+        Navigator.popUntil(context, (route) => route.settings.name == home);
       }
     });
   }
