@@ -107,7 +107,6 @@ class _AppHomePageState extends State<AppHomePage> {
               ],
             ),
           ));
-  var _refreshController = RefreshController(initialRefresh: false);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,10 +193,9 @@ class _AppHomePageState extends State<AppHomePage> {
                           completeText: 'Radiokanaler uppdaterade',
                           idleText: "Dra ner för att uppdatera radiokanaler",
                         ),
-                        controller: _refreshController,
+                        controller: context.watch<VM>().refreshController,
                         onRefresh: () async {
-                          context.read<VM>().updateChannels();
-                          _refreshController.refreshCompleted();
+                          context.read<VM>().refresh();
                         },
                         child: ListView.builder(
                           shrinkWrap: true,

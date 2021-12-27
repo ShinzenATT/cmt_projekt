@@ -13,6 +13,7 @@ import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 
@@ -43,6 +44,7 @@ class VM with ChangeNotifier {
   TextEditingController get password2 => lm.createPassword2;
   TextEditingController get username => lm.createUsername;
   DatabaseApi get client => lm.databaseAPI;
+  RefreshController get refreshController => lm.refreshController;
 
   TextEditingController get channelName => lm.channelName;
 
@@ -194,7 +196,6 @@ class VM with ChangeNotifier {
   ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
     databaseAPI.streamController.stream.listen((QueryModel message) async {
-    
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       await Prefs().storedData.setString("phone", message.phone!);
@@ -256,6 +257,7 @@ class VM with ChangeNotifier {
   void updateChannels() {
     databaseAPI.sendRequest(QueryModel.getChannels());
   }
+
   /// Organizes a list of all channels into a map where each
   /// category references a list of channels.
   Map<String, List<QueryModel>> getCategoryNumber(List<QueryModel> l) {
@@ -270,12 +272,13 @@ class VM with ChangeNotifier {
     }
     return categories;
   }
+
   /// Given a name and a list of QueryModel returns the QueryModel
   /// that corresponds with the name.
   /// Can return null
-  QueryModel? getChannel(List<QueryModel> l, String channelName){
-    for(QueryModel qm in l){
-      if(qm.channelName == channelName){
+  QueryModel? getChannel(List<QueryModel> l, String channelName) {
+    for (QueryModel qm in l) {
+      if (qm.channelName == channelName) {
         return qm;
       }
     }
@@ -299,5 +302,10 @@ class VM with ChangeNotifier {
   Future<void> grantMicPermsission() async {
     await Permission.microphone.request();
     notifyListeners();
+  }
+
+  void refresh() {
+    updateChannels();
+    refreshController.refreshCompleted();
   }
 }

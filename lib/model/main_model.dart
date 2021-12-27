@@ -1,6 +1,7 @@
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Model {
   DatabaseApi databaseAPI = DatabaseApi();
@@ -43,4 +44,7 @@ class Model {
 
   ///For Channelsettings
   TextEditingController channelName = TextEditingController();
+
+  ///For App_homepage
+  var refreshController = RefreshController(initialRefresh: false);
 }
