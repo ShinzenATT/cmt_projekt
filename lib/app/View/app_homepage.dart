@@ -71,18 +71,31 @@ class _AppHomePageState extends State<AppHomePage> {
                   fit: BoxFit.fill,
                   color: Colors.black.withOpacity(0.5),
                 ),
-                Container(
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                    child: Text(
-                      channel.channelName!,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                Column(
+                  children: [
+                    Container(
+                      height: 150,
+                      width: 150,
+                      child: Center(
+                        child: Text(
+                          channel.channelName!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      child: Text(
+                        channel.total.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        )
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -166,12 +179,6 @@ class _AppHomePageState extends State<AppHomePage> {
                     List<QueryModel> channels = snapshot.data;
                     Map<String, List<QueryModel>> categories =
                         context.read<VM>().getCategoryNumber(channels);
-                    int i = 0;
-                    for(QueryModel qm in channels){
-                      print("total count $i: ${qm.total}");
-                      i++;
-                    }
-
                     return Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -261,7 +268,8 @@ class _AppHomePageState extends State<AppHomePage> {
   }
 }
 
-///AlertMessage då man är inloggad som gäst. Gäst får förfrågan om att skapa konto för att få tillgång till funktionalitet.
+///AlertMessage when you are logged in as a guest.
+///The guest is asked to create an account to get access to the functionality.
 class AlertMessage extends StatelessWidget {
   const AlertMessage({Key? key}) : super(key: key);
 

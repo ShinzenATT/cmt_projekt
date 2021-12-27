@@ -1,9 +1,14 @@
 import 'package:cmt_projekt/api/prefs.dart';
+import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/*
+  The page responsible for displaying what the viewer sees
+  when listening to a stream.
+ */
 class AppListenPage extends StatelessWidget {
   const AppListenPage({Key? key}) : super(key: key);
 
@@ -18,7 +23,7 @@ class AppListenPage extends StatelessWidget {
       onWillPop: willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80.0),
           child: AppBar(
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -77,22 +82,44 @@ class AppListenPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Row(
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.person,
                       color: Colors.white,
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        '2', //Här ska countern läggas in för aktiva lyssnare.
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    Text(
+                    StreamBuilder(
+                        stream: context.watch<VM>().databaseAPI.channelController.stream,
+                        initialData: 0,
+                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.connectionState == ConnectionState.active ||
+                              snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.hasError) {
+                              return const Text("error");
+                            } else if (snapshot.hasData) {
+                              QueryModel? channel =
+                              context.read<VM>().getChannel(snapshot.data,
+                                  Prefs().storedData.getString("channelName")!);
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  channel != null ? channel.total.toString() : "0", //Här ska countern läggas in för aktiva lyssnare.
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return const Text("No active channels");
+                            }
+                          } else {
+                            return Text("State: ${snapshot.connectionState}");
+                          }
+                        }),
+
+                    const Text(
                       'lyssnare', //Här ska countern läggas in för aktiva lyssnare.
                       style: TextStyle(
                         color: Colors.white,
@@ -128,11 +155,11 @@ class AppListenPage extends StatelessWidget {
                       indent: MediaQuery.of(context).size.width * 0.05,
                       endIndent: MediaQuery.of(context).size.width * 0.05,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Här ska det stå om kanalen sänder',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
                         ),
