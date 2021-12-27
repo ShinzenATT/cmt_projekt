@@ -1,5 +1,7 @@
 import 'package:cmt_projekt/api/prefs.dart';
+
 import 'package:cmt_projekt/model/query_model.dart';
+
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,14 @@ class AppListenPage extends StatelessWidget {
       context.read<StreamViewModel>().closeClient();
       return context.read<VM>().willPopCallback();
     }
+
     return WillPopScope(
       onWillPop: willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
+
           preferredSize: const Size.fromHeight(80.0),
+
           child: AppBar(
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -41,8 +46,10 @@ class AppListenPage extends StatelessWidget {
               children: [
                 Text(
                   context.read<VM>().title.toUpperCase(),
-                  style:
-                      const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.bold),
+
                 ),
                 const Text(
                   'Din moderna radioapp',
@@ -61,6 +68,7 @@ class AppListenPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -72,6 +80,7 @@ class AppListenPage extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
                       ),
                     ),
                     Text(
@@ -87,6 +96,7 @@ class AppListenPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Row(
+
                   children: [
                     const Icon(
                       Icons.person,
@@ -125,6 +135,7 @@ class AppListenPage extends StatelessWidget {
                         }),
 
                     const Text(
+
                       'lyssnare', //Här ska countern läggas in för aktiva lyssnare.
                       style: TextStyle(
                         color: Colors.white,
@@ -135,7 +146,9 @@ class AppListenPage extends StatelessWidget {
                 ),
               ),
               Container(
+
                 margin: const EdgeInsets.only(left:3,right:3,top:100),
+
                 height: MediaQuery.of(context).size.height * 0.4,
                 width: double.infinity,
                 alignment: Alignment.center,
@@ -159,11 +172,13 @@ class AppListenPage extends StatelessWidget {
                       indent: MediaQuery.of(context).size.width * 0.05,
                       endIndent: MediaQuery.of(context).size.width * 0.05,
                     ),
+
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Här ska det stå om kanalen sänder',
                         style: TextStyle(
+
                           fontSize: 20,
                           color: Colors.white,
                         ),

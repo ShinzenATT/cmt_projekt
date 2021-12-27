@@ -194,7 +194,7 @@ class VM with ChangeNotifier {
   ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
     databaseAPI.streamController.stream.listen((QueryModel message) async {
-      print(message);
+    
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       await Prefs().storedData.setString("phone", message.phone!);

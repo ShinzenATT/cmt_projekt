@@ -54,7 +54,9 @@ class _AppHomePageState extends State<AppHomePage> {
       InkWell(
           onTap: () {
             context.read<VM>().setJoinPrefs(
-                channel.channelid!, channel.channelName!, channel.username!);
+
+                channel.channelid!, channel.channelName!, channel.username!,);
+
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
           },
@@ -202,46 +204,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   return Text("State: ${snapshot.connectionState}");
                 }
               }),
-          /* GradientElevatedButton(
-            child: const Text(
-              'DEMO',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamed(constants.demo);
-            },
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ]),
-          ), */
-          /* GradientElevatedButton(
-            child: const Text(
-              'Refresh',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              context.read<VM>().updateChannels();
-            },
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ]),
-          ) */
+    
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
