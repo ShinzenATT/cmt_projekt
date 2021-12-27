@@ -61,12 +61,17 @@ class AppListenPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      (Prefs().storedData.getString("channelName")!),
-                      style: const TextStyle(
-                        color: Colors.greenAccent,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Text(
+                          (Prefs().storedData.getString("channelName")!),
+                          style: const TextStyle(
+                            color: Colors.greenAccent,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                     Text(
@@ -130,8 +135,7 @@ class AppListenPage extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.all(3),
-                padding: const EdgeInsets.all(3),
+                margin: const EdgeInsets.only(left:3,right:3,top:100),
                 height: MediaQuery.of(context).size.height * 0.4,
                 width: double.infinity,
                 alignment: Alignment.center,

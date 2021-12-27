@@ -29,7 +29,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
             child: Text(
               categoryName,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black, fontSize: 20),
             ),
           ),
           Expanded(
@@ -53,8 +53,8 @@ class _AppHomePageState extends State<AppHomePage> {
           required BuildContext context}) =>
       InkWell(
           onTap: () {
-            context.read<VM>().setJoinPrefs(channel.channelid!,
-                      channel.channelName!, channel.username!);
+            context.read<VM>().setJoinPrefs(
+                channel.channelid!, channel.channelName!, channel.username!);
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
           },
@@ -71,30 +71,33 @@ class _AppHomePageState extends State<AppHomePage> {
                   fit: BoxFit.fill,
                   color: Colors.black.withOpacity(0.5),
                 ),
-                Column(
+                Container(
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      channel.channelName!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
                   children: [
-                    Container(
-                      height: 150,
-                      width: 150,
-                      child: Center(
-                        child: Text(
-                          channel.channelName!,
+                    const Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      child: Text(channel.total.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      child: Text(
-                        channel.total.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
-                    ),
+                          )),
+                    )
                   ],
                 ),
               ],
@@ -160,7 +163,7 @@ class _AppHomePageState extends State<AppHomePage> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const Text(
-            'Radiokanaler',
+            'Live just nu',
             style: TextStyle(fontSize: 18),
           ),
 
