@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget checkLogin() {
-    if (Prefs().storedData.getString("uid") != null) {
+    if (Prefs().storedData.getString("email") != null) {
       if (kIsWeb) {
         return const WebHomePage();
       }
