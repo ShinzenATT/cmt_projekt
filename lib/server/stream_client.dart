@@ -43,7 +43,9 @@ class Client {
       playSound(event);
     }, onDone: () {
       if (Navigator.canPop(context)) {
-        Navigator.popUntil(context, (route) => route.settings.name == home);
+        Navigator.popUntil(context, (route) {
+          return route.settings.name == home;
+        });
       }
     });
   }
