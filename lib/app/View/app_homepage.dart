@@ -54,8 +54,10 @@ class _AppHomePageState extends State<AppHomePage> {
       InkWell(
           onTap: () {
             context.read<VM>().setJoinPrefs(
-
-                channel.channelid!, channel.channelName!, channel.username!,);
+                  channel.channelid!,
+                  channel.channelName!,
+                  channel.username!,
+                );
 
             context.read<StreamViewModel>().startup(context);
             Navigator.pushNamed(context, constants.joinChannel);
@@ -80,10 +82,9 @@ class _AppHomePageState extends State<AppHomePage> {
                     child: Text(
                       channel.channelName!,
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
                     ),
                   ),
                 ),
@@ -166,7 +167,7 @@ class _AppHomePageState extends State<AppHomePage> {
         children: <Widget>[
           const Text(
             'Live just nu',
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 20),
           ),
 
           /// Used to fetch live channels and display them in a list.
@@ -204,7 +205,6 @@ class _AppHomePageState extends State<AppHomePage> {
                   return Text("State: ${snapshot.connectionState}");
                 }
               }),
-    
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

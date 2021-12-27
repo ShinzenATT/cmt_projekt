@@ -65,7 +65,7 @@ class AppMenu extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    context.read<VM>().getEmail() ?? 'Gäst',
+                    context.read<VM>().getUsername() ?? 'Gäst',
                     style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,

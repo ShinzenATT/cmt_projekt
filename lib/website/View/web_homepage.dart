@@ -1,7 +1,10 @@
+import 'package:cmt_projekt/model/query_model.dart';
+import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
 
 ///Homepage för hemsidan.
 class WebHomePage extends StatefulWidget {
@@ -12,6 +15,97 @@ class WebHomePage extends StatefulWidget {
 }
 
 class _WebHomePageState extends State<WebHomePage> {
+  Widget _horizontalListView(
+      {required String image,
+      required List<QueryModel> channelList,
+      required String categoryName}) {
+    return SizedBox(
+      height: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding:
+                EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
+            child: Text(
+              categoryName,
+              style: const TextStyle(color: Colors.black, fontSize: 20),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: channelList.length,
+              itemBuilder: (BuildContext context, int index) => _buildBox(
+                  image: context.read<VM>().categoryList[categoryName]!,
+                  channel: channelList[index],
+                  context: context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBox(
+          {required String image,
+          required QueryModel channel,
+          required BuildContext context}) =>
+      InkWell(
+          onTap: () {
+            context.read<VM>().setJoinPrefs(
+                  channel.channelid!,
+                  channel.channelName!,
+                  channel.username!,
+                );
+
+            context.read<StreamViewModel>().startup(context);
+            Navigator.pushNamed(context, constants.joinChannel);
+          },
+          child: Card(
+            elevation: 10,
+            child: Stack(
+              children: [
+                Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                ),
+                Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                Container(
+                  height: 150,
+                  width: 150,
+                  child: Center(
+                    child: Text(
+                      channel.channelName!,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      child: Text(channel.total.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +132,9 @@ class _WebHomePageState extends State<WebHomePage> {
               highlightColor: Colors.transparent,
               hoverColor: Colors.transparent,
               onTap: () {},
-              child: const Text(
-                'COMMENT',
-                style: TextStyle(
+              child: Text(
+                context.read<VM>().title.toUpperCase(),
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -50,31 +144,50 @@ class _WebHomePageState extends State<WebHomePage> {
         ],
       ),
 
-      ///Knapp för demosidan, har i dagsläget ingen funktion. Knappen ska inte
-      ///finnas kvar permanent.
-      body: Center(
-        child: SizedBox(
-          width: 200,
-          height: 50,
-          child: GradientElevatedButton(
-            child: const Text(
-              'Demo Sida',
-              style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {},
-            gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ]),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Text(
+            'Live just nu',
+            style: TextStyle(fontSize: 22),
           ),
-        ),
+
+          /// Used to fetch live channels and display them in a list.
+          StreamBuilder(
+              stream: context.watch<VM>().databaseAPI.channelController.stream,
+              initialData: 0,
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.connectionState == ConnectionState.active ||
+                    snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return const Text("error");
+                  } else if (snapshot.hasData) {
+                    List<QueryModel> channels = snapshot.data;
+                    Map<String, List<QueryModel>> categories =
+                        context.read<VM>().getCategoryNumber(channels);
+                    return Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: categories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _horizontalListView(
+                              image: "ds",
+                              channelList:
+                                  categories[categories.keys.elementAt(index)]!,
+                              categoryName: categories.keys.elementAt(index));
+                        },
+                      ),
+                    );
+                  } else {
+                    return const Text("No active channels");
+                  }
+                } else {
+                  return Text("State: ${snapshot.connectionState}");
+                }
+              }),
+        ],
       ),
 
       ///Menyn i appbaren på hemsidan.
@@ -107,7 +220,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     ),
                   ),
                   Text(
-                    context.read<VM>().getEmail() ?? 'Gäst',
+                    context.read<VM>().getUsername() ?? 'Gäst',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -131,7 +244,7 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<VM>().channelSettings(context);
+                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -139,8 +252,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-
-                Navigator.pop(context);
               },
             ),
             const Padding(
@@ -159,7 +270,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -167,7 +277,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -175,8 +284,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                // Navigator.pop(context);
-                context.read<VM>().profileInformation(context);
               },
             ),
             ListTile(
@@ -184,7 +291,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -192,7 +298,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             const Padding(
@@ -211,7 +316,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -219,7 +323,6 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                Navigator.pop(context);
               },
             ),
             TextButton.icon(
