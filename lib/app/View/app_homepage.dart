@@ -108,6 +108,7 @@ class _AppHomePageState extends State<AppHomePage> {
             ),
           ));
   @override
+  var _refreshController = RefreshController(initialRefresh: false);
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -176,6 +177,7 @@ class _AppHomePageState extends State<AppHomePage> {
               initialData: 0,
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
+                  context.read<VM>().updateChannels();
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.connectionState == ConnectionState.active ||
                     snapshot.connectionState == ConnectionState.done) {
@@ -193,9 +195,10 @@ class _AppHomePageState extends State<AppHomePage> {
                           completeText: 'Radiokanaler uppdaterade',
                           idleText: "Dra ner för att uppdatera radiokanaler",
                         ),
-                        controller: context.watch<VM>().refreshController,
+                        controller: _refreshController,
                         onRefresh: () async {
-                          context.read<VM>().refresh();
+                          context.read<VM>().updateChannels();
+                          _refreshController.refreshCompleted();
                         },
                         child: ListView.builder(
                           shrinkWrap: true,

@@ -2,7 +2,6 @@ import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
 
-
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -18,7 +17,6 @@ class DatabaseApi {
   DatabaseApi._internal() {
     init();
     poller();
-    sendRequest(QueryModel.getChannels());
   }
   //En ström som skickar ut en bool till alla lyssnare.
   StreamController<QueryModel> streamController =
