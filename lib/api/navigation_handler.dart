@@ -1,6 +1,5 @@
 //package imports
 import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/app/View/app_hostpage.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
@@ -16,7 +15,7 @@ class NaviHandler {
   int index = 1;
   int previousIndex = 1;
 
-  ///context from the current active page in order to swap page correctly.
+  ///Context from the current active page in order to swap page correctly.
   late BuildContext _context;
 
   factory NaviHandler() {
@@ -57,9 +56,6 @@ class NaviHandler {
       }
       previousIndex = i;
       Navigator.of(_context).pushNamed(goLive);
-      // Prefs().storedData.setString("intent", "h");
-      // _context.read<StreamViewModel>().startup(_context);
-      // Navigator.of(_context).pushReplacementNamed(appChannel);
     }
     index = i;
   }

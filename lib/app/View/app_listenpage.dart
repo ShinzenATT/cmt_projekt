@@ -1,16 +1,12 @@
 import 'package:cmt_projekt/api/prefs.dart';
-
 import 'package:cmt_projekt/model/query_model.dart';
-
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/*
-  The page responsible for displaying what the viewer sees
-  when listening to a stream.
- */
+
+///The page responsible for displaying what the viewer sees when listening to a stream.
 class AppListenPage extends StatelessWidget {
   const AppListenPage({Key? key}) : super(key: key);
 

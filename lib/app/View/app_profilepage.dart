@@ -2,7 +2,7 @@ import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-///Widget för sidan med profilinformation.
+///Widget for the profile page.
 class AppProfileWidget extends StatelessWidget {
   const AppProfileWidget({Key? key}) : super(key: key);
 
