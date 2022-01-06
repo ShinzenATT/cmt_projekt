@@ -12,31 +12,27 @@ import 'package:cmt_projekt/api/database_api.dart';
 import '../constants.dart';
 
 void main() async {
-  ///En map med alla anslutna användare.
+  ///A map with all connected users.
   Map<WebSocketChannel, StreamController> connectedUsers = {};
 
-  ///En map med alla rum
+  ///A map with all the rooms
   Map<String, RadioChannel> rooms = {};
 
-  ///Instans av DatabaseApi för att möjligöra kommunikation med databasen.
+  ///A instance of DatabaseAPI to enable communication with the database.
   DatabaseApi database = DatabaseApi();
 
-  ///Meddelar att en host har anslutit till ett rum och skapar detta rummet med hostens Id.
-  ///Sätter även upp en extra intern ström som varje Host-websocket har enskilt för att kunna göra flera listen funktioner.
+  ///This function is called when a host connects to the server and creates a radiochannel with the host id.
+  ///Also sets up a extra stream internally for the host-websocket for creating multiple listen functions.
   void initHostStream(StreamMessage message, webSocket) {
-    print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
+    //print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
 
-    ///Skapar en radiokanal.
+    ///Creates a radiochannel
     RadioChannel channel = RadioChannel(webSocket, message.hostId!);
 
-    ///Lägger till radiokanalen i listan av alla radiokanaler.
+    ///Adds the radiochannel to the list of all radiochannels.
     rooms[message.hostId!] = channel;
 
-    ///Lägger till kanalen i databasen om den inte finns där. Sedan sätts den til "isOnline".
-    print("ChannelName: " + message.channelName!);
-    print("ChannelType: " + message.category!);
-
-    ///
+    ///Adds the radiochannel to the database if it doesn't already exist. After that the radiochannel is toggled as online.
     database.sendRequest(QueryModel.createChannel(
         uid: message.uid,
         channelName: message.channelName,
@@ -44,6 +40,8 @@ void main() async {
 
     ///Sätter upp en listen funktion specifikt för en host. Denna ström låter hosten skicka meddelade till alla klienter anslutna på dennes kanal.
     ///OnDone disconnectar alla anslutna klienter till rummet och tar bort kanalen från listan
+    ///Sets up a listen function specifically for the host. It is used to let the host send messages to all clients connected to the hosts radiochannel.
+    ///
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((message) {
       if (message.runtimeType != String) {
         for (WebSocketChannel sock in channel.connectedAudioClients) {
@@ -51,11 +49,11 @@ void main() async {
         }
       }
     }, onDone: () {
-      print("host för rum ${channel.channelId} lämnade");
+      //print("host för rum ${channel.channelId} lämnade");
       for (WebSocketChannel client in channel.connectedAudioClients) {
         client.sink.close(100005, "Rum ${channel.channelId} stängdes");
       }
-      print("Kanal ${channel.channelId} tas bort");
+      //print("Kanal ${channel.channelId} tas bort");
       rooms.remove(channel.channelId);
       database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
       database.sendRequest(QueryModel.delViewers(channelid: message.hostId));
@@ -66,8 +64,7 @@ void main() async {
   ///Meddelar att en klient har anslutit till ett rum och lägger till den till det angivna rummet.
   ///Sätter även upp en extra intern ström som varje Klient-websocket har enskilt för att kunna göra flera listen funktioner.
   void initClientStream(message, webSocket) {
-    print(
-        "A new client ${message.uid} has connected: ${webSocket.hashCode} and wants to join room ${message.hostId}");
+    //print("A new client ${message.uid} has connected: ${webSocket.hashCode} and wants to join room ${message.hostId}");
 
     ///Plockar ut rummet som någon host har skapat ur listan av alla rum
     RadioChannel? room = rooms[message.hostId];
