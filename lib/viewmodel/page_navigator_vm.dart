@@ -8,7 +8,6 @@ import 'package:cmt_projekt/app/View/app_loginpage.dart';
 import 'package:cmt_projekt/app/View/app_meny.dart';
 
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
-import 'package:cmt_projekt/website/View/web_createaccountwidget.dart';
 import 'package:cmt_projekt/website/View/web_homepage.dart';
 import 'package:cmt_projekt/website/View/web_loginpage.dart';
 import 'package:flutter/foundation.dart';

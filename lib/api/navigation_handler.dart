@@ -38,7 +38,6 @@ class NaviHandler {
       //TODO implementera detta då det finns en fungerande sök-sida.
 
     } else if (i == 1) {
-      print(previousIndex);
       if (previousIndex == 2) {
         _context.read<StreamViewModel>().closeClient();
         _context.read<VM>().willPopCallback();
@@ -50,7 +49,7 @@ class NaviHandler {
         showDialog(
             context: _context,
             builder: (context) {
-              return AlertMessage();
+              return const AlertMessage();
             });
         return;
       }

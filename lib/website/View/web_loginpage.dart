@@ -9,10 +9,10 @@ import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import '../../constants.dart' as constant;
 
-///Loginpage för hemsidan.
-
+///Login page for the website.
 class WebLoginPage extends StatelessWidget {
   const WebLoginPage({Key? key}) : super(key: key);
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -20,7 +20,7 @@ class WebLoginPage extends StatelessWidget {
         elevation: 0,
       ),
       body: Container(
-        ///Här sätts färgtemat för bakgrunden på loginpage.
+        ///Here the color theme for the background is set for the login page.
         decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
@@ -31,8 +31,8 @@ class WebLoginPage extends StatelessWidget {
               Colors.greenAccent,
             ])),
 
-        ///Rad som innehåller applikationens titel samt undertext till vänster och
-        ///ett kort med olika alternativ för att logga in, skapa konto osv till vänster.
+        ///Line containing the application title and subtitle on the left and
+        ///a card with various options for logging in, creating an account, etc. to the left.
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -124,7 +124,7 @@ class WebLoginPage extends StatelessWidget {
                                     splashRadius: null,
                                     splashColor: Colors.transparent,
                                     icon: Icon(
-                                      /// Ikonen ändras beroende på om man valt att se lösenord eller inte.
+                                      ///The icon changes depending on whether you have chosen to see the password or not.
                                       context
                                               .watch<VM>()
                                               .passwordVisibilityLogin
@@ -133,7 +133,7 @@ class WebLoginPage extends StatelessWidget {
                                       color: Theme.of(context).primaryColorDark,
                                     ),
                                     onPressed: () {
-                                      /// Updaterar en bool ifall man vill se lösenord eller inte.
+                                      ///Updates a bool if you want to see the password or not.
                                       context
                                           .read<VM>()
                                           .changePasswordVisibilityLogin();

@@ -29,16 +29,15 @@ class DatabaseServer {
       ///Gives all clients that connects their own StreamController and adds them to the map connectedUsers.
       connectedClients[webSocket] = StreamController.broadcast();
 
-      ///Sets up a listen function that forwards all incoming data from the websocket to the StreamController.
-      ///The onDone function is called when the websocket connection is closed and handles the host/clients close methods.
+      ///Sets up a listen function that forwards all incoming data from the web socket to the StreamController.
+      ///The onDone function is called when the web socket connection is closed and handles the host/clients close methods.
       webSocket.stream.listen((event) {
         connectedClients[webSocket]!.sink.add(event);
       }, onDone: () {
         connectedClients[webSocket]!.close();
       });
 
-      ///Sets up the first listen function for the StreamController. Here it checks whether the websocket is a host or client
-      ///and acts accordingly.
+      ///Sets up the first listen function for the StreamController. Here it checks whether the web socket is a host or client and acts accordingly.
       connectedClients[webSocket]!.stream.asBroadcastStream().listen((data) {
         onMessage(webSocket, data);
       }, onDone: () {
@@ -47,10 +46,11 @@ class DatabaseServer {
     });
 
     shelf_io.serve(handler, dbConnection, 5604).then((server) {
-      print('Serving at ws://${server.address.host}:${server.port}');
+      //print('Serving at ws://${server.address.host}:${server.port}');
     });
   }
 
+  ///This function is called for each message sent to the database and interpretate its intention.
   void onMessage(WebSocketChannel client, data) async {
     QueryModel query = QueryModel.fromJson(jsonDecode(data));
     if (query.code == dbPing) {
@@ -188,8 +188,8 @@ class DatabaseQueries {
         return "";
       }
 
-      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
+      ///After which each element in the row is compared to the right variable.
       Map mapOfQueries = {};
       mapOfQueries['code'] = [dbGetInfo];
       mapOfQueries['result'] = [];
@@ -235,8 +235,8 @@ class DatabaseQueries {
         return "";
       }
 
-      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
+      ///After which each element in the row is compared to the right variable.
       Map mapOfQueries = {};
       mapOfQueries['code'] = [dbGetOnlineChannels];
       mapOfQueries['result'] = [];

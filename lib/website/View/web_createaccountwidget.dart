@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 
-///CreateAccountPage för hemsidan, denna skapas i en showdialog på Loginpage.
+///CreateAccountPage for the website, it's created in a showdialog in Loginpage.
 
 class WebCreateAccountWidget extends StatelessWidget {
   const WebCreateAccountWidget({Key? key}) : super(key: key);
