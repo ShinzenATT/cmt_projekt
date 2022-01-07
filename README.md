@@ -19,13 +19,13 @@ Comment aims to provide a combination of both traditional podcasts but also live
 ## How users can get started with the project
 To get started and setup your own test environment is relatively simple:
 Setup your local network so that it accepts and properly forward UDP/TCP traffic on ports 5604, 5605.
-_Follow the flutter guide on how to configure your IDE with [flutter](https://docs.flutter.dev/get-started/editor), and clone the repository.
-_Setup and configure a postgres database with the SQL file provided from the repo. 
+Follow the flutter guide on how to configure your IDE with [flutter](https://docs.flutter.dev/get-started/editor), and clone the repository.
+Setup and configure a postgres database with the SQL file provided from the repo. 
 Update the  ip used in constants.dart to reflect your server and databases local ip.
 Start database_api.dart.
 Start stream_server.dart.
 
-Once this is done in order to run the application first start the database server and stream server. 
+Once this is done in order to run the application first start the database server and stream server. You can then download and install the apk provided in this repository.
 
 
 ## How to generate and install an APK on your android. 
