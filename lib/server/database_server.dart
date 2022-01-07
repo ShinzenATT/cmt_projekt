@@ -14,7 +14,7 @@ void main() async {
   DatabaseServer();
 }
 
-/// Skapar en koppling mellan applikationen och databasen.
+/// Creates a connection between the database and the application.
 class DatabaseServer {
   DatabaseQueries db = DatabaseQueries();
   late HttpServer server;
@@ -26,19 +26,18 @@ class DatabaseServer {
 
   void initServer() async {
     var handler = webSocketHandler((WebSocketChannel webSocket) {
-      ///Sätter upp så att alla klienter som ansluter får en egen StreamController och läggs till i mapen connectedUsers.
+      ///Gives all clients that connects their own StreamController and adds them to the map connectedUsers.
       connectedClients[webSocket] = StreamController.broadcast();
 
-      ///Sätter upp en listen funktion som skickar vidare all inkommande data från websocketen till StreamControllern.
-      ///Ondone funktionen websocketens StreamController vilket i sin tur gör host/client stängningsmetoder.
+      ///Sets up a listen function that forwards all incoming data from the web socket to the StreamController.
+      ///The onDone function is called when the web socket connection is closed and handles the host/clients close methods.
       webSocket.stream.listen((event) {
         connectedClients[webSocket]!.sink.add(event);
       }, onDone: () {
         connectedClients[webSocket]!.close();
       });
 
-      ///Sätter upp första listen funktionen till StreamControllern. Här kollas ifall den anslutna användaren är en host eller klient
-      ///och sätter sedan upp rätt funktioner beroende på vad den är.
+      ///Sets up the first listen function for the StreamController. Here it checks whether the web socket is a host or client and acts accordingly.
       connectedClients[webSocket]!.stream.asBroadcastStream().listen((data) {
         onMessage(webSocket, data);
       }, onDone: () {
@@ -46,12 +45,12 @@ class DatabaseServer {
       });
     });
 
-    //Öppnar server på port och ip.
     shelf_io.serve(handler, dbConnection, 5604).then((server) {
-      print('Serving at ws://${server.address.host}:${server.port}');
+      //print('Serving at ws://${server.address.host}:${server.port}');
     });
   }
 
+  ///This function is called for each message sent to the database and interpretate its intention.
   void onMessage(WebSocketChannel client, data) async {
     QueryModel query = QueryModel.fromJson(jsonDecode(data));
     if (query.code == dbPing) {
@@ -60,7 +59,7 @@ class DatabaseServer {
       client.sink.add(jsonEncode(mapOfQueries));
       return;
     }
-    print(query.code);
+
     switch (query.code) {
       case dbAccount:
         {
@@ -79,16 +78,8 @@ class DatabaseServer {
       case dbCreateChannel:
         {
           await db.createChannel(query.channelName!, query.uid!, query.category!);
-          /*
-          Future.delayed(const Duration(milliseconds: 500), () async {
-
-            }
-          });
-           */
-
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
             client.sink.add(response);
           }
         }
@@ -96,15 +87,8 @@ class DatabaseServer {
       case dbChannelOffline:
         {
           await db.goOffline(query.uid!);
-          /*
-          Future.delayed(const Duration(milliseconds: 500), () async {
-
-          });
-
-           */
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
             client.sink.add(response);
           }
         }
@@ -155,7 +139,7 @@ class DatabaseServer {
   }
 }
 
-/// Skapar queries och kommunicerar med databasen.
+/// Creates queries and communicates with the database.
 class DatabaseQueries {
   //Database host ip
   var connection = PostgreSQLConnection("localhost", 5432, "cmt_projekt",
@@ -204,8 +188,8 @@ class DatabaseQueries {
         return "";
       }
 
-      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
+      ///After which each element in the row is compared to the right variable.
       Map mapOfQueries = {};
       mapOfQueries['code'] = [dbGetInfo];
       mapOfQueries['result'] = [];
@@ -251,8 +235,8 @@ class DatabaseQueries {
         return "";
       }
 
-      ///Då result är en List<List<dynamic>> så gör result.first[0] att man får den första List<dynamic>, dvs första raden.
-      ///Efter det tar man ut varje element på raden för sig och kopplar det till rätt variabel.
+      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
+      ///After which each element in the row is compared to the right variable.
       Map mapOfQueries = {};
       mapOfQueries['code'] = [dbGetOnlineChannels];
       mapOfQueries['result'] = [];

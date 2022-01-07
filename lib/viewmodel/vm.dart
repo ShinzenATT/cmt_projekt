@@ -13,7 +13,6 @@ import 'package:cmt_projekt/website/View/web_profilewidget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 
@@ -48,12 +47,9 @@ class VM with ChangeNotifier {
   TextEditingController get channelName => lm.channelName;
 
   void setChannelSettings() {
-    print(channelName.value.text);
-    print(getCategory);
     Prefs().storedData.setString("channelName", channelName.value.text);
     Prefs().storedData.setString("category", getCategory);
     Prefs().storedData.setString("intent", "h");
-    //Navigator.of(context).pushReplacementNamed(appChannel);
   }
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
@@ -203,7 +199,7 @@ class VM with ChangeNotifier {
       // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
       Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
       //Navigator.of(context)
-      //    .pushReplacementNamed('/Home'); // Byter till homepage.
+      //    .pushReplacementNamed('/Home'); // Changes to HomePage.
       lm.databaseAPI.sendRequest(QueryModel.getChannels());
     });
   }

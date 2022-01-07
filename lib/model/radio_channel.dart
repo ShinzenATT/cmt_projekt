@@ -11,7 +11,7 @@ class RadioChannel {
   RadioChannel(WebSocketChannel wc, String channel) {
     channelId = channel;
     streamAudioHost = wc;
-    print("room: $channel created");
+    //print("room: $channel created");
   }
 
   addAudioViewer(WebSocketChannel wc) {
@@ -20,30 +20,9 @@ class RadioChannel {
     }
   }
 
-  addVideoViewer(WebSocketChannel wc) {
-    if (!connectedVideoClients.contains(wc)) {
-      connectedVideoClients.add(wc);
-    }
-  }
-
   disconnectAudioViewer(WebSocketChannel wc) {
     if (connectedAudioClients.contains(wc)) {
       connectedAudioClients.remove(wc);
     }
-  }
-
-  disconnectVideoViewer(WebSocketChannel wc) {
-    if (connectedVideoClients.contains(wc)) {
-      connectedVideoClients.remove(wc);
-    }
-  }
-
-  startHosting(){
-  return channelId;
-  }
-
-  //Probably needs more
-  stopHosting() {
-    //print('Maybe implement in future');
   }
 }

@@ -1,4 +1,3 @@
-import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/stream_model.dart';
 import 'package:cmt_projekt/server/stream_client.dart';
 import 'package:flutter/cupertino.dart';
@@ -102,15 +101,13 @@ class StreamViewModel with ChangeNotifier {
   }
 
   void getRecFn() {
-    if (!smodel.isInitiated) {
-      return null;
+    if (smodel.isInitiated) {
+      return;
     }
-    print("hello" + " " + "${smodel.recorder!.isRecording}");
     if (smodel.recorder!.isRecording) {
       stop();
     } else {
       record();
     }
-    ;
   }
 }

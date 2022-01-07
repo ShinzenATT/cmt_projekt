@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../constants.dart' as constant;
 
 ///First version of welcomepage for the app.
-
 class AppWelcomePage extends StatelessWidget {
   const AppWelcomePage({Key? key}) : super(key: key);
 

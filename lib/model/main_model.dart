@@ -1,7 +1,6 @@
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Model {
   DatabaseApi databaseAPI = DatabaseApi();
@@ -20,7 +19,7 @@ class Model {
   TextEditingController createPassword2 = TextEditingController();
   TextEditingController createUsername = TextEditingController();
 
-  ///For Category
+  ///For Category images
   final categoryAndStandardImg = {
     'Rock':
         'https://images.unsplash.com/photo-1459305272254-33a7d593a851?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',

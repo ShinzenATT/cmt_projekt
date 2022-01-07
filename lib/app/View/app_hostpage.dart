@@ -6,10 +6,7 @@ import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/*
-  The page responsible for displaying what the host sees
-  when streaming.
- */
+///The page responsible for displaying what the host sees when streaming.
 class AppHostPage extends StatefulWidget {
   const AppHostPage({Key? key}) : super(key: key);
 

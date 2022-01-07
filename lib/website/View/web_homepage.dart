@@ -190,9 +190,9 @@ class _WebHomePageState extends State<WebHomePage> {
         ],
       ),
 
-      ///Menyn i appbaren på hemsidan.
-      ///Innehåller en header som innehåller en text samt användarens email.
-      ///Innehåller också en lista med olika textknappar som tar användaren till bla profilinformation.
+      ///The menu in the app bar on the website.
+      ///Contains a header with a text and the users email.
+      ///Also contains a list with different text buttons which takes the user the the profile page etc.
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical

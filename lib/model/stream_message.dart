@@ -1,5 +1,5 @@
-///En klass som innehåller id,förfrågningsinfo och kanalinfo.
-///Syftet med denna klass är att skapa en enkel kommunikation mellan server och klient.
+///A class that contains user id, request iformation, and information about the requested radiochannel.
+///The purpose of this class is to relay information between the server and client.
 class StreamMessage {
   String uid;
   String? hostOrJoin;
@@ -8,7 +8,7 @@ class StreamMessage {
   String? channelName;
   String? category;
 
-  ///Ett StreamMessage skapar en förfrågan att hosta.
+  ///An instance of StreamMessage for a host request.
   StreamMessage.host({
     required this.uid,
     required this.channelType,
@@ -19,7 +19,7 @@ class StreamMessage {
     hostOrJoin = "h";
   }
 
-  ///Ett StreamMessage skapar en förfrågan att joina.
+  ///An instance of StreamMessage for a join request.
   StreamMessage.join(
       {required this.uid, required this.hostId, required this.channelType}) {
     hostOrJoin = "j";
@@ -35,7 +35,7 @@ class StreamMessage {
         'category': category,
       };
 
-  ///Skapar en klass från json.
+  ///Creates an instance of StreamMessage from jason.
   StreamMessage.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
         hostOrJoin = json['hostOrJoin'],
