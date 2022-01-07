@@ -101,7 +101,7 @@ class StreamViewModel with ChangeNotifier {
   }
 
   void getRecFn() {
-    if (smodel.isInitiated) {
+    if (!smodel.isInitiated) {
       return;
     }
     if (smodel.recorder!.isRecording) {
