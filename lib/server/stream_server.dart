@@ -24,7 +24,8 @@ void main() async {
   ///This function is called when a host connects to the server and creates a radio channel with the host id.
   ///Also sets up a extra stream internally for the host-web socket for creating multiple listen functions.
   void initHostStream(StreamMessage message, webSocket) {
-    //print("A new host ${message.uid} has connected: ${webSocket.hashCode}");
+    print(
+        "A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
 
     ///Creates a radio channel
     RadioChannel channel = RadioChannel(webSocket, message.hostId!);
@@ -47,11 +48,10 @@ void main() async {
         }
       }
     }, onDone: () {
-      //print("host för rum ${channel.channelId} lämnade");
       for (WebSocketChannel client in channel.connectedAudioClients) {
         client.sink.close(100005, "Rum ${channel.channelId} stängdes");
       }
-      //print("Kanal ${channel.channelId} tas bort");
+      print("Channel ${message.channelName} closed");
       rooms.remove(channel.channelId);
       database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
       database.sendRequest(QueryModel.delViewers(channelid: message.hostId));
@@ -59,11 +59,11 @@ void main() async {
     });
   }
 
-
   ///This function is called when a client connects to the server and wants to join a radio channel.
   ///Also sets up a extra stream internally for the client-web socket for creating multiple listen functions.
-  void initClientStream(message, webSocket) {
-    //print("A new client ${message.uid} has connected: ${webSocket.hashCode} and wants to join room ${message.hostId}");
+  void initClientStream(StreamMessage message, webSocket) {
+    print(
+        "A new client ${message.uid} has connected: and wants to join room ${message.hostId}");
 
     ///Picks out the desired radio channel from the list of all radio channels.
     RadioChannel? room = rooms[message.hostId];
@@ -73,13 +73,15 @@ void main() async {
     room!.addAudioViewer(webSocket);
 
     ///Adds the viewer of said radio channel to the database.
-    database.sendRequest(QueryModel.addViewers(channelid: message.hostId, uid: message.uid));
+    database.sendRequest(
+        QueryModel.addViewers(channelid: message.hostId, uid: message.uid));
 
     ///Sets up a listen function with the sole purpose of disconnecting clients with onDone.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
         onDone: () {
-      //print("Klient ${webSocket.hashCode} lämnade");
-      database.sendRequest(QueryModel.delViewer(channelid: message.hostId, uid: message.uid)); // -
+      print("Client ${message.uid} left ${message.hostId}");
+      database.sendRequest(QueryModel.delViewer(
+          channelid: message.hostId, uid: message.uid)); // -
       room.disconnectAudioViewer(webSocket);
       webSocket.sink.close(10006, "lämnade servern");
       connectedUsers.remove(webSocket);
@@ -115,7 +117,7 @@ void main() async {
     });
   });
   shelf_io.serve(handler, localServer, 5605).then((server) {
-    //print('Serving at ws://${server.address.host}:${server.port}');
+    print('Serving at ws://${server.address.host}:${server.port}');
   });
 }
 
