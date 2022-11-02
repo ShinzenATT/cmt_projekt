@@ -20,6 +20,17 @@ Comment aims to provide a combination of both traditional podcasts but also live
 To get started and setup your own test environment is relatively simple:
 Setup your local network so that it accepts and properly forward UDP/TCP traffic on ports 5604, 5605.
 Follow the flutter guide on how to configure your IDE with [flutter](https://docs.flutter.dev/get-started/editor), and clone the repository.
+
+This project use Flutter v2 so if you have installed flutter V3 or newer then run this command:
+```bash
+flutter downgrade 2.10 # downgrades flutter to version 2.10.5
+```
+
+Use this command to verify that everything is installed correctly:
+```bash
+flutter doctor
+```
+
 Setup and configure a postgres database with the SQL file provided from the repo. 
 Update the  ip used in constants.dart to reflect your server and databases local ip.
 Start database_api.dart.
@@ -27,6 +38,33 @@ Start stream_server.dart.
 
 Once this is done in order to run the application first start the database server and stream server. You can then download and install the apk provided in this repository.
 
+### Building the project
+IDEs like Android Studio should handle most things automatically but you can run  these commands  anyway.
+You may need to configure an Android emulator trough Android Studio for running.
+
+#### Downloading dependencies
+```bash
+flutter pub get
+```
+
+#### Lint Dart code
+```bash
+flutter analyze
+```
+
+#### Build
+```bash
+flutter build apk # build for android
+flutter install # install app to virtual/physical device (use adb if needed)
+flutter run # builds, installs and runs the app on a device
+
+flutter build web # build website
+```
+
+#### Runs tests
+```bash
+flutter test
+```
 
 ## How to generate and install an APK on your android. 
 If you want to use the application on your physical android phone rather than the emulator, you can generate an APK (a file which represents the app), install it on your phone and then run it. This allows you to test the application on a physical device rather than solely testing it on an emulator. 
