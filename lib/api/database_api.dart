@@ -29,7 +29,7 @@ class DatabaseApi {
   }
 
   void init() {
-    channel = WebSocketChannel.connect(Uri.parse('ws://188.150.156.238:5604'));
+    channel = WebSocketChannel.connect(Uri.parse('ws://' + dbConnection + ':5604'));
     channel.stream.listen((message) => onMessage(message));
   }
 

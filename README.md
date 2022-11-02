@@ -31,16 +31,17 @@ Use this command to verify that everything is installed correctly:
 flutter doctor
 ```
 
-Setup and configure a postgres database with the SQL file provided from the repo. 
-Update the  ip used in constants.dart to reflect your server and databases local ip.
+Setup and configure a postgres database at port 5432 with the SQL file `lib/server/server.sql` provided from the repo.
+Alternatively, if you have docker you can run `docker-compose up db` to setup a development postgres db container.
+Update the  ip used in `constants.dart` to reflect your server and databases local ip (or leave at localhost for development).
 - Start database_api.dart.
 - Start stream_server.dart.
 
 Once this is done in order to run the application first start the database server and stream server. You can then download and install the apk provided in this repository.
 
 ### Building the project
-IDEs like Android Studio should handle most things automatically but you can run  these commands  anyway.
-You may need to configure an Android emulator trough Android Studio for running.
+Most IDEs like Android Studio should handle most things automatically but you can run  these commands  anyway.
+You may need to configure an Android emulator trough Android Studio for running the app.
 
 #### Downloading dependencies
 ```bash

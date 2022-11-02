@@ -25,6 +25,6 @@ const String dbDelViewers = "8";
 const String dbDelViewer = "9";
 
 //Connection-logic
-const String serverConnection = "ws://188.150.156.238:5605";
-const String localServer = "192.168.0.2"; //IP of hostServer port 5605
-const String dbConnection = '192.168.0.7'; //IP of raspberyPi port 5604
+const String serverConnection = "ws://localhost:5605"; // url to connect with stream server
+const String localServer = "localhost"; //IP of stream server, port 5605
+const String dbConnection = 'localhost'; //IP of postgres db, port 5604
