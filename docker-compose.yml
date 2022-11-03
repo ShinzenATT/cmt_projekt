@@ -1,0 +1,11 @@
+version: "3"
+services:
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      # copies folder containing server.sql to initdb to auto initialise db
+      - ./lib/server:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
