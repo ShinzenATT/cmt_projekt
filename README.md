@@ -1,12 +1,9 @@
 # Comment
 
 ## What is Comment?
-Comment is a platform where users can create their own radio channels and broadcast to other users. There are currently several categories that users can choose between, these are as follows:
-- Sport
-- Rock
-- Jazz
-- Pop
-- Tjööt
+Comment is a platform where users can create their own radio channels and broadcast to other users. 
+There are currently several categories that users can choose between, these are as follows:
+Sport, Rock, Jazz, Pop, Tjööt and more to come!
 
 To be able to create a channel, it is required to have a registered account which can be created through the application. Requirements to create an account consist of an email address and password. It is however possible to view other’s broadcasts as a guest user. 
 Once a user either logs in or enters as a guest, the app transitions to a page which displays all live channels within each respective category. The user may then join or leave any channel.
@@ -33,11 +30,15 @@ flutter doctor
 
 Setup and configure a postgres database at port 5432 with the SQL file `lib/server/server.sql` provided from the repo.
 Alternatively, if you have docker you can run `docker-compose up db` to setup a development postgres db container.
-Update the  ip used in `constants.dart` to reflect your server and databases local ip (or leave at localhost for development).
-- Start database_api.dart.
-- Start stream_server.dart.
+Update the  ip used in `lib/constants.dart` to reflect your server and databases local ip which can be found
+with the command `ipconfig`(windows) or `ifconfig` (Unix). 
 
-Once this is done in order to run the application first start the database server and stream server. You can then download and install the apk provided in this repository.
+Afterwards you can start the servers by running the command `dart run <file>` on the following files found in `lib/server`:
+- Start **database_api.dart**
+- Start **stream_server.dart**
+
+Once this is done in order to run the application first start the database server and stream server. 
+You can then download and install the apk provided in this repository or run them with the flutter commands below.
 
 ### Building the project
 Most IDEs like Android Studio should handle most things automatically but you can run  these commands  anyway.
@@ -58,6 +59,9 @@ flutter analyze
 flutter build apk # build for android
 flutter install # install app to virtual/physical device (use adb if needed)
 flutter run # builds, installs and runs the app on a device
+
+flutter build ipa # builds for ios (only on macOS)
+flutter run
 
 flutter build web # build website
 ```

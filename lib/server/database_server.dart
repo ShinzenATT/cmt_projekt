@@ -45,7 +45,7 @@ class DatabaseServer {
       });
     });
 
-    shelf_io.serve(handler, dbConnection, 5604).then((server) {
+    shelf_io.serve(handler, localServer, 5604).then((server) {
       print('Serving at ws://${server.address.host}:${server.port}');
     });
   }
@@ -142,7 +142,7 @@ class DatabaseServer {
 /// Creates queries and communicates with the database.
 class DatabaseQueries {
   //Database host ip
-  var connection = PostgreSQLConnection("localhost", 5432, "postgres",
+  var connection = PostgreSQLConnection(dbConnection, 5432, "postgres",
       username: "postgres", password: "postgres");
   DatabaseQueries() {
     init();
