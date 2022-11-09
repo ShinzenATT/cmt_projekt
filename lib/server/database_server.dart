@@ -10,6 +10,7 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants.dart';
+import '../envioroment.dart';
 
 void main() async {
   DatabaseServer();
@@ -143,8 +144,8 @@ class DatabaseServer {
 /// Creates queries and communicates with the database.
 class DatabaseQueries {
   //Database host ip
-  var connection = PostgreSQLConnection(dbConnection, 5432, "postgres",
-      username: "postgres", password: "postgres");
+  var connection = PostgreSQLConnection(dbConnection, dbPort, dbDatabase,
+      username: dbUser, password: dbPassword);
   DatabaseQueries() {
     init();
   }
