@@ -25,6 +25,8 @@ jobs:
 
         # get dependencies
       - run: flutter pub get
+        # copy env file
+      - run: cp environment.dart.example environment.dart
       # lint the code
       - run: dart analyze --fatal-infos
 
@@ -44,6 +46,8 @@ jobs:
 
         # get dependencies
       - run: flutter pub get
+        # copy env file
+      - run: cp lib/environment.dart.example lib/environment.dart
       # build app
       - run: flutter build apk
 
@@ -60,6 +64,8 @@ jobs:
 
         # get dependencies
       - run: flutter pub get
+        # copy env file
+      - run: cp lib/environment.dart.example lib/environment.dart
       # build app
       - run: flutter build ios --release --no-codesign
 
@@ -75,6 +81,8 @@ jobs:
 
         # get dependencies
       - run: flutter pub get
+        # copy env file
+      - run: cp lib/environment.dart.example lib/environment.dart
       # build app
       - run: flutter build web
 
