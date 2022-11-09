@@ -66,7 +66,7 @@ class DatabaseServer {
       case dbAccount:
         {
           String response = await db.createAccount(
-              query.email!, query.password!, query.phone!);
+              query.email!, query.password!, query.phone!, query.username!);
           client.sink.add(response);
         }
         break;
@@ -169,10 +169,10 @@ class DatabaseQueries {
     }
   }
 
-  Future<String> createAccount(String email, String pass, String phone) async {
+  Future<String> createAccount(String email, String pass, String phone, String username) async {
     try {
       await connection
-          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
+          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone', '$username')");
       return (getInfo(email));
     } on PostgreSQLException catch (e) {
       log("an error in createAccount");
