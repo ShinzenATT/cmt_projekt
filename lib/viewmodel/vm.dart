@@ -93,7 +93,7 @@ class VM with ChangeNotifier {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertMessage();
+            return const AlertMessage();
           });
       return;
     }
@@ -117,7 +117,7 @@ class VM with ChangeNotifier {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertMessage();
+            return const AlertMessage();
           });
       return;
     }
@@ -131,7 +131,7 @@ class VM with ChangeNotifier {
       showDialog(
           context: context,
           builder: (context) {
-            return GoLiveSettings();
+            return const GoLiveSettings();
           });
     }
   }

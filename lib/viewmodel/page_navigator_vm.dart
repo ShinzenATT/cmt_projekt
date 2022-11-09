@@ -20,7 +20,7 @@ class PageNavigator {
     constant.home: (BuildContext context) =>
         kIsWeb ? const WebHomePage() : const AppHomePage(),
     constant.createAcc: (BuildContext context) => const AppCreateAccountPage(),
-    constant.demo: (BuildContext context) => StreamLoop(),
+    constant.demo: (BuildContext context) => const StreamLoop(),
     constant.login: (BuildContext context) =>
         kIsWeb ? const WebLoginPage() : const AppLoginPage(),
     constant.hostChannel: (BuildContext context) => const AppHostPage(),

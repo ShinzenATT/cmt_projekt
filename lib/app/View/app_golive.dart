@@ -14,7 +14,7 @@ class AppGoLive extends StatelessWidget {
       onWillPop: context.read<VM>().willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80.0),
           child: AppBar(
             leading: InkWell(
               onTap: () {
@@ -119,7 +119,7 @@ class AppGoLive extends StatelessWidget {
                       Colors.greenAccent,
                       Colors.blueAccent,
                     ]),
-                icon: Icon(Icons.mic),
+                icon: const Icon(Icons.mic),
                 label: const Text(
                   'Gå live med endast ljud',
                   style: TextStyle(
@@ -166,7 +166,7 @@ class AppGoLive2 extends StatelessWidget {
       onWillPop: context.read<VM>().willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80.0),
           child: AppBar(
             leading: InkWell(
               onTap: () {

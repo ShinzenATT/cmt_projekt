@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cmt_projekt/model/query_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants.dart';
@@ -39,7 +40,9 @@ class DatabaseApi {
       await Future.delayed(const Duration(seconds: 7), () {
         try {
           channel.sink.add(jsonEncode(QueryModel.polling()));
-        } catch (WebSocketChannelException) {}
+        } on WebSocketChannelException {
+          debugPrint('Connection to server lost');
+        }
         if (!pollingBool) {
           channel.sink.close();
           init();
@@ -53,7 +56,9 @@ class DatabaseApi {
   void sendRequest(QueryModel message) {
     try {
       channel.sink.add(jsonEncode(message));
-    } catch (WebSocketChannelException) {}
+    } on WebSocketChannelException {
+      debugPrint('Connection to server lost');
+    }
   }
 
   ///Method that handles all incoming messages from the database server.

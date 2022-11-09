@@ -75,7 +75,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   fit: BoxFit.fill,
                   color: Colors.black.withOpacity(0.5),
                 ),
-                Container(
+                SizedBox(
                   height: 150,
                   width: 150,
                   child: Center(
@@ -106,12 +106,12 @@ class _AppHomePageState extends State<AppHomePage> {
               ],
             ),
           ));
+  final _refreshController = RefreshController(initialRefresh: false);
   @override
-  var _refreshController = RefreshController(initialRefresh: false);
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80.0),
+        preferredSize: const Size.fromHeight(80.0),
         child: AppBar(
           leading: InkWell(
             onTap: () {

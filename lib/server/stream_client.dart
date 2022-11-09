@@ -6,7 +6,6 @@ import 'package:cmt_projekt/model/stream_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:flutter_sound_lite/public/flutter_sound_player.dart';
 
 import '../constants.dart';
 
@@ -21,7 +20,7 @@ class Client {
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
     if (Prefs().getIntent() == "j") {
-      print(Prefs().getIntent().toString());
+      debugPrint(Prefs().getIntent().toString());
       client.sink.add(jsonEncode(StreamMessage.join(
           uid: Prefs().storedData.get("uid").toString(),
           channelType: "a",
