@@ -2,7 +2,6 @@ import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 
@@ -75,7 +74,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   fit: BoxFit.fill,
                   color: Colors.black.withOpacity(0.5),
                 ),
-                Container(
+                SizedBox(
                   height: 150,
                   width: 150,
                   child: Center(

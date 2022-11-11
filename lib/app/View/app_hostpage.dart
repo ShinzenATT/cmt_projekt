@@ -26,7 +26,7 @@ class _AppHostPageState extends State<AppHostPage> {
       onWillPop: willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0),
+          preferredSize: const Size.fromHeight(80.0),
           child: AppBar(
             elevation: 0,
             centerTitle: true,

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cmt_projekt/viewmodel/vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
@@ -18,9 +16,9 @@ class WebChannelSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context.watch<VM>().categoryList);
+    debugPrint(context.watch<VM>().categoryList.toString());
     return Center(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         height: MediaQuery.of(context).size.height * 0.8,
         child: Card(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
@@ -9,6 +10,7 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants.dart';
+import '../environment.dart';
 
 void main() async {
   DatabaseServer();
@@ -46,7 +48,7 @@ class DatabaseServer {
     });
 
     shelf_io.serve(handler, localServer, 5604).then((server) {
-      print('Serving at ws://${server.address.host}:${server.port}');
+      log('Serving at ws://${server.address.host}:${server.port}');
     });
   }
 
@@ -64,7 +66,7 @@ class DatabaseServer {
       case dbAccount:
         {
           String response = await db.createAccount(
-              query.email!, query.password!, query.phone!);
+              query.email!, query.password!, query.phone!, query.username!);
           client.sink.add(response);
         }
         break;
@@ -104,7 +106,7 @@ class DatabaseServer {
           await db.insertViewer(query.uid!, query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
+            log(client.toString());
             client.sink.add(response);
           }
 
@@ -115,7 +117,7 @@ class DatabaseServer {
           await db.delViewers(query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
+            log(client.toString());
             client.sink.add(response);
           }
         }
@@ -125,7 +127,7 @@ class DatabaseServer {
           await db.delViewer(query.uid!, query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            print(client);
+            log(client.toString());
             client.sink.add(response);
           }
         }
@@ -142,8 +144,8 @@ class DatabaseServer {
 /// Creates queries and communicates with the database.
 class DatabaseQueries {
   //Database host ip
-  var connection = PostgreSQLConnection(dbConnection, 5432, "postgres",
-      username: "postgres", password: "postgres");
+  var connection = PostgreSQLConnection(dbConnection, dbPort, dbDatabase,
+      username: dbUser, password: dbPassword);
   DatabaseQueries() {
     init();
   }
@@ -160,21 +162,21 @@ class DatabaseQueries {
         return "";
       }
       return getInfo(login);
-    } catch (PostgreSQLException) {
-      print("an error in compareCredentials");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("an error in compareCredentials");
+      log(e.toString());
       return "";
     }
   }
 
-  Future<String> createAccount(String email, String pass, String phone) async {
+  Future<String> createAccount(String email, String pass, String phone, String username) async {
     try {
-      List<List<dynamic>> results = await connection
-          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone')");
+      await connection
+          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone', '$username')");
       return (getInfo(email));
-    } catch (PostgreSQLException) {
-      print("an error in createAccount");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("an error in createAccount");
+      log(e.toString());
       return ("");
     }
   }
@@ -197,11 +199,11 @@ class DatabaseQueries {
       for (final row in results) {
         listOfChannels.add(row[0]);
       }
-      print(jsonEncode(mapOfQueries));
+      log(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
-    } catch (PostgreSQLException) {
-      print("error in getInfo");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("error in getInfo");
+      log(e.toString());
       return "";
     }
   }
@@ -210,19 +212,19 @@ class DatabaseQueries {
     try {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
-    } catch (PostgreSQLException) {
-      print("error in goOffline");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("error in goOffline");
+      log(e.toString());
     }
   }
 
   Future<void> createChannel(String channelName, String uid, String category) async {
     try {
-      List<List<dynamic>> results = await connection.query(
+      await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
-    } catch (PostgreSQLException) {
-      print("error in createChannel");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("error in createChannel");
+      log(e.toString());
     }
   }
 
@@ -244,11 +246,11 @@ class DatabaseQueries {
       for (final row in results) {
         listOfChannels.add(row[0]);
       }
-      print(jsonEncode(mapOfQueries));
+      log(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
-    } catch (PostgreSQLException) {
-      print("error in getOnlineChannels");
-      print(PostgreSQLException);
+    } on PostgreSQLException catch (e) {
+      log("error in getOnlineChannels");
+      log(e.toString());
       return "";
     }
   }
@@ -257,8 +259,8 @@ class DatabaseQueries {
     try {
       await connection.query(
           "INSERT INTO Viewers VALUES('$uid','$channelId')");
-    } catch (PostgreSQLException) {
-      print("error in insertViewer");
+    } on PostgreSQLException {
+      log("error in insertViewer");
     }
   }
 
@@ -267,8 +269,8 @@ class DatabaseQueries {
     try {
       await connection.query(
           "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
-    } catch (PostgreSQLException) {
-      print("error in delViewer");
+    } on PostgreSQLException {
+      log("error in delViewer");
     }
   }
 
@@ -277,7 +279,7 @@ class DatabaseQueries {
       await connection.query(
           "DELETE FROM Viewers WHERE(channel = '$channelId')");
     } on PostgreSQLException {
-      print("error in delViewers");
+      log("error in delViewers");
     }
   }
 

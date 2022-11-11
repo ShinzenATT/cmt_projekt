@@ -7,7 +7,7 @@ class DemoStreamViewModel with ChangeNotifier {
   TextEditingController get hostID => tx;
   void demoJoin() {
     Prefs().storedData.setString("joinChannelID", tx.value.text);
-    print("HostID/Value/Text: " +
+    debugPrint("HostID/Value/Text: " +
         tx.value.text);
     Prefs().storedData.setString("intent", "j");
   }

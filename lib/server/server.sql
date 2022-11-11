@@ -65,7 +65,7 @@ INSERT INTO Category VALUES('Jazz');
 INSERT INTO Category VALUES('Pop');
 INSERT INTO Category VALUES('Tjööt');
 
-SELECT * FROM Account;
+--SELECT * FROM Account;
 
 CREATE FUNCTION channel_update()
     RETURNS trigger AS $$

@@ -42,83 +42,81 @@ class _StreamLoopState extends State<StreamLoop> {
           ),
         ),
       ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: context.watch<DemoStreamViewModel>().hostID,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.white,
-                      labelText: 'HostId',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            color: Colors.white,
+            child: Column(
               children: [
-                SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: GradientElevatedButton(
-                    child: const Text(
-                      'Host',
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(hostChannel);
-                      Prefs().storedData.setString("intent", "h");
-                      context.read<StreamViewModel>().startup(context);
-                    },
-                    gradient: const LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.greenAccent,
-                          Colors.blueAccent,
-                        ]),
-                  ),
-                ),
-                SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: GradientElevatedButton(
-                    child: const Text(
-                      'Join',
-                      style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(hostChannel);
-                      context.read<DemoStreamViewModel>().demoJoin();
-                      context.read<StreamViewModel>().startup(context);
-                    },
-                    gradient: const LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.greenAccent,
-                          Colors.blueAccent,
-                        ]),
+                TextFormField(
+                  controller: context.watch<DemoStreamViewModel>().hostID,
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white,
+                    labelText: 'HostId',
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 150,
+                height: 50,
+                child: GradientElevatedButton(
+                  child: const Text(
+                    'Host',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(hostChannel);
+                    Prefs().storedData.setString("intent", "h");
+                    context.read<StreamViewModel>().startup(context);
+                  },
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.greenAccent,
+                        Colors.blueAccent,
+                      ]),
+                ),
+              ),
+              SizedBox(
+                width: 150,
+                height: 50,
+                child: GradientElevatedButton(
+                  child: const Text(
+                    'Join',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(hostChannel);
+                    context.read<DemoStreamViewModel>().demoJoin();
+                    context.read<StreamViewModel>().startup(context);
+                  },
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.greenAccent,
+                        Colors.blueAccent,
+                      ]),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

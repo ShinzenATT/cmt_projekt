@@ -1,7 +1,5 @@
 import 'package:cmt_projekt/viewmodel/vm.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart' as constant;
