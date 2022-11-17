@@ -48,90 +48,119 @@ class AppCreateAccountPage extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text(
-              "Ange dina uppgifter för att skapa ett konto",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            TextFormField(
-              controller: context.watch<VM>().email,
-              decoration: const InputDecoration(
-                labelText: 'Epost',
+          children: [//All children are wrapped in Flexible to adjust when the keyboard is used
+            const Flexible(
+              flex: 1,
+              child: Text(
+                "Ange dina uppgifter för att skapa ett konto",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
-            TextFormField(
-              controller: context.watch<VM>().username,
-              decoration: const InputDecoration(
-                labelText: 'Användarnamn',
-              ),
-            ),
-            TextFormField(
-              controller: context.watch<VM>().phone,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Telefonnummer',
-              ),
-            ),
-            TextFormField(
-              controller: context.watch<VM>().password1,
-              obscureText: !context.watch<VM>().passwordVisibilityCreate,
-              decoration: const InputDecoration(
-                labelText: 'Lösenord',
-              ),
-              keyboardType: TextInputType.visiblePassword,
-            ),
-            TextFormField(
-              controller: context.watch<VM>().password2,
-              obscureText: !context.watch<VM>().passwordVisibilityCreate,
-              decoration: const InputDecoration(
-                labelText: 'Bekräfta lösenord',
-              ),
-            ),
-            Row(
-              children: [
-                Checkbox(
-                  splashRadius: 0,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  value: context.watch<VM>().passwordVisibilityCreate,
-                  onChanged: (_) {
-                    context.read<VM>().changePasswordVisibilityCreate();
-                  },
+            Flexible(
+              flex: 2,
+              child: TextFormField(
+                controller: context.watch<VM>().email,
+                textInputAction: TextInputAction.next, // Moves focus to next textfield.
+                decoration: const InputDecoration(
+                  labelText: 'Epost',
                 ),
-                InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  onTap: () {
-                    context.read<VM>().changePasswordVisibilityCreate();
-                  },
-                  child: const Text("Visa lösenord"),
-                ),
-              ],
+              ),
             ),
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: GradientElevatedButton(
-                child: const Text(
-                  'Skapa konto',
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            Flexible(
+              flex: 2,
+              child: TextFormField(
+                controller: context.watch<VM>().username,
+                textInputAction: TextInputAction.next, // Moves focus to next.
+                decoration: const InputDecoration(
+                  labelText: 'Användarnamn',
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 2,
+              child: TextFormField(
+                controller: context.watch<VM>().phone,
+                textInputAction: TextInputAction.next, // Moves focus to next.
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  labelText: 'Telefonnummer',
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 2,
+              child: TextFormField(
+                controller: context.watch<VM>().password1,
+                textInputAction: TextInputAction.next, // Moves focus to next.
+                obscureText: !context.watch<VM>().passwordVisibilityCreate,
+                decoration: const InputDecoration(
+                  labelText: 'Lösenord',
+                ),
+                keyboardType: TextInputType.visiblePassword,
+              ),
+            ),
+            Flexible(
+              flex: 2,
+              child: TextFormField(
+                controller: context.watch<VM>().password2,
+                textInputAction: TextInputAction.done, // Close keyboard.
+                obscureText: !context.watch<VM>().passwordVisibilityCreate,
+                decoration: const InputDecoration(
+                  labelText: 'Bekräfta lösenord',
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: Row(
+                  children: [
+                    Checkbox(
+                      splashRadius: 0,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      value: context.watch<VM>().passwordVisibilityCreate,
+                      onChanged: (_) {
+                        context.read<VM>().changePasswordVisibilityCreate();
+                      },
+                    ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      onTap: () {
+                        context.read<VM>().changePasswordVisibilityCreate();
+                      },
+                      child: const Text("Visa lösenord"),
+                    ),
+                  ],
+                ),
+            ),
+            Flexible(
+              flex: 2,
+              child: SizedBox(
+                  width: 200,
+                  height: 50,
+                  child: GradientElevatedButton(
+                    child: const Text(
+                      'Skapa konto',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      context.read<VM>().comparePw(context);
+                    },
+                    gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.greenAccent,
+                          Colors.blueAccent,
+                        ]),
                   ),
                 ),
-                onPressed: () {
-                  context.read<VM>().comparePw(context);
-                },
-                gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.greenAccent,
-                      Colors.blueAccent,
-                    ]),
-              ),
             ),
           ],
         ),
