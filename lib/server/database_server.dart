@@ -13,7 +13,6 @@ import 'package:dbcrypt/dbcrypt.dart';
 import '../constants.dart';
 import '../environment.dart';
 
-
 void main() async {
   DatabaseServer();
 }
