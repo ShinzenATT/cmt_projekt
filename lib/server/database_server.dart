@@ -8,6 +8,7 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:postgres/postgres.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:dbcrypt/dbcrypt.dart';
 
 import '../constants.dart';
 import '../environment.dart';
@@ -157,11 +158,11 @@ class DatabaseQueries {
   Future<String> compareCredentials(String login, String pass) async {
     try {
       List<List<dynamic>> results = await connection.query(
-          "SELECT email, phone FROM Account WHERE ((email = '$login' OR phone = '$login') AND (password = '$pass'))");
-      if (results.isEmpty) {
-        return "";
+          "SELECT password FROM Account WHERE (email = '$login' OR phone = '$login')");
+      if (results.length == 1 && DBCrypt().checkpw(pass, results[0][0])) {
+        return getInfo(login);
       }
-      return getInfo(login);
+      return "";
     } on PostgreSQLException catch (e) {
       log("an error in compareCredentials");
       log(e.toString());

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
+import 'package:dbcrypt/dbcrypt.dart';
 
 /*
   The main ViewModel used by the main Model and
@@ -240,11 +241,12 @@ class VM with ChangeNotifier {
 
   /// From createaccountviewmodel
   void createAccount() {
+    var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
     client.sendRequest(
       QueryModel.account(
         email: email.value.text,
         phone: phone.value.text,
-        password: password1.value.text,
+        password: hashedPassword,
         username: username.value.text,
       ),
     );
