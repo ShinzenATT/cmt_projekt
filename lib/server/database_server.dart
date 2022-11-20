@@ -234,9 +234,11 @@ class DatabaseQueries {
       List<List<dynamic>> results = await connection.query(
           "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username, 'total',(SELECT COUNT(jsonb_build_object('viewer',viewer)) as total FROM Viewers WHERE channel = channelid)) FROM Channel, Account WHERE uid = channelid ");
 
+      /*
       if (results.isEmpty) {
         return "";
       }
+       */
 
       ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
       ///After which each element in the row is compared to the right variable.
