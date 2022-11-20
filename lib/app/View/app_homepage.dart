@@ -110,22 +110,25 @@ class _AppHomePageState extends State<AppHomePage> {
   final _refreshController = RefreshController(initialRefresh: false);
 
   Widget getChannelsContent(Map<String, List<QueryModel>> categories) {
-    return categories.isNotEmpty
-        ? ListView.builder(
-        shrinkWrap: true,
-        itemCount: categories.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _horizontalListView(
-              image: "ds",
-              channelList: categories[categories.keys.elementAt(index)]!,
-              categoryName: categories.keys.elementAt(index));
-        })
-        : const Center(
-        child: Text(
-          "No active channels at the moment",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
-        ));
+    if(categories.isNotEmpty) {
+      return ListView.builder(
+          shrinkWrap: true,
+          itemCount: categories.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _horizontalListView(
+                image: "ds",
+                channelList: categories[categories.keys.elementAt(index)]!,
+                categoryName: categories.keys.elementAt(index));
+          });
+    }
+    else {
+      return const Center(
+          child: Text(
+            "No active channels at the moment",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          ));
+    }
   }
 
   @override
