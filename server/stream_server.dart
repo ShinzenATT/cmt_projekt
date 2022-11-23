@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/model/radio_channel.dart';
 import 'package:cmt_projekt/model/stream_message.dart';
@@ -25,8 +26,7 @@ void main() async {
   ///This function is called when a host connects to the server and creates a radio channel with the host id.
   ///Also sets up a extra stream internally for the host-web socket for creating multiple listen functions.
   void initHostStream(StreamMessage message, webSocket) {
-    log(
-        "A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
+    logger.v("A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
 
     ///Creates a radio channel
     RadioChannel channel = RadioChannel(webSocket, message.hostId!);
@@ -52,7 +52,7 @@ void main() async {
       for (WebSocketChannel client in channel.connectedAudioClients) {
         client.sink.close(100005, "Rum ${channel.channelId} stängdes");
       }
-      log("Channel ${message.channelName} closed");
+      logger.v("Channel ${message.uid} closed");
       rooms.remove(channel.channelId);
       database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
       database.sendRequest(QueryModel.delViewers(channelid: message.hostId));
@@ -63,7 +63,7 @@ void main() async {
   ///This function is called when a client connects to the server and wants to join a radio channel.
   ///Also sets up a extra stream internally for the client-web socket for creating multiple listen functions.
   void initClientStream(StreamMessage message, webSocket) {
-    log(
+    logger.v(
         "A new client ${message.uid} has connected: and wants to join room ${message.hostId}");
 
     ///Picks out the desired radio channel from the list of all radio channels.
@@ -80,7 +80,7 @@ void main() async {
     ///Sets up a listen function with the sole purpose of disconnecting clients with onDone.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
         onDone: () {
-      log("Client ${message.uid} left ${message.hostId}");
+      logger.v("Client ${message.uid} left ${message.hostId}");
       database.sendRequest(QueryModel.delViewer(
           channelid: message.hostId, uid: message.uid)); // -
       room.disconnectAudioViewer(webSocket);
@@ -118,7 +118,7 @@ void main() async {
     });
   });
   shelf_io.serve(handler, localServer, 5605).then((server) {
-    log('Serving at ws://${server.address.host}:${server.port}');
+    logger.i('Stream server serving at ws://${server.address.host}:${server.port}');
   });
 }
 

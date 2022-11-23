@@ -49,7 +49,7 @@ class DatabaseServer {
     });
 
     shelf_io.serve(handler, localServer, 5604).then((server) {
-      log('Serving at ws://${server.address.host}:${server.port}');
+      logger.i('Database server serving at ws://${server.address.host}:${server.port}');
     });
   }
 
@@ -107,7 +107,7 @@ class DatabaseServer {
           await db.insertViewer(query.uid!, query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            log(client.toString());
+            logger.d(client);
             client.sink.add(response);
           }
 
@@ -118,7 +118,7 @@ class DatabaseServer {
           await db.delViewers(query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            log(client.toString());
+            logger.d(client);
             client.sink.add(response);
           }
         }
@@ -128,7 +128,7 @@ class DatabaseServer {
           await db.delViewer(query.uid!, query.channelid!);
           String response = await db.getOnlineChannels();
           for (WebSocketChannel client in connectedClients.keys) {
-            log(client.toString());
+            logger.d(client);
             client.sink.add(response);
           }
         }
@@ -164,8 +164,7 @@ class DatabaseQueries {
       }
       return "";
     } on PostgreSQLException catch (e) {
-      log("an error in compareCredentials");
-      log(e.toString());
+      logger.e("an error in compareCredentials \n" + (e.message ?? ""), [e, e.stackTrace]);
       return "";
     }
   }
@@ -176,9 +175,8 @@ class DatabaseQueries {
           .query("INSERT INTO Account VALUES('$email', '$pass', '$phone', '$username')");
       return (getInfo(email));
     } on PostgreSQLException catch (e) {
-      log("an error in createAccount");
-      log(e.toString());
-      return ("");
+      logger.e("an error in createAccount\n" + (e.message ?? ""), [e, e.stackTrace]);
+      return "";
     }
   }
 
@@ -200,11 +198,10 @@ class DatabaseQueries {
       for (final row in results) {
         listOfChannels.add(row[0]);
       }
-      log(jsonEncode(mapOfQueries));
+      logger.d(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
     } on PostgreSQLException catch (e) {
-      log("error in getInfo");
-      log(e.toString());
+      logger.e("error in getInfo\n" + (e.message ?? ""), [e, e.stackTrace]);
       return "";
     }
   }
@@ -214,8 +211,7 @@ class DatabaseQueries {
       await connection.query(
           "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
     } on PostgreSQLException catch (e) {
-      log("error in goOffline");
-      log(e.toString());
+      logger.e("error in goOffline\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
   }
 
@@ -224,8 +220,7 @@ class DatabaseQueries {
       await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
     } on PostgreSQLException catch (e) {
-      log("error in createChannel");
-      log(e.toString());
+      logger.e("error in createChannel\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
   }
 
@@ -249,11 +244,10 @@ class DatabaseQueries {
       for (final row in results) {
         listOfChannels.add(row[0]);
       }
-      log(jsonEncode(mapOfQueries));
+      logger.d(jsonEncode(mapOfQueries));
       return jsonEncode(mapOfQueries);
     } on PostgreSQLException catch (e) {
-      log("error in getOnlineChannels");
-      log(e.toString());
+      logger.e("error in getOnlineChannels\n" + (e.message ?? ""), [e, e.stackTrace]);
       return "";
     }
   }
@@ -262,8 +256,8 @@ class DatabaseQueries {
     try {
       await connection.query(
           "INSERT INTO Viewers VALUES('$uid','$channelId')");
-    } on PostgreSQLException {
-      log("error in insertViewer");
+    } on PostgreSQLException catch (e) {
+      logger.e("error in insertViewer\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
   }
 
@@ -272,8 +266,8 @@ class DatabaseQueries {
     try {
       await connection.query(
           "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
-    } on PostgreSQLException {
-      log("error in delViewer");
+    } on PostgreSQLException catch (e) {
+      logger.e("error in delViewer\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
   }
 
@@ -281,8 +275,8 @@ class DatabaseQueries {
     try {
       await connection.query(
           "DELETE FROM Viewers WHERE(channel = '$channelId')");
-    } on PostgreSQLException {
-      log("error in delViewers");
+    } on PostgreSQLException catch (e) {
+      logger.e("error in delViewers\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
   }
 

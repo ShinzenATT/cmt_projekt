@@ -41,8 +41,8 @@ class DatabaseApi {
       await Future.delayed(const Duration(seconds: 7), () {
         try {
           channel.sink.add(jsonEncode(QueryModel.polling()));
-        } on WebSocketChannelException {
-          log('Connection to server lost');
+        } on WebSocketChannelException catch (e) {
+          logger.e('Connection to server lost', [e]);
         }
         if (!pollingBool) {
           channel.sink.close();
@@ -57,8 +57,8 @@ class DatabaseApi {
   void sendRequest(QueryModel message) {
     try {
       channel.sink.add(jsonEncode(message));
-    } on WebSocketChannelException {
-      log('Connection to server lost');
+    } on WebSocketChannelException catch (e) {
+      logger.e('Connection to server lost', [e]);
     }
   }
 
