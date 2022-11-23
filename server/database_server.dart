@@ -10,8 +10,8 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 
-import '../constants.dart';
-import '../environment.dart';
+import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/environment.dart';
 
 void main() async {
   DatabaseServer();
