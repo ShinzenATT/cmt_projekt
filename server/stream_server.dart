@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/query_model.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;

@@ -26,7 +26,7 @@ const String dbAddViewers = "7";
 const String dbDelViewers = "8";
 const String dbDelViewer = "9";
 
-Logger logger = Logger(
+final Logger logger = Logger(
   printer: PrettyPrinter(
     methodCount: 0
   )
