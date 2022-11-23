@@ -17,10 +17,16 @@ import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 import 'package:dbcrypt/dbcrypt.dart';
 
+import '../app/View/app_createaccountpage.dart';
+
 /*
   The main ViewModel used by the main Model and
   the majority of Views
  */
+
+final navigatorKey = GlobalKey<NavigatorState>(); // Fore test purpose
+
+
 class VM with ChangeNotifier {
   Model lm = Model();
 
@@ -192,6 +198,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
+    print("void setUpResponseStreamLogin(context)");
     databaseAPI.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
@@ -212,13 +219,31 @@ class VM with ChangeNotifier {
   }
 
   /// From createaccountviewmodel
-  void comparePw(var context) {
+  /// Check so that passwords matches
+  Future<void> comparePw(var context) async {
     if (password1.value.text == password2.value.text) {
-      setUpResponseStreamCA(context);
-      createAccount();
+      checkPhonenumber(context);
+    } else {
+      await showErrorDialog(
+          context,
+          "Lösenorden stämmer inte överens"
+      );
     }
   }
-
+  /// From createaccountviewmodel
+  /// Check so that phone number is a ten digit number
+  Future<void> checkPhonenumber(var context) async {
+    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
+    if (exp.hasMatch(phone.value.text)) {
+      setUpResponseStreamCA(context);
+      createAccount();
+    } else {
+      await showErrorDialog(
+          context,
+          "Telefonnumret behöver vara på 10 siffror"
+      );
+    }
+  }
   /// From createaccountviewmodel
   ///Initiates a function that runs when a new value comes from the response stream for the client.
   void setUpResponseStreamCA(context) {

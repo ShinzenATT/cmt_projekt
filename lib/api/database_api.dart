@@ -6,8 +6,10 @@ import 'dart:developer';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../app/View/app_createaccountpage.dart';
 import '../constants.dart';
 import '../environment.dart';
+import '../viewmodel/vm.dart';
 
 
 /// Api for fetching and sending data from the database.
@@ -67,6 +69,7 @@ class DatabaseApi {
     if (message == "") {
       return;
     }
+    //userErrorMessage(message);
     String queryCode = (jsonDecode(message)['code'] as List)[0];
     if (queryCode == dbGetInfo) {
       streamController
@@ -82,4 +85,21 @@ class DatabaseApi {
       pollingBool = true;
     }
   }
+   ///Does not work!
+  ///Method that sends a error message back to the user.
+  void userErrorMessage(String message) async {
+    print("void userErrorMessage");
+    //NaviHandler _navi = NaviHandler._internal();
+    // var retContext = navi_.NaviHandler();
+    //context: navigatorKey.currentContext!;
+    var retContext = navigatorKey.currentState!.context;
+    await showErrorDialog(
+      //retContext,
+      retContext,
+        //navigatorKey.currentState!.context,
+    "Misslyckades med att skapa ett konto"
+    );
+  }
+
 }
+

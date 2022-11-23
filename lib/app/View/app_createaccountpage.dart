@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 class AppCreateAccountPage extends StatelessWidget {
   const AppCreateAccountPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,4 +166,22 @@ class AppCreateAccountPage extends StatelessWidget {
       ),
     );
   }
+}
+Future<void>showErrorDialog(
+    BuildContext context,
+    String text,
+    ){
+  return showDialog(context: context, builder: (context){
+    return AlertDialog(
+        title: const Text("Ett fel inträffade"),
+      content: Text(text),
+      actions: [
+        TextButton(onPressed: () {
+          Navigator.of(context).pop();
+        },
+            child: const Text("Ok")),
+      ],
+    );
+
+  },);
 }
