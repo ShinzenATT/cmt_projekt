@@ -10,8 +10,6 @@ import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:cmt_projekt/api/database_api.dart';
 
-import 'package:cmt_projekt/environment.dart';
-
 void main() async {
   ///A map with all connected users.
   Map<WebSocketChannel, StreamController> connectedUsers = {};
@@ -116,8 +114,9 @@ void main() async {
       }
     });
   });
-  shelf_io.serve(handler, localServer, 5605).then((server) {
-    logger.i('Stream server serving at ws://${server.address.host}:${server.port}');
+  shelf_io.serve(handler, '0.0.0.0', 5605).then((server) {
+    logger.i('Stream server serving at ws://${server.address.host}:${server.port} \n'
+        '(0.0.0.0 means all ips are accepted, which includes localhost)');
   });
 }
 
