@@ -48,6 +48,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   dbcrypt: ^2.0.0
   logger: ^1.1.0
+  alfred: ^0.1.5+3
 
 dev_dependencies:
   flutter_test:
