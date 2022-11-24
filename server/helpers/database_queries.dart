@@ -22,7 +22,7 @@ class DatabaseQueries {
   Future<Map<String, dynamic>?> compareCredentials(String login, String pass) async {
       final results = await connection.mappedResultsQuery(
           "SELECT password FROM Account WHERE (email = '$login' OR phone = '$login')");
-      if (results.length == 1 && DBCrypt().checkpw(pass, results[0]["pass"] as String)) {
+      if (results.length == 1 && DBCrypt().checkpw(pass, results[0]["account"]!["password"] as String)) {
         return getInfo(login);
       }
       return null;

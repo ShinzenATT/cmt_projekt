@@ -37,6 +37,7 @@ class DatabaseServer {
     server.get("/create_account", (req, res) async {
       final QueryModel body;
       final Map<String, dynamic> data;
+
       try {
         body = QueryModel.fromJson(await req.bodyAsJsonMap);
         data = await db.createAccount(body.email!, body.password!, body.phone!, body.username!);
@@ -45,12 +46,39 @@ class DatabaseServer {
         logger.e(e.message, [e, e.stackTrace]);
         res.statusCode = HttpStatus.conflict;
         return e.message;
-      } catch (e) {
+      }
+      catch (e) {
         logger.e(e);
         res.statusCode = HttpStatus.badRequest;
         return e.toString();
       }
 
+      return data;
+    });
+
+    server.get("/login", (req, res) async {
+      final QueryModel body;
+      final Map<String, dynamic>? data;
+
+      try{
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        data = await db.compareCredentials(body.email!, body.password!);
+      }
+      on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.internalServerError;
+        return null;
+      }
+      catch(e) {
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      if(data == null){
+        res.statusCode = HttpStatus.notFound;
+        return 'credentials mismatch';
+      }
       return data;
     });
   }
