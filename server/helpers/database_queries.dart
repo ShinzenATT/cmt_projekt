@@ -87,31 +87,18 @@ class DatabaseQueries {
   }
 
   Future<void> insertViewer(String uid, String channelId) async{
-    try {
       await connection.query(
           "INSERT INTO Viewers VALUES('$uid','$channelId')");
-    } on PostgreSQLException catch (e) {
-      logger.e("error in insertViewer\n" + (e.message ?? ""), [e, e.stackTrace]);
-    }
   }
 
   Future<void> delViewer(String uid, String channelId) async{
-
-    try {
       await connection.query(
           "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
-    } on PostgreSQLException catch (e) {
-      logger.e("error in delViewer\n" + (e.message ?? ""), [e, e.stackTrace]);
-    }
   }
 
   Future<void> delViewers(String channelId) async{
-    try {
       await connection.query(
           "DELETE FROM Viewers WHERE(channel = '$channelId')");
-    } on PostgreSQLException catch (e) {
-      logger.e("error in delViewers\n" + (e.message ?? ""), [e, e.stackTrace]);
-    }
   }
 
 }

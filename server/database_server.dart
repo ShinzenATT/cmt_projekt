@@ -133,6 +133,63 @@ class DatabaseServer {
 
       return data;
     });
+
+    server.post("/channel/viewers", (req, res) async {
+      final QueryModel body;
+
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        await db.insertViewer(body.uid!, body.channelid!);
+      } on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.conflict;
+        return e.message;
+      } catch (e){
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      return null;
+    });
+
+    server.delete("/channel/viewers", (req, res) async {
+      final QueryModel body;
+
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        await db.delViewer(body.uid!, body.channelid!);
+      } on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.notFound;
+        return e.message;
+      } catch (e){
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      return null;
+    });
+
+    server.delete("/channel/viewers/all", (req, res) async {
+      final QueryModel body;
+
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        await db.delViewers(body.channelid!);
+      } on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.notFound;
+        return e.message;
+      } catch (e){
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      return null;
+    });
   }
 }
 
