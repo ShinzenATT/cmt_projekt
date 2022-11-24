@@ -7,7 +7,7 @@ class QueryModel {
   String? uid;
   String? channelid;
   String? code;
-  String? channelName;
+  String? channelname;
   String? category;
   String? username;
   bool? isonline;
@@ -45,7 +45,7 @@ class QueryModel {
     code = dbGetInfo;
   }
   QueryModel.createChannel(
-      {required this.uid, required this.channelName, required this.category}) {
+      {required this.uid, required this.channelname, required this.category}) {
     code = dbCreateChannel;
   }
 
@@ -66,7 +66,7 @@ class QueryModel {
         password = json['password'],
         uid = json['uid'],
         code = json['code'],
-        channelName = json['channelName'],
+        channelname = json['channelname'],
         category = json['category'],
         channelid = json['channelid'],
         isonline = json['isonline'],
@@ -79,7 +79,7 @@ class QueryModel {
         'password': password,
         'uid': uid,
         'code': code,
-        'channelName': channelName,
+        'channelname': channelname,
         'category': category,
         'channelid': channelid,
         'isonline': isonline,
@@ -88,6 +88,6 @@ class QueryModel {
       };
   @override
   String toString() {
-    return "email: $email phone: $phone password: $password uid: $uid code: $code channelName: $channelName category: $category channelid: $channelid isonline: $isonline username: $username total: $total" ;
+    return "email: $email phone: $phone password: $password uid: $uid code: $code channelname: $channelname category: $category channelid: $channelid isonline: $isonline username: $username total: $total" ;
   }
 }

@@ -25,7 +25,7 @@ class ChannelController {
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
-      await db.createChannel(body.channelName!, body.uid!, body.category!);
+      await db.createChannel(body.channelname!, body.uid!, body.category!);
       data = await db.getOnlineChannels();
     }
     on PostgreSQLException catch (e){
@@ -34,6 +34,7 @@ class ChannelController {
       return e.message;
     }
     catch (e){
+      logger.d(await req.body);
       logger.e(e);
       res.statusCode = HttpStatus.badRequest;
       return e.toString();
@@ -57,6 +58,7 @@ class ChannelController {
       return e.message;
     }
     catch (e){
+      logger.d(await req.body);
       logger.e(e);
       res.statusCode = HttpStatus.badRequest;
       return e.toString();

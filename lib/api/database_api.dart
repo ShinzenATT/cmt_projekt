@@ -1,30 +1,23 @@
 import 'dart:core';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:cmt_projekt/model/query_model.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
-import '../constants.dart';
 import '../environment.dart';
 
 
 /// Api for fetching and sending data from the database.
 class DatabaseApi {
-  static final DatabaseApi _databaseApi = DatabaseApi._internal();
-  StreamController<QueryModel> streamController =
-  StreamController<QueryModel>.broadcast();
-  StreamController<List<QueryModel>> channelController =
-  StreamController<List<QueryModel>>.broadcast();
-  bool pollingBool = false;
+  //static final DatabaseApi _databaseApi = DatabaseApi._internal();
+  StreamController<QueryModel> streamController = StreamController<QueryModel>.broadcast();
+  StreamController<List<QueryModel>> channelController = StreamController<List<QueryModel>>.broadcast();
 
-  //Connects to the server with ip address and port.
-  late WebSocketChannel channel;
-
-  factory DatabaseApi() {
+  /*factory DatabaseApi() {
     return _databaseApi;
-  }
-  DatabaseApi._internal() {
+  }*/
+  /*DatabaseApi._internal() {
     init();
     poller();
   }
@@ -50,19 +43,76 @@ class DatabaseApi {
         }
       });
     }
+  }*/
+
+
+  dynamic getRequest(String path) async {
+    final res = await http.get(Uri.http(localServer + ':5604', path), headers: {'Accept': 'application/json'})
+        .timeout(const Duration(seconds: 40));
+    if(res.statusCode >= 400){
+      throw HttpReqException(res.statusCode.toString() + ' - ' + res.body, res);
+    }
+
+    if(res.headers['content-type']?.startsWith('application/json') ?? false){
+      return jsonDecode(res.body);
+    }
+
+    return res.body.isEmpty ? null : res.body ;
   }
 
-  ///Sends a QueryModel in the form of jason to the databse server.
-  void sendRequest(QueryModel message) {
-    try {
-      channel.sink.add(jsonEncode(message));
-    } on WebSocketChannelException catch (e) {
-      logger.e('Connection to server lost', [e]);
+  dynamic postRequest(String path, dynamic body) async {
+    final res = await http.post(Uri.http(localServer + ':5604', path),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: jsonEncode(body))
+        .timeout(const Duration(seconds: 40));
+    if(res.statusCode >= 400){
+      throw HttpReqException(res.statusCode.toString() + ' - ' + res.body, res);
     }
+
+    if(res.headers['content-type']?.startsWith('application/json') ?? false){
+      return jsonDecode(res.body);
+    }
+
+    return res.body.isEmpty ? null : res.body ;
+  }
+
+  dynamic deleteRequest(String path, dynamic body) async {
+    final res = await http.delete(Uri.http(localServer + ':5604', path),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: (body != null ? jsonEncode(body) : null))
+        .timeout(const Duration(seconds: 40));
+    if(res.statusCode >= 400){
+      throw HttpReqException(res.statusCode.toString() + ' - ' + res.body, res);
+    }
+
+    if(res.headers['content-type']?.startsWith('application/json') ?? false){
+      return jsonDecode(res.body);
+    }
+
+    return res.body.isEmpty ? null : res.body ;
+  }
+
+  Future<List<QueryModel>> loadOnlineChannels() async{
+    final data = (await getRequest('/channel')) as List<dynamic>;
+    final List<QueryModel> r = [];
+
+    for (var e in data) {
+      r.add(QueryModel.fromJson(e));
+    }
+
+    channelController.add(r);
+
+    return r;
+  }
+
+  Future<QueryModel> postAndSaveToStreamCtrl(String path, dynamic body) async{
+    final data = QueryModel.fromJson(await postRequest(path, body));
+    streamController.add(data);
+    return data;
   }
 
   ///Method that handles all incoming messages from the database server.
-  void onMessage(String message) async {
+  /*void onMessage(String message) async {
     if (message == "") {
       return;
     }
@@ -80,5 +130,16 @@ class DatabaseApi {
     } else if (queryCode == dbPing) {
       pollingBool = true;
     }
+  }*/
+}
+
+class HttpReqException extends HttpException {
+  late final int statusCode;
+  late final String body;
+
+  HttpReqException(String message, http.Response res) : super(message, uri: res.request?.url){
+    statusCode = res.statusCode;
+    body = res.body;
   }
+
 }

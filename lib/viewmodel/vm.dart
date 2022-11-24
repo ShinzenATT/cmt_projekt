@@ -177,8 +177,10 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   void loginAttempt(context) async {
     setUpResponseStreamLogin(context);
-    databaseAPI.sendRequest(QueryModel.login(
-        email: login.value.text, password: password.value.text));
+    databaseAPI.postAndSaveToStreamCtrl(
+        '/account/login',
+        QueryModel.login(email: login.value.text, password: password.value.text)
+    );
   }
 
   /// From loginpageviewmodel
@@ -201,7 +203,7 @@ class VM with ChangeNotifier {
       Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
       //Navigator.of(context)
       //    .pushReplacementNamed('/Home'); // Changes to HomePage.
-      lm.databaseAPI.sendRequest(QueryModel.getChannels());
+      lm.databaseAPI.loadOnlineChannels();
     });
   }
 
@@ -235,14 +237,15 @@ class VM with ChangeNotifier {
 
       Navigator.of(_context)
           .pushReplacementNamed('/Home'); // Byter till homepage.
-      databaseAPI.sendRequest(QueryModel.getChannels());
+      databaseAPI.loadOnlineChannels();
     });
   }
 
   /// From createaccountviewmodel
   void createAccount() {
     var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
-    client.sendRequest(
+    client.postAndSaveToStreamCtrl(
+      '/account/register',
       QueryModel.account(
         email: email.value.text,
         phone: phone.value.text,
@@ -253,7 +256,7 @@ class VM with ChangeNotifier {
   }
 
   void updateChannels() {
-    databaseAPI.sendRequest(QueryModel.getChannels());
+    databaseAPI.loadOnlineChannels();
   }
 
   /// Organizes a list of all channels into a map where each
@@ -276,7 +279,7 @@ class VM with ChangeNotifier {
   /// Can return null
   QueryModel? getChannel(List<QueryModel> l, String channelName) {
     for (QueryModel qm in l) {
-      if (qm.channelName == channelName) {
+      if (qm.channelname == channelName) {
         return qm;
       }
     }

@@ -54,7 +54,7 @@ class _WebHomePageState extends State<WebHomePage> {
           onTap: () {
             context.read<VM>().setJoinPrefs(
                   channel.channelid!,
-                  channel.channelName!,
+                  channel.channelname!,
                   channel.username!,
                 );
 
@@ -79,7 +79,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   width: 150,
                   child: Center(
                     child: Text(
-                      channel.channelName!,
+                      channel.channelname!,
                       style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

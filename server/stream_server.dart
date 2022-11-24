@@ -22,7 +22,7 @@ void main() async {
 
   ///This function is called when a host connects to the server and creates a radio channel with the host id.
   ///Also sets up a extra stream internally for the host-web socket for creating multiple listen functions.
-  void initHostStream(StreamMessage message, webSocket) {
+  Future<void> initHostStream(StreamMessage message, webSocket) async {
     logger.v("A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
 
     ///Creates a radio channel
@@ -32,9 +32,9 @@ void main() async {
     rooms[message.hostId!] = channel;
 
     ///Adds the radiochannel to the database if it doesn't already exist. After that the radio channel is toggled as online.
-    database.sendRequest(QueryModel.createChannel(
+    await database.postRequest( '/channel' ,QueryModel.createChannel(
         uid: message.uid,
-        channelName: message.channelName,
+        channelname: message.channelName,
         category: message.category));
 
     ///Sets up a listen function specifically for the host. It is used to let the host send messages to all clients connected to the hosts radio channel.
@@ -45,21 +45,21 @@ void main() async {
           sendData(sock, message);
         }
       }
-    }, onDone: () {
+    }, onDone: () async {
       for (WebSocketChannel client in channel.connectedAudioClients) {
         client.sink.close(100005, "Rum ${channel.channelId} stängdes");
       }
       logger.v("Channel ${message.uid} closed");
       rooms.remove(channel.channelId);
-      database.sendRequest(QueryModel.channelOffline(uid: channel.channelId));
-      database.sendRequest(QueryModel.delViewers(channelid: message.hostId));
+      await database.deleteRequest('/channel', QueryModel.channelOffline(uid: channel.channelId));
+      await database.deleteRequest('/channel/viewers/all', QueryModel.delViewers(channelid: message.hostId));
       connectedUsers.remove(webSocket);
     });
   }
 
   ///This function is called when a client connects to the server and wants to join a radio channel.
   ///Also sets up a extra stream internally for the client-web socket for creating multiple listen functions.
-  void initClientStream(StreamMessage message, webSocket) {
+  Future<void> initClientStream(StreamMessage message, webSocket) async {
     logger.v(
         "A new client ${message.uid} has connected: and wants to join room ${message.hostId}");
 
@@ -71,15 +71,19 @@ void main() async {
     room!.addAudioViewer(webSocket);
 
     ///Adds the viewer of said radio channel to the database.
-    database.sendRequest(
-        QueryModel.addViewers(channelid: message.hostId, uid: message.uid));
+    await database.postRequest(
+        '/channel/viewers',
+        QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
+    );
 
     ///Sets up a listen function with the sole purpose of disconnecting clients with onDone.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
-        onDone: () {
+        onDone: () async {
       logger.v("Client ${message.uid} left ${message.hostId}");
-      database.sendRequest(QueryModel.delViewer(
-          channelid: message.hostId, uid: message.uid)); // -
+      await database.deleteRequest(
+          '/channel/viewers',
+          QueryModel.delViewer(channelid: message.hostId, uid: message.uid)
+      ); // -
       room.disconnectAudioViewer(webSocket);
       webSocket.sink.close(10006, "lämnade servern");
       connectedUsers.remove(webSocket);
