@@ -40,9 +40,6 @@ class DatabaseQueries {
         throw Exception("Account does not exist");
       }
 
-      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
-      ///After which each element in the row is compared to the right variable.
-      logger.d(results);
       return results[0]['account'] as Map<String, dynamic>;
   }
 
@@ -64,13 +61,6 @@ class DatabaseQueries {
       final results = await connection.mappedResultsQuery(
           "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) FROM Channel JOIN Account on uid = channelid;");
 
-      /*
-      if (results.isEmpty) {
-        return "";
-      }
-       */
-
-      logger.d(results);
       List<Map<String, dynamic>> response = [];
 
       for(final row in results){
@@ -80,8 +70,6 @@ class DatabaseQueries {
         m.addAll(row["channel"]!);
         response.add(m);
       }
-
-      logger.d(response);
 
       return response;
   }
