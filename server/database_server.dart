@@ -34,7 +34,7 @@ class DatabaseServer {
   }
 
   initRoutes(){
-    server.post("/create_account", (req, res) async {
+    server.post("account/register", (req, res) async {
       final QueryModel body;
       final Map<String, dynamic> data;
 
@@ -56,7 +56,7 @@ class DatabaseServer {
       return data;
     });
 
-    server.get("/login", (req, res) async {
+    server.post("account/login", (req, res) async {
       final QueryModel body;
       final Map<String, dynamic>? data;
 
