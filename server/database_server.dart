@@ -34,7 +34,7 @@ class DatabaseServer {
   }
 
   initRoutes(){
-    server.get("/create_account", (req, res) async {
+    server.post("/create_account", (req, res) async {
       final QueryModel body;
       final Map<String, dynamic> data;
 
@@ -79,6 +79,58 @@ class DatabaseServer {
         res.statusCode = HttpStatus.notFound;
         return 'credentials mismatch';
       }
+      return data;
+    });
+
+    server.get("/channel", (req, res) async {
+      try {
+        return await db.getOnlineChannels();
+      } on PostgreSQLException catch(e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.internalServerError;
+        return e.message;
+      }
+    });
+
+    server.post('/channel', (req, res) async {
+      final QueryModel body;
+      final List<Map<String, dynamic>> data;
+
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        await db.createChannel(body.channelName!, body.uid!, body.category!);
+        data = await db.getOnlineChannels();
+      } on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.badRequest;
+        return e.message;
+      } catch (e){
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      return data;
+    });
+
+    server.delete("/channel", (req, res) async {
+      final QueryModel body;
+      final List<Map<String, dynamic>> data;
+
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        await db.goOffline(body.uid!);
+        data = await db.getOnlineChannels();
+      } on PostgreSQLException catch (e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.notFound;
+        return e.message;
+      } catch (e){
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
       return data;
     });
   }

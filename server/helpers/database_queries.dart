@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:postgres/postgres.dart';
 
@@ -58,18 +56,13 @@ class DatabaseQueries {
   }
 
   Future<void> createChannel(String channelName, String uid, String category) async {
-    try {
       await connection.query(
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
-    } on PostgreSQLException catch (e) {
-      logger.e("error in createChannel\n" + (e.message ?? ""), [e, e.stackTrace]);
-    }
   }
 
-  Future<String> getOnlineChannels() async {
-    try {
-      List<List<dynamic>> results = await connection.query(
-          "SELECT jsonb_build_object('category',category, 'channelid',channelid,'channelName',channelname,'isonline',isonline,'username',username, 'total',(SELECT COUNT(jsonb_build_object('viewer',viewer)) as total FROM Viewers WHERE channel = channelid)) FROM Channel, Account WHERE uid = channelid ");
+  Future<List<Map<String, dynamic>>> getOnlineChannels() async {
+      final results = await connection.mappedResultsQuery(
+          "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) FROM Channel JOIN Account on uid = channelid;");
 
       /*
       if (results.isEmpty) {
@@ -77,21 +70,20 @@ class DatabaseQueries {
       }
        */
 
-      ///The result is a List<List><dynamic>> which means that result.first[0] gives the first List<dynamic> which is the first row.
-      ///After which each element in the row is compared to the right variable.
-      Map mapOfQueries = {};
-      mapOfQueries['code'] = [dbGetOnlineChannels];
-      mapOfQueries['result'] = [];
-      List listOfChannels = mapOfQueries['result'];
-      for (final row in results) {
-        listOfChannels.add(row[0]);
+      logger.d(results);
+      List<Map<String, dynamic>> response = [];
+
+      for(final row in results){
+        Map<String, dynamic> m = {};
+        m.addAll(row[""]!);
+        m.addAll(row["account"]!);
+        m.addAll(row["channel"]!);
+        response.add(m);
       }
-      logger.d(jsonEncode(mapOfQueries));
-      return jsonEncode(mapOfQueries);
-    } on PostgreSQLException catch (e) {
-      logger.e("error in getOnlineChannels\n" + (e.message ?? ""), [e, e.stackTrace]);
-      return "";
-    }
+
+      logger.d(response);
+
+      return response;
   }
 
   Future<void> insertViewer(String uid, String channelId) async{
