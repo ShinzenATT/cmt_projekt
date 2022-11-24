@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:alfred/alfred.dart';
 import 'package:cmt_projekt/model/query_model.dart';
+import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -23,11 +24,35 @@ class DatabaseServer {
   DatabaseQueries db = DatabaseQueries();
 
   DatabaseServer(){
+    initRoutes();
+
     server.listen(5604, '0.0.0.0')
         .then((s) =>
         logger.i('Database server served under http://${s.address.address}:${s.port} \n'
             '(0.0.0.0 means all ips are accepted, which includes localhost)'
         ));
+  }
+
+  initRoutes(){
+    server.get("/create_account", (req, res) async {
+      final QueryModel body;
+      final Map<String, dynamic> data;
+      try {
+        body = QueryModel.fromJson(await req.bodyAsJsonMap);
+        data = await db.createAccount(body.email!, body.password!, body.phone!, body.username!);
+      }
+      on PostgreSQLException catch(e){
+        logger.e(e.message, [e, e.stackTrace]);
+        res.statusCode = HttpStatus.conflict;
+        return e.message;
+      } catch (e) {
+        logger.e(e);
+        res.statusCode = HttpStatus.badRequest;
+        return e.toString();
+      }
+
+      return data;
+    });
   }
 }
 
@@ -77,7 +102,7 @@ class DatabaseServerOld {
       return;
     }
 
-    switch (query.code) {
+    /*switch (query.code) {
       case dbAccount:
         {
           String response = await db.createAccount(
@@ -152,7 +177,7 @@ class DatabaseServerOld {
         {
           break;
         }
-    }
+    }*/
   }
 }
 
