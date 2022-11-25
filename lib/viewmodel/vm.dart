@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
@@ -200,7 +202,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
-    print("void setUpResponseStreamLogin(context)");
+    debugPrint("void setUpResponseStreamLogin(context)");
     databaseAPI.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
@@ -238,7 +240,7 @@ class VM with ChangeNotifier {
     RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
     if (exp.hasMatch(phone.value.text)) {
       setUpResponseStreamCA(context);
-      createAccount();
+      createAccount(context);
     } else {
       await showErrorDialog(
           context,
@@ -267,17 +269,23 @@ class VM with ChangeNotifier {
   }
 
   /// From createaccountviewmodel
-  void createAccount() {
+  void createAccount(var ctx) async {
     var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
-    client.postAndSaveToStreamCtrl(
-      '/account/register',
-      QueryModel.account(
-        email: email.value.text,
-        phone: phone.value.text,
-        password: hashedPassword,
-        username: username.value.text,
-      ),
-    );
+    try {
+      client.postAndSaveToStreamCtrl(
+        '/account/register',
+        QueryModel.account(
+          email: email.value.text,
+          phone: phone.value.text,
+          password: hashedPassword,
+          username: username.value.text,
+        ),
+      );
+    } on HttpReqException catch(e){
+      await showErrorDialog(ctx, e.message);
+    } on TimeoutException {
+      await showErrorDialog(ctx, 'Kunde inte nå servern');
+    }
   }
 
   void updateChannels() {
