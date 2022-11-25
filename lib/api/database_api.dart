@@ -116,6 +116,7 @@ class DatabaseApi {
     if (message == "") {
       return;
     }
+    //userErrorMessage(message);
     String queryCode = (jsonDecode(message)['code'] as List)[0];
     if (queryCode == dbGetInfo) {
       streamController
