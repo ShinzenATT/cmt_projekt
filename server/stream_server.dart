@@ -17,9 +17,6 @@ void main() async {
   ///A map with all the rooms
   Map<String, RadioChannel> rooms = {};
 
-  ///A instance of DatabaseAPI to enable communication with the database.
-  DatabaseApi database = DatabaseApi();
-
   ///This function is called when a host connects to the server and creates a radio channel with the host id.
   ///Also sets up a extra stream internally for the host-web socket for creating multiple listen functions.
   Future<void> initHostStream(StreamMessage message, webSocket) async {
@@ -32,7 +29,7 @@ void main() async {
     rooms[message.hostId!] = channel;
 
     ///Adds the radiochannel to the database if it doesn't already exist. After that the radio channel is toggled as online.
-    await database.postRequest( '/channel' ,QueryModel.createChannel(
+    await DatabaseApi.postRequest( '/channel' ,QueryModel.createChannel(
         uid: message.uid,
         channelname: message.channelName,
         category: message.category));
@@ -51,8 +48,8 @@ void main() async {
       }
       logger.v("Channel ${message.uid} closed");
       rooms.remove(channel.channelId);
-      await database.deleteRequest('/channel', QueryModel.channelOffline(uid: channel.channelId));
-      await database.deleteRequest('/channel/viewers/all', QueryModel.delViewers(channelid: message.hostId));
+      await DatabaseApi.deleteRequest('/channel', QueryModel.channelOffline(uid: channel.channelId));
+      await DatabaseApi.deleteRequest('/channel/viewers/all', QueryModel.delViewers(channelid: message.hostId));
       connectedUsers.remove(webSocket);
     });
   }
@@ -71,7 +68,7 @@ void main() async {
     room!.addAudioViewer(webSocket);
 
     ///Adds the viewer of said radio channel to the database.
-    await database.postRequest(
+    await DatabaseApi.postRequest(
         '/channel/viewers',
         QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
     );
@@ -80,7 +77,7 @@ void main() async {
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
         onDone: () async {
       logger.v("Client ${message.uid} left ${message.hostId}");
-      await database.deleteRequest(
+      await DatabaseApi.deleteRequest(
           '/channel/viewers',
           QueryModel.delViewer(channelid: message.hostId, uid: message.uid)
       ); // -
