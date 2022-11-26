@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
@@ -272,7 +273,7 @@ class VM with ChangeNotifier {
   void createAccount(var ctx) async {
     var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
     try {
-      client.postAndSaveToStreamCtrl(
+      await client.postAndSaveToStreamCtrl(
         '/account/register',
         QueryModel.account(
           email: email.value.text,
@@ -281,10 +282,13 @@ class VM with ChangeNotifier {
           username: username.value.text,
         ),
       );
-    } on HttpReqException catch(e){
+    } on HttpException catch(e){
       await showErrorDialog(ctx, e.message);
     } on TimeoutException {
       await showErrorDialog(ctx, 'Kunde inte nå servern');
+    } catch(e){
+      logger.i(e.runtimeType);
+      await showErrorDialog(ctx, e.toString());
     }
   }
 
