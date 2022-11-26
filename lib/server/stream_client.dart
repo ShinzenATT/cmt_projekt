@@ -45,12 +45,38 @@ class Client {
     }, onDone: () {
       showDialog(
         context: context,
+        barrierDismissible: false, // user must tap a button!
         builder: (context) {
           return AlertDialog(
-            title: const Text('Sändningen är avslutad'),
-            actionsAlignment: MainAxisAlignment.spaceBetween,
+            title: const Text('Sändningen är avslutad',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))
+            ),
+            content: Builder(
+              builder: (context) {
+                return Container(
+                  height: MediaQuery.of(context).size.height*0.1,
+                  width: MediaQuery.of(context).size.width*0.9,
+                  child: Column(
+                    children: const [
+                      Text('Byter till ny kanal om:',
+                        style: TextStyle(
+                          fontSize: 22,
+                        ),
+                      ),
+                      DialogTimer(time: 10,), //change fontsize in widget
+                    ],
+                  ),
+                );
+              },
+            ),
+            actionsAlignment: MainAxisAlignment.center,
             actions: [
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   if (Navigator.canPop(context)) {
                     Navigator.popUntil(context, (route) {
@@ -58,15 +84,22 @@ class Client {
                     });
                   }
                 },
-                child: const Text('Tillbaka till startsidan'),
+                child: const Text('Tillbaka till startsidan',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Byt kanal'),
+                child: const Text('Byt kanal',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
               ),
-              const DialogTimer(),
             ],
           );
         },
@@ -89,9 +122,11 @@ class Client {
   }
 }
 
-///Widget that displays a countdown from start time to 0 when initialized
+///Widget that displays a countdown from the given duration to 0 when initialized
+///Required key time sets the duration in seconds
 class DialogTimer extends StatefulWidget {
-  const DialogTimer({Key? key}) : super(key: key);
+  final int time;
+  const DialogTimer({Key? key, required this.time}) : super(key: key);
 
   @override
   State<DialogTimer> createState() => _DialogTimerState();
@@ -99,11 +134,12 @@ class DialogTimer extends StatefulWidget {
 
 class _DialogTimerState extends State<DialogTimer> {
   Timer? timer;
-  Duration alertDuration = const Duration(seconds: 10); //start time for the countdown
+  late Duration alertDuration;//start time for the countdown
 
   @override
   void initState() {
     super.initState();
+    alertDuration = Duration(seconds: widget.time);
 
     /// Periodic timer is created when widget DialogTimer is initialized
     timer = Timer.periodic(
@@ -123,7 +159,11 @@ class _DialogTimerState extends State<DialogTimer> {
   @override
   Widget build(BuildContext context) {
     final seconds = alertDuration.inSeconds;
-    return Text('$seconds');
+    return Text('$seconds',
+      style: const TextStyle(
+        fontSize: 30,
+      ),
+    );
   }
 
   /// Reduces the alerDuration, i.e time displayed, each time it's called.

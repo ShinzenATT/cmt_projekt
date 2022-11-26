@@ -10,72 +10,14 @@ import 'package:provider/provider.dart';
 class AppListenPage extends StatelessWidget {
   const AppListenPage({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
-    /**
     Future<bool> willPopCallback() async {
-      //showAlertDialog(context);
       context.read<StreamViewModel>().closeClient();
       return context.read<VM>().willPopCallback();
     }
-
-    Future<bool> showAlertDialog(BuildContext context) async {
-      Future<bool?> shouldPop = showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Stream ended'),
-          content: const Text('Want to leave stream'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-      shouldPop.then((value) => {if (value) willPopCallback});
-      return shouldPop;
-    }
-    */
-
-
     return WillPopScope(
-      onWillPop: () async {
-        var shouldPop = await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Do you want to go back?'),
-              actionsAlignment: MainAxisAlignment.spaceBetween,
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: const Text('No'),
-                ),
-              ],
-            );
-          },
-        );
-        shouldPop ??= false;
-        if(shouldPop){
-          context.read<StreamViewModel>().closeClient();
-          context.read<VM>().willPopCallback();
-        }
-        return shouldPop;
-      },
+      onWillPop: willPopCallback,
       child: Scaffold(
         appBar: PreferredSize(
 
