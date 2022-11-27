@@ -112,6 +112,114 @@ class DatabaseApi {
     return res.body.isEmpty ? null : res.body ;
   }
 
+  /// Makes a HTTP Put request to the path on the server specified by [localServer]
+  /// in environment.dart on port 5604.
+  ///
+  /// **Parameter** [body] is converted to JSON using jsonEncode and is sent to
+  /// the server in the request body.
+  ///
+  /// **Returns** [Future<dynamic>] that is a processed version of the response body,
+  /// depending on the content-type header the returned value is String, a decoded
+  /// JSON Map of type [Map<String, dynamic>] or null on a empty body.
+  ///
+  /// **Throws** [HttpReqException] when the HTTP status code is 400 or above
+  /// (includes the 400-499 client errors and 500-599 server errors).
+  ///
+  /// **Throws** [TimeoutException] when no response has been received after 20 seconds
+  ///
+  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  ///
+  /// **Example usage:**
+  /// ```Dart
+  ///   final data;
+  ///   try {
+  ///       data = await DatabaseAPI.postRequest(
+  ///         '/account/register',
+  ///         {
+  ///          email: 'email@mail.com',
+  ///           phone: '123456789',
+  ///           password: 'password',
+  ///           username: 'user'
+  ///       );
+  ///     }
+  ///       on HttpReqException catch(e){
+  ///         print(e.message);
+  ///     }
+  ///       catch(e){
+  ///         print(e);
+  ///     }
+  ///   return data;
+  /// ```
+  static dynamic putRequest(String path, dynamic body) async {
+    final res = await http.put(Uri.http(localServer + ':5604', path),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: jsonEncode(body))
+        .timeout(const Duration(seconds: 20));
+    if(res.statusCode >= 400){
+      throw HttpReqException(res.statusCode.toString() + ' - ' + res.body, res);
+    }
+
+    if(res.headers['content-type']?.startsWith('application/json') ?? false){
+      return jsonDecode(res.body);
+    }
+
+    return res.body.isEmpty ? null : res.body ;
+  }
+
+  /// Makes a HTTP Patch request to the path on the server specified by [localServer]
+  /// in environment.dart on port 5604.
+  ///
+  /// **Parameter** [body] is converted to JSON using jsonEncode and is sent to
+  /// the server in the request body.
+  ///
+  /// **Returns** [Future<dynamic>] that is a processed version of the response body,
+  /// depending on the content-type header the returned value is String, a decoded
+  /// JSON Map of type [Map<String, dynamic>] or null on a empty body.
+  ///
+  /// **Throws** [HttpReqException] when the HTTP status code is 400 or above
+  /// (includes the 400-499 client errors and 500-599 server errors).
+  ///
+  /// **Throws** [TimeoutException] when no response has been received after 20 seconds
+  ///
+  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  ///
+  /// **Example usage:**
+  /// ```Dart
+  ///   final data;
+  ///   try {
+  ///       data = await DatabaseAPI.postRequest(
+  ///         '/account/register',
+  ///         {
+  ///          email: 'email@mail.com',
+  ///           phone: '123456789',
+  ///           password: 'password',
+  ///           username: 'user'
+  ///       );
+  ///     }
+  ///       on HttpReqException catch(e){
+  ///         print(e.message);
+  ///     }
+  ///       catch(e){
+  ///         print(e);
+  ///     }
+  ///   return data;
+  /// ```
+  static dynamic patchRequest(String path, dynamic body) async {
+    final res = await http.patch(Uri.http(localServer + ':5604', path),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+        body: jsonEncode(body))
+        .timeout(const Duration(seconds: 20));
+    if(res.statusCode >= 400){
+      throw HttpReqException(res.statusCode.toString() + ' - ' + res.body, res);
+    }
+
+    if(res.headers['content-type']?.startsWith('application/json') ?? false){
+      return jsonDecode(res.body);
+    }
+
+    return res.body.isEmpty ? null : res.body ;
+  }
+
   /// Makes a HTTP Delete request to the path on the server specified by [localServer]
   /// in environment.dart on port 5604.
   ///
