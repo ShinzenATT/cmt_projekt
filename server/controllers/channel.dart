@@ -7,18 +7,35 @@ import 'package:postgres/postgres.dart';
 
 import '../database_server.dart';
 
+/// A HTTP controller for handling requests regarding channels
 class ChannelController {
 
+  /// Gets all the available channels and responds with them as a List.
+  ///
+  /// **Response Body** a [List<QueryModel>] that contains a list of channels but excluding account info.
+  ///
+  /// **Error Status Codes** when it's executed successfully then 200 ok is returned &
+  /// 500 on a exception or database error.
   static getChannels(HttpRequest req, HttpResponse res) async {
     try {
       return await db.getOnlineChannels();
-    } on PostgreSQLException catch(e){
+    } on PostgreSQLException catch(e){ // on db errors
       logger.e(e.message, [e, e.stackTrace]);
       res.statusCode = HttpStatus.internalServerError;
       return e.message;
     }
   }
 
+  /// Adds a channel to the database where a db trigger handles if a new is
+  /// to be made or updates a existing one.
+  ///
+  /// **Request Body** a [QueryModel] that contains channelname, uid and category.
+  ///
+  /// **Response Body** a [List<QueryModel>] that contains channels without account info.
+  ///
+  /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
+  /// 400 when the request body doesn't contain the expected values &
+  /// 404 when uid doesn't match an account.
   static addChannel(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
     final List<Map<String, dynamic>> data;
@@ -28,12 +45,12 @@ class ChannelController {
       await db.createChannel(body.channelname!, body.uid!, body.category!);
       data = await db.getOnlineChannels();
     }
-    on PostgreSQLException catch (e){
+    on PostgreSQLException catch (e){ // when uid does not match an account
       logger.e(e.message, [e, e.stackTrace]);
-      res.statusCode = HttpStatus.badRequest;
+      res.statusCode = HttpStatus.notFound;
       return e.message;
     }
-    catch (e){
+    catch (e){ // when channelname, uid or category is not on the request body
       logger.d(await req.body);
       logger.e(e);
       res.statusCode = HttpStatus.badRequest;
@@ -43,6 +60,15 @@ class ChannelController {
     return data;
   }
 
+  /// Marks a channel as offline on the db.
+  ///
+  /// **Request Body** a [QueryModel] that contains the channelid in the uid field.
+  ///
+  /// **Response Body** a [List<QueryModel>] that contains channels without account info.
+  ///
+  /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
+  /// 400 when the request body doesn't contain the expected values &
+  /// 404 when uid doesn't match a channel.
   static makeOffline(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
     final List<Map<String, dynamic>> data;
@@ -52,12 +78,12 @@ class ChannelController {
       await db.goOffline(body.uid!);
       data = await db.getOnlineChannels();
     }
-    on PostgreSQLException catch (e){
+    on PostgreSQLException catch (e){ // when uid does not match a channel
       logger.e(e.message, [e, e.stackTrace]);
       res.statusCode = HttpStatus.notFound;
       return e.message;
     }
-    catch (e){
+    catch (e){ // when uid is not in request body
       logger.d(await req.body);
       logger.e(e);
       res.statusCode = HttpStatus.badRequest;
