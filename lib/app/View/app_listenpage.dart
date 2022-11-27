@@ -10,14 +10,12 @@ import 'package:provider/provider.dart';
 class AppListenPage extends StatelessWidget {
   const AppListenPage({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     Future<bool> willPopCallback() async {
       context.read<StreamViewModel>().closeClient();
       return context.read<VM>().willPopCallback();
     }
-
     return WillPopScope(
       onWillPop: willPopCallback,
       child: Scaffold(
