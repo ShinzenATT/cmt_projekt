@@ -9,6 +9,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants.dart';
 import '../environment.dart';
+import '../widgets/dialog_timer.dart';
 
 class Client {
   late WebSocketChannel client;
@@ -42,69 +43,7 @@ class Client {
   void listen(context) {
     client.stream.listen((event) {
       playSound(event);
-    }, onDone: () {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // user must tap a button!
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Sändningen är avslutad',
-              style: TextStyle(
-                fontSize: 24,
-              ),
-            ),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))
-            ),
-            content: Builder(
-              builder: (context) {
-                return Container(
-                  height: MediaQuery.of(context).size.height*0.1,
-                  width: MediaQuery.of(context).size.width*0.9,
-                  child: Column(
-                    children: const [
-                      Text('Byter till ny kanal om:',
-                        style: TextStyle(
-                          fontSize: 22,
-                        ),
-                      ),
-                      DialogTimer(time: 10,), //change fontsize in widget
-                    ],
-                  ),
-                );
-              },
-            ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.popUntil(context, (route) {
-                      return route.settings.name == home;
-                    });
-                  }
-                },
-                child: const Text('Tillbaka till startsidan',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Byt kanal',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    });
+    }, onDone: () {channelClosedDialog(context);});
   }
 
   Future<void> stopSound() async {
@@ -120,64 +59,82 @@ class Client {
     FoodData fd = data;
     client.sink.add(fd.data);
   }
-}
 
-///Widget that displays a countdown from the given duration to 0 when initialized
-///Required key time sets the duration in seconds
-class DialogTimer extends StatefulWidget {
-  final int time;
-  const DialogTimer({Key? key, required this.time}) : super(key: key);
-
-  @override
-  State<DialogTimer> createState() => _DialogTimerState();
-}
-
-class _DialogTimerState extends State<DialogTimer> {
-  Timer? timer;
-  late Duration alertDuration;//start time for the countdown
-
-  @override
-  void initState() {
-    super.initState();
-    alertDuration = Duration(seconds: widget.time);
-
-    /// Periodic timer is created when widget DialogTimer is initialized
-    timer = Timer.periodic(
-      const Duration(seconds: 1), //call setCountDown every second
-            (_) => setCountDown()
+  void channelClosedDialog(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap a button!
+      builder: (context) {
+        return Dialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))
+          ),
+          child: Container(
+            height: MediaQuery.of(context).size.height*0.4,
+            width: MediaQuery.of(context).size.width*0.9,
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+                gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.greenAccent,
+                      Colors.blueAccent,
+                    ])
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Text('Sändningen är avslutad',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const Text('Byter till ny kanal om:',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const DialogTimer(time: 10,), //change textstyle in widget
+                ElevatedButton(
+                  onPressed: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.popUntil(context, (route) {
+                        return route.settings.name == home;
+                      });
+                    }
+                  },
+                  child: const Text('Tillbaka till startsidan',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Byt kanal',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
-
-  /// cancel the timer when widget is disposed,
-  /// to avoid any active timer that is not executed yet
-  @override
-  void dispose() {
-    super.dispose();
-    timer?.cancel();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final seconds = alertDuration.inSeconds;
-    return Text('$seconds',
-      style: const TextStyle(
-        fontSize: 30,
-      ),
-    );
-  }
-
-  /// Reduces the alerDuration, i.e time displayed, each time it's called.
-  /// Until it reached zero, then timer is cancelled.
-  void setCountDown() {
-    const reduceSecondsBy = 1;
-    setState(() {
-      final seconds = alertDuration.inSeconds - reduceSecondsBy;
-      if (seconds < 0) {
-        timer!.cancel();
-      } else {
-        alertDuration = Duration(seconds: seconds);
-      }
-    });
-  }
 }
-
