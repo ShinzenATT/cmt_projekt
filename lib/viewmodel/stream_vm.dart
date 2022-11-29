@@ -1,5 +1,5 @@
 import 'package:cmt_projekt/model/stream_model.dart';
-import 'package:cmt_projekt/server/stream_client.dart';
+import 'package:cmt_projekt/api/stream_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 

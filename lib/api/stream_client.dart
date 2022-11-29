@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../widgets/dialog_timer.dart';
 import '../constants.dart';
 import '../environment.dart';
-import '../widgets/dialog_timer.dart';
 
 class Client {
   late WebSocketChannel client;

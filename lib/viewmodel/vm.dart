@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:cmt_projekt/api/database_api.dart';
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
@@ -17,10 +20,16 @@ import 'package:uuid/uuid.dart';
 import '../../constants.dart' as constant;
 import 'package:dbcrypt/dbcrypt.dart';
 
+import '../app/View/app_createaccountpage.dart';
+
 /*
   The main ViewModel used by the main Model and
   the majority of Views
  */
+
+final navigatorKey = GlobalKey<NavigatorState>(); // Fore test purpose
+
+
 class VM with ChangeNotifier {
   Model lm = Model();
 
@@ -177,8 +186,10 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   void loginAttempt(context) async {
     setUpResponseStreamLogin(context);
-    databaseAPI.sendRequest(QueryModel.login(
-        email: login.value.text, password: password.value.text));
+    databaseAPI.postAndSaveToStreamCtrl(
+        '/account/login',
+        QueryModel.login(email: login.value.text, password: password.value.text)
+    );
   }
 
   /// From loginpageviewmodel
@@ -192,6 +203,7 @@ class VM with ChangeNotifier {
   /// From loginpageviewmodel
   ///Initiates a function that runs when a new value comes from the response stream for the database.
   void setUpResponseStreamLogin(context) {
+    debugPrint("void setUpResponseStreamLogin(context)");
     databaseAPI.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
@@ -201,7 +213,7 @@ class VM with ChangeNotifier {
       Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
       //Navigator.of(context)
       //    .pushReplacementNamed('/Home'); // Changes to HomePage.
-      lm.databaseAPI.sendRequest(QueryModel.getChannels());
+      lm.databaseAPI.loadOnlineChannels();
     });
   }
 
@@ -212,13 +224,31 @@ class VM with ChangeNotifier {
   }
 
   /// From createaccountviewmodel
-  void comparePw(var context) {
+  /// Check so that passwords matches
+  Future<void> comparePw(var context) async {
     if (password1.value.text == password2.value.text) {
-      setUpResponseStreamCA(context);
-      createAccount();
+      checkPhonenumber(context);
+    } else {
+      await showErrorDialog(
+          context,
+          "Lösenorden stämmer inte överens"
+      );
     }
   }
-
+  /// From createaccountviewmodel
+  /// Check so that phone number is a ten digit number
+  Future<void> checkPhonenumber(var context) async {
+    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
+    if (exp.hasMatch(phone.value.text)) {
+      setUpResponseStreamCA(context);
+      createAccount(context);
+    } else {
+      await showErrorDialog(
+          context,
+          "Telefonnumret behöver vara på 10 siffror"
+      );
+    }
+  }
   /// From createaccountviewmodel
   ///Initiates a function that runs when a new value comes from the response stream for the client.
   void setUpResponseStreamCA(context) {
@@ -235,25 +265,35 @@ class VM with ChangeNotifier {
 
       Navigator.of(_context)
           .pushReplacementNamed('/Home'); // Byter till homepage.
-      databaseAPI.sendRequest(QueryModel.getChannels());
+      databaseAPI.loadOnlineChannels();
     });
   }
 
   /// From createaccountviewmodel
-  void createAccount() {
+  void createAccount(var ctx) async {
     var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
-    client.sendRequest(
-      QueryModel.account(
-        email: email.value.text,
-        phone: phone.value.text,
-        password: hashedPassword,
-        username: username.value.text,
-      ),
-    );
+    try {
+      await client.postAndSaveToStreamCtrl(
+        '/account/register',
+        QueryModel.account(
+          email: email.value.text,
+          phone: phone.value.text,
+          password: hashedPassword,
+          username: username.value.text,
+        ),
+      );
+    } on HttpException catch(e){
+      await showErrorDialog(ctx, e.message);
+    } on TimeoutException {
+      await showErrorDialog(ctx, 'Kunde inte nå servern');
+    } catch(e){
+      logger.i(e.runtimeType);
+      await showErrorDialog(ctx, e.toString());
+    }
   }
 
   void updateChannels() {
-    databaseAPI.sendRequest(QueryModel.getChannels());
+    databaseAPI.loadOnlineChannels();
   }
 
   /// Organizes a list of all channels into a map where each
@@ -276,7 +316,7 @@ class VM with ChangeNotifier {
   /// Can return null
   QueryModel? getChannel(List<QueryModel> l, String channelName) {
     for (QueryModel qm in l) {
-      if (qm.channelName == channelName) {
+      if (qm.channelname == channelName) {
         return qm;
       }
     }

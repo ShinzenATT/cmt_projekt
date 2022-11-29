@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 /// All the constants used throughout the project.
 
 //Page-references
@@ -23,3 +25,9 @@ const String dbPing = "6";
 const String dbAddViewers = "7";
 const String dbDelViewers = "8";
 const String dbDelViewer = "9";
+
+final Logger logger = Logger(
+  printer: PrettyPrinter(
+    methodCount: 0
+  )
+);
