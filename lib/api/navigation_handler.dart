@@ -3,7 +3,7 @@ import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ class NaviHandler {
     } else if (i == 1) {
       if (previousIndex == 2) {
         _context.read<StreamViewModel>().closeClient();
-        _context.read<VM>().willPopCallback();
+        _context.read<MainViewModel>().willPopCallback();
         Navigator.pop(_context);
         previousIndex = i;
       }

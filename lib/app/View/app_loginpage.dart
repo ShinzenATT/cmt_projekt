@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
@@ -31,7 +31,7 @@ class AppLoginPage extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<VM>().title,
+                context.read<MainViewModel>().title,
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -82,7 +82,7 @@ class AppLoginPage extends StatelessWidget {
                       flex: 3,
                       child: TextFormField(
                         controller: context
-                            .watch<VM>()
+                            .watch<MainViewModel>()
                             .login,
                         textInputAction: TextInputAction.next, // Moves focus to next text field.
                         decoration: const InputDecoration(
@@ -94,7 +94,7 @@ class AppLoginPage extends StatelessWidget {
                       flex: 3,
                       child: TextFormField(
                         controller: context
-                            .watch<VM>()
+                            .watch<MainViewModel>()
                             .password,
                         textInputAction: TextInputAction.done, // Close keyboard.
                         decoration: InputDecoration(
@@ -106,7 +106,7 @@ class AppLoginPage extends StatelessWidget {
                             icon: Icon(
                               // Based on passwordVisible state choose the icon
                               context
-                                  .read<VM>()
+                                  .read<MainViewModel>()
                                   .passwordVisibilityLogin
                                   ? Icons.visibility
                                   : Icons.visibility_off,
@@ -116,11 +116,11 @@ class AppLoginPage extends StatelessWidget {
                             ),
                             onPressed: () {
                               // Update the state i.e. toogle the state of passwordVisible variable
-                              context.read<VM>().changePasswordVisibilityLogin();
+                              context.read<MainViewModel>().changePasswordVisibilityLogin();
                             },
                           ),
                         ),
-                        obscureText: !context.watch<VM>().passwordVisibilityLogin,
+                        obscureText: !context.watch<MainViewModel>().passwordVisibilityLogin,
                       ),
                     ),
                     Flexible(
@@ -156,7 +156,7 @@ class AppLoginPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            context.read<VM>().loginAttempt(context);
+                            context.read<MainViewModel>().loginAttempt(context);
                           },
                           gradient: const LinearGradient(
                               begin: Alignment.centerLeft,
@@ -190,7 +190,7 @@ class AppLoginPage extends StatelessWidget {
                             highlightColor: Colors.transparent,
                             hoverColor: Colors.transparent,
                             onTap: () {
-                              context.read<VM>().guestSign(context);
+                              context.read<MainViewModel>().guestSign(context);
                             },
                             child: const Text(
                               "gäst",
@@ -222,7 +222,7 @@ class AppLoginPage extends StatelessWidget {
                               hoverColor: Colors.transparent,
                               onTap: () {
                                 context
-                                    .read<VM>()
+                                    .read<MainViewModel>()
                                     .changePage(context, constant.createAcc);
                               },
                               child: const Text(

@@ -2,12 +2,26 @@ import 'package:cmt_projekt/api/database_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Model {
+/// The MainModel holds all the variables and data that has relevance for the
+/// entire application, or at least many parts of it.
+/// It generally does not modify the data as this is supposed to be done by the
+/// MainViewModel when it is needed to build the view/views.
+
+class MainModel {
+
+  ///Api for communicating with the database
   DatabaseApi databaseAPI = DatabaseApi();
+
+  ///App variables
+  final String title = 'Comment';                   //Website logotype.
+  final String subTitle = 'Din moderna radioapp';   //Website subtitle.
+  double appBarHeight = 80.0;                 //
+
+
 
   ///For LoginPage
   bool passwordVisibilityLogin = false; // Controlls the hide-password feature.
-  String title = 'Comment'; //The website logotype.
+
   TextEditingController login = TextEditingController();
   TextEditingController password = TextEditingController();
 

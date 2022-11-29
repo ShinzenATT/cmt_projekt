@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
@@ -26,35 +26,35 @@ class WebCreateAccountWidget extends StatelessWidget {
             children: [
               const Text("Ange dina uppgifter för att skapa ett konto. "),
               TextFormField(
-                controller: context.watch<VM>().email,
+                controller: context.watch<MainViewModel>().email,
                 decoration: const InputDecoration(
                   labelText: 'Epost',
                 ),
               ),
               TextFormField(
-                controller: context.watch<VM>().username,
+                controller: context.watch<MainViewModel>().username,
                 decoration: const InputDecoration(
                   labelText: 'Användarnamn',
                 ),
               ),
               TextFormField(
-                controller: context.watch<VM>().phone,
+                controller: context.watch<MainViewModel>().phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: const InputDecoration(
                   labelText: 'Telefonnummer',
                 ),
               ),
               TextFormField(
-                controller: context.watch<VM>().password1,
-                obscureText: !context.watch<VM>().passwordVisibilityCreate,
+                controller: context.watch<MainViewModel>().password1,
+                obscureText: !context.watch<MainViewModel>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Lösenord',
                 ),
                 keyboardType: TextInputType.visiblePassword,
               ),
               TextFormField(
-                controller: context.watch<VM>().password2,
-                obscureText: !context.watch<VM>().passwordVisibilityCreate,
+                controller: context.watch<MainViewModel>().password2,
+                obscureText: !context.watch<MainViewModel>().passwordVisibilityCreate,
                 decoration: const InputDecoration(
                   labelText: 'Bekräfta lösenord',
                 ),
@@ -65,9 +65,9 @@ class WebCreateAccountWidget extends StatelessWidget {
                     splashRadius: 0,
                     focusColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    value: context.watch<VM>().passwordVisibilityCreate,
+                    value: context.watch<MainViewModel>().passwordVisibilityCreate,
                     onChanged: (_) {
-                      context.read<VM>().changePasswordVisibilityCreate();
+                      context.read<MainViewModel>().changePasswordVisibilityCreate();
                     },
                   ),
                   InkWell(
@@ -75,7 +75,7 @@ class WebCreateAccountWidget extends StatelessWidget {
                     highlightColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                     onTap: () {
-                      context.read<VM>().changePasswordVisibilityCreate();
+                      context.read<MainViewModel>().changePasswordVisibilityCreate();
                     },
                     child: const Text("Visa lösenord"),
                   ),
@@ -94,7 +94,7 @@ class WebCreateAccountWidget extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    context.read<VM>().comparePw(context);
+                    context.read<MainViewModel>().comparePw(context);
                   },
                   gradient: const LinearGradient(
                       begin: Alignment.centerLeft,

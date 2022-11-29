@@ -7,7 +7,6 @@ import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_golivesettings.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_profilepage.dart';
-import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/model/main_model.dart';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/website/View/web_channelsettings.dart';
@@ -17,49 +16,58 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-import '../../constants.dart' as constant;
+import 'package:cmt_projekt/constants.dart' as constant;
 import 'package:dbcrypt/dbcrypt.dart';
 
 import '../app/View/app_createaccountpage.dart';
 
-/*
-  The main ViewModel used by the main Model and
-  the majority of Views
- */
+//final navigatorKey = GlobalKey<NavigatorState>(); // For test purpose
 
-final navigatorKey = GlobalKey<NavigatorState>(); // Fore test purpose
+///The MainViewModel is used to deliver, modify and perform functions on data
+///retrieved from the MainModel. Its purpose is to act as an intermediary
+///between the views and the MainModel. Views should never directly access
+///the MainModel, but instead use MainViewModel to get what they need to build
+///their UI.
+
+class MainViewModel with ChangeNotifier {
+
+  ///MainModel to use for data access.
+  static final MainModel _mainModel = MainModel();
+
+  ///Getter functions
+  String get title => _mainModel.title;
+  String get subtitle => _mainModel.subTitle;
+  double get appBarHeight => _mainModel.appBarHeight;
 
 
-class VM with ChangeNotifier {
-  Model lm = Model();
 
-  Map<String, String> get categoryList => lm.categoryAndStandardImg;
-  get getCategory => lm.category;
+  Map<String, String> get categoryList => _mainModel.categoryAndStandardImg;
+  get getCategory => _mainModel.category;
   void setCategory(var item) {
-    lm.category = item;
+    _mainModel.category = item;
   }
 
-  bool get passwordVisibilityLogin => lm.passwordVisibilityLogin;
-  TextEditingController get login => lm.login;
-  TextEditingController get password => lm.password;
+  bool get passwordVisibilityLogin => _mainModel.passwordVisibilityLogin;
+  TextEditingController get login => _mainModel.login;
+  TextEditingController get password => _mainModel.password;
 
-  DatabaseApi get databaseAPI => lm.databaseAPI;
+  DatabaseApi get databaseAPI => _mainModel.databaseAPI;
 
-  bool get passwordVisibilityCreate => lm.passwordVisibilityCreate;
-  String get title => lm.title.toUpperCase();
-  TextEditingController get email => lm.createEmail;
-  TextEditingController get phone => lm.createPhone;
-  TextEditingController get password1 => lm.createPassword;
-  TextEditingController get password2 => lm.createPassword2;
-  TextEditingController get username => lm.createUsername;
-  DatabaseApi get client => lm.databaseAPI;
+  bool get passwordVisibilityCreate => _mainModel.passwordVisibilityCreate;
+  TextEditingController get email => _mainModel.createEmail;
+  TextEditingController get phone => _mainModel.createPhone;
+  TextEditingController get password1 => _mainModel.createPassword;
+  TextEditingController get password2 => _mainModel.createPassword2;
+  TextEditingController get username => _mainModel.createUsername;
+  DatabaseApi get client => _mainModel.databaseAPI;
 
-  TextEditingController get channelName => lm.channelName;
+  TextEditingController get channelName => _mainModel.channelName;
 
   void setChannelSettings() {
     Prefs().storedData.setString("channelName", channelName.value.text);
     Prefs().storedData.setString("category", getCategory);
     Prefs().storedData.setString("intent", "h");
+
   }
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
@@ -70,7 +78,7 @@ class VM with ChangeNotifier {
       );
 
   dynamic categoryToDropdownMenuItemList() {
-    return lm.categoryAndStandardImg.keys.map(categoryItem).toList();
+    return _mainModel.categoryAndStandardImg.keys.map(categoryItem).toList();
   }
 
   Future<bool> willPopCallback() async {
@@ -174,7 +182,7 @@ class VM with ChangeNotifier {
 
   /// From loginpageviewmodel
   void changePasswordVisibilityLogin() {
-    lm.passwordVisibilityLogin = !passwordVisibilityLogin;
+    _mainModel.passwordVisibilityLogin = !passwordVisibilityLogin;
     notifyListeners();
   }
 
@@ -197,7 +205,7 @@ class VM with ChangeNotifier {
     setUpResponseStreamLogin(context);
     Prefs().storedData.setString("uid", const Uuid().v4());
     Prefs().storedData.get("uid");
-    Navigator.pushNamedAndRemoveUntil(context, home, (route) => route.isFirst);
+    Navigator.pushNamedAndRemoveUntil(context, constant.home, (route) => route.isFirst);
   }
 
   /// From loginpageviewmodel
@@ -210,16 +218,16 @@ class VM with ChangeNotifier {
       await Prefs().storedData.setString("phone", message.phone!);
       await Prefs().storedData.setString("username", message.username!);
       // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-      Navigator.of(context).pushNamedAndRemoveUntil(home, (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(constant.home, (route) => false);
       //Navigator.of(context)
       //    .pushReplacementNamed('/Home'); // Changes to HomePage.
-      lm.databaseAPI.loadOnlineChannels();
+      _mainModel.databaseAPI.loadOnlineChannels();
     });
   }
 
   /// From createaccountviewmodel
   void changePasswordVisibilityCreate() {
-    lm.passwordVisibilityCreate = !lm.passwordVisibilityCreate;
+    _mainModel.passwordVisibilityCreate = !_mainModel.passwordVisibilityCreate;
     notifyListeners();
   }
 
@@ -287,7 +295,7 @@ class VM with ChangeNotifier {
     } on TimeoutException {
       await showErrorDialog(ctx, 'Kunde inte nå servern');
     } catch(e){
-      logger.i(e.runtimeType);
+      constant.logger.i(e.runtimeType);
       await showErrorDialog(ctx, e.toString());
     }
   }

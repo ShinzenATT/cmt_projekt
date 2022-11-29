@@ -20,8 +20,10 @@ class StreamMessage {
   }
 
   ///An instance of StreamMessage for a join request.
-  StreamMessage.join(
-      {required this.uid, required this.hostId, required this.channelType}) {
+  StreamMessage.join({
+    required this.uid,
+    required this.hostId,
+    required this.channelType}) {
     hostOrJoin = "j";
   }
 

@@ -3,7 +3,7 @@ import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/app/View/app_homepage.dart';
 import 'package:cmt_projekt/app/View/app_welcomepage.dart';
 import 'package:cmt_projekt/viewmodel/demo_stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:cmt_projekt/viewmodel/page_navigator_vm.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
 import 'package:cmt_projekt/website/View/web_homepage.dart';
@@ -20,7 +20,7 @@ void main() async {
   await Prefs().setUp();
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => VM()),
+      ChangeNotifierProvider(create: (_) => MainViewModel()),
       ChangeNotifierProvider(create: (_) => StreamViewModel()),
       ChangeNotifierProvider(create: (_) => DemoStreamViewModel()),
     ],

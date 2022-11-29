@@ -1,9 +1,11 @@
 import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/constants.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
+
+import '../../widgets/comment_app_bar.dart';
 
 class AppGoLive extends StatelessWidget {
   const AppGoLive({Key? key}) : super(key: key);
@@ -11,60 +13,9 @@ class AppGoLive extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: context.read<VM>().willPopCallback,
+      onWillPop: context.read<MainViewModel>().willPopCallback,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: AppBar(
-            leading: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(menu);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(
-                      child: Icon(Icons.account_circle_outlined),
-                    ),
-                    Center(
-                      child: Text(
-                        context.watch<VM>().getUsername() ?? 'Gäst',
-                        style: const TextStyle(fontSize: 13.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                    Colors.greenAccent,
-                    Colors.blueAccent,
-                  ])),
-            ),
-            elevation: 0,
-            centerTitle: true,
-            title: Column(
-              children: [
-                Text(
-                  context.read<VM>().title.toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'Din moderna radioapp',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          ),
-        ),
+        appBar: CommentAppBar(context),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -163,60 +114,9 @@ class AppGoLive2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: context.read<VM>().willPopCallback,
+      onWillPop: context.read<MainViewModel>().willPopCallback,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: AppBar(
-            leading: InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(menu);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(
-                      child: Icon(Icons.account_circle_outlined),
-                    ),
-                    Center(
-                      child: Text(
-                        context.watch<VM>().getUsername() ?? 'Gäst',
-                        style: const TextStyle(fontSize: 13.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                    Colors.greenAccent,
-                    Colors.blueAccent,
-                  ])),
-            ),
-            elevation: 0,
-            centerTitle: true,
-            title: Column(
-              children: [
-                Text(
-                  context.read<VM>().title.toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'Din moderna radioapp',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          ),
-        ),
+        appBar: CommentAppBar(context),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -248,12 +148,12 @@ class AppGoLive2 extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.1,
               child: FutureBuilder<bool>(
-                future: context.read<VM>().checkMicPermssion(),
+                future: context.read<MainViewModel>().checkMicPermssion(),
                 builder: (context, snapshot) {
                   if (snapshot.data == null || !snapshot.data!) {
                     return GradientElevatedButton.icon(
                       onPressed: () {
-                        context.read<VM>().grantMicPermsission();
+                        context.read<MainViewModel>().grantMicPermsission();
                       },
                       gradient: const LinearGradient(
                           begin: Alignment.centerLeft,
@@ -309,9 +209,9 @@ class AppGoLive2 extends StatelessWidget {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(primary: Colors.black),
                   onPressed: () {
-                    context.read<VM>().checkMicPermssion().then((value) => {
+                    context.read<MainViewModel>().checkMicPermssion().then((value) => {
                           if (value)
-                            {context.read<VM>().channelSettings(context)}
+                            {context.read<MainViewModel>().channelSettings(context)}
                         });
                     // context.read<StreamViewModel>().startup(context);
                   },

@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class AppMenu extends StatelessWidget {
           title: Column(
             children: [
               Text(
-                context.read<VM>().title.toUpperCase(),
+                context.read<MainViewModel>().title.toUpperCase(),
                 style:
                     const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
@@ -65,7 +65,7 @@ class AppMenu extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    context.read<VM>().getUsername() ?? 'Gäst',
+                    context.read<MainViewModel>().getUsername() ?? 'Gäst',
                     style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -106,7 +106,7 @@ class AppMenu extends StatelessWidget {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<VM>().profileInformation(context);
+                context.read<MainViewModel>().profileInformation(context);
               },
             ),
             ListTile(
@@ -191,7 +191,7 @@ class AppMenu extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                context.read<VM>().logOut(context);
+                context.read<MainViewModel>().logOut(context);
               },
             ),
           ],

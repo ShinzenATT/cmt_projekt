@@ -1,6 +1,6 @@
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
@@ -36,7 +36,7 @@ class _WebHomePageState extends State<WebHomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: channelList.length,
               itemBuilder: (BuildContext context, int index) => _buildBox(
-                  image: context.read<VM>().categoryList[categoryName]!,
+                  image: context.read<MainViewModel>().categoryList[categoryName]!,
                   channel: channelList[index],
                   context: context),
             ),
@@ -52,7 +52,7 @@ class _WebHomePageState extends State<WebHomePage> {
           required BuildContext context}) =>
       InkWell(
           onTap: () {
-            context.read<VM>().setJoinPrefs(
+            context.read<MainViewModel>().setJoinPrefs(
                   channel.channelid!,
                   channel.channelname!,
                   channel.username!,
@@ -132,7 +132,7 @@ class _WebHomePageState extends State<WebHomePage> {
               hoverColor: Colors.transparent,
               onTap: () {},
               child: Text(
-                context.read<VM>().title.toUpperCase(),
+                context.read<MainViewModel>().title.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class _WebHomePageState extends State<WebHomePage> {
 
           /// Used to fetch live channels and display them in a list.
           StreamBuilder(
-              stream: context.watch<VM>().databaseAPI.channelController.stream,
+              stream: context.watch<MainViewModel>().databaseAPI.channelController.stream,
               initialData: 0,
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -165,7 +165,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   } else if (snapshot.hasData) {
                     List<QueryModel> channels = snapshot.data;
                     Map<String, List<QueryModel>> categories =
-                        context.read<VM>().getCategoryNumber(channels);
+                        context.read<MainViewModel>().getCategoryNumber(channels);
                     return Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -219,7 +219,7 @@ class _WebHomePageState extends State<WebHomePage> {
                     ),
                   ),
                   Text(
-                    context.read<VM>().getUsername() ?? 'Gäst',
+                    context.read<MainViewModel>().getUsername() ?? 'Gäst',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -243,7 +243,7 @@ class _WebHomePageState extends State<WebHomePage> {
               onTap: () {
                 // Update the state of the app.
                 // ...
-                context.read<VM>().profileInformation(context);
+                context.read<MainViewModel>().profileInformation(context);
               },
             ),
             ListTile(
@@ -334,7 +334,7 @@ class _WebHomePageState extends State<WebHomePage> {
                 ),
               ),
               onPressed: () {
-                context.read<VM>().logOut(context);
+                context.read<MainViewModel>().logOut(context);
               },
             ),
           ],

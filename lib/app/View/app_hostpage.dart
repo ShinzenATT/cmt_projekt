@@ -2,8 +2,9 @@ import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/api/prefs.dart';
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 ///The page responsible for displaying what the host sees when streaming.
@@ -17,7 +18,7 @@ class AppHostPage extends StatefulWidget {
 class _AppHostPageState extends State<AppHostPage> {
   Future<bool> willPopCallback() async {
     context.read<StreamViewModel>().closeClient();
-    return context.read<VM>().willPopCallback();
+    return context.read<MainViewModel>().willPopCallback();
   }
 
   @override
@@ -33,7 +34,7 @@ class _AppHostPageState extends State<AppHostPage> {
             title: Column(
               children: [
                 Text(
-                  context.read<VM>().title.toUpperCase(),
+                  context.read<MainViewModel>().title.toUpperCase(),
                   style: const TextStyle(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),
@@ -68,7 +69,7 @@ class _AppHostPageState extends State<AppHostPage> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Text(
-                          context.watch<VM>().channelName.value.text,
+                          context.watch<MainViewModel>().channelName.value.text,
                           style: const TextStyle(
                             color: Colors.greenAccent,
                             fontSize: 24,
@@ -80,7 +81,7 @@ class _AppHostPageState extends State<AppHostPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        context.watch<VM>().getEmail().toString(),
+                        context.watch<MainViewModel>().getEmail().toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -99,23 +100,39 @@ class _AppHostPageState extends State<AppHostPage> {
                       color: Colors.white,
                     ),
                     StreamBuilder(
-                        stream: context.watch<VM>().databaseAPI.channelController.stream,
+                        stream: context
+                            .watch<MainViewModel>()
+                            .databaseAPI
+                            .channelController
+                            .stream,
                         initialData: 0,
-                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          } else if (snapshot.connectionState == ConnectionState.active ||
-                              snapshot.connectionState == ConnectionState.done) {
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.connectionState ==
+                                  ConnectionState.active ||
+                              snapshot.connectionState ==
+                                  ConnectionState.done) {
                             if (snapshot.hasError) {
                               return const Text("error");
                             } else if (snapshot.hasData) {
-                              QueryModel? channel =
-                              context.read<VM>().getChannel(snapshot.data,
-                                  Prefs().storedData.getString("channelName")!);
+                              QueryModel? channel = context
+                                  .read<MainViewModel>()
+                                  .getChannel(
+                                      snapshot.data,
+                                      Prefs()
+                                          .storedData
+                                          .getString("channelName")!);
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  channel != null ? channel.total.toString() : "0", //Här ska countern läggas in för aktiva lyssnare.
+                                  channel != null
+                                      ? channel.total.toString()
+                                      : "0",
+                                  //Här ska countern läggas in för aktiva lyssnare.
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -130,7 +147,7 @@ class _AppHostPageState extends State<AppHostPage> {
                           }
                         }),
                     const Text(
-                      'lyssnare', //Här ska countern läggas in för aktiva lyssnare.
+                      'lyssnare',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -148,7 +165,7 @@ class _AppHostPageState extends State<AppHostPage> {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   border: Border.all(
-                    color: Colors.white,
+                    color: Colors.white30,
                     width: 3,
                   ),
                 ),
@@ -157,7 +174,7 @@ class _AppHostPageState extends State<AppHostPage> {
                     Icon(
                       Icons.play_arrow_outlined,
                       color: Colors.white,
-                      size: MediaQuery.of(context).size.height * 0.2,
+                      size: MediaQuery.of(context).size.height * 0.15,
                     ),
                     Divider(
                       thickness: 1,
@@ -166,19 +183,12 @@ class _AppHostPageState extends State<AppHostPage> {
                       endIndent: MediaQuery.of(context).size.width * 0.05,
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        context
-                                .watch<StreamViewModel>()
-                                .smodel
-                                .recorder!
-                                .isRecording
-                            ? 'Nu sänder du live!'
-                            : 'Nu är sändningen stoppad',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          liveNotification(context),
+                          descriptionBox(context),
+                        ],
                       ),
                     ),
                   ],
@@ -226,5 +236,43 @@ class _AppHostPageState extends State<AppHostPage> {
         ),
       ),
     );
+  }
+
+  Widget descriptionBox(BuildContext context) {
+    /*
+    if (context.watch<VM>().hasChannelDescription()) {
+      return SizedBox(
+          width: double.infinity,
+          child: Text(
+            context.watch<VM>().getChannelDescription().toString(),
+            style: const TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ));
+    } else {
+
+     */
+      return SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text("Lägg till information"),
+        ),
+      );
+
+  }
+
+  Widget liveNotification(BuildContext context) {
+    if (!context.watch<StreamViewModel>().smodel.recorder!.isRecording) {
+      return const Text(
+        'Sändningen är pausad',
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
+      );
+    }
+    return Column();
   }
 }

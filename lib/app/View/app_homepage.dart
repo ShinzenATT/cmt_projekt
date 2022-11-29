@@ -2,7 +2,8 @@ import 'package:cmt_projekt/api/navigation_handler.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 import 'package:cmt_projekt/model/query_model.dart';
 import 'package:cmt_projekt/viewmodel/stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
+import 'package:cmt_projekt/widgets/comment_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,6 +16,92 @@ class AppHomePage extends StatefulWidget {
 }
 
 class _AppHomePageState extends State<AppHomePage> {
+
+  final _refreshController = RefreshController(initialRefresh: false);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CommentAppBar(context),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Text(
+            'Live just nu',
+            style: TextStyle(fontSize: 20),
+          ),
+          buildStream(context),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Sök',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.house),
+            label: 'Hem',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mic_none),
+            label: 'Gå live!',
+          ),
+        ],
+        onTap: (value) {
+          setState(() {
+            NaviHandler().setContext(context);
+            NaviHandler().changePage(value);
+          });
+        },
+        currentIndex: NaviHandler().index,
+      ),
+    );
+  }
+
+  Widget buildStream(BuildContext context) {
+    return StreamBuilder(
+      stream:
+          context.watch<MainViewModel>().databaseAPI.channelController.stream,
+      initialData: 0,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          context.read<MainViewModel>().updateChannels();
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.connectionState == ConnectionState.active ||
+            snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return const Text("error");
+          } else if (snapshot.hasData) {
+            List<QueryModel> channels = snapshot.data;
+            Map<String, List<QueryModel>> categories =
+                context.read<MainViewModel>().getCategoryNumber(channels);
+            return Expanded(
+              child: SmartRefresher(
+                header: const ClassicHeader(
+                  releaseText: "Släpp för att uppdatera",
+                  refreshingText: "Uppdaterar radiokanaler",
+                  completeText: 'Radiokanaler uppdaterade',
+                  idleText: "Dra ner för att uppdatera radiokanaler",
+                ),
+                controller: _refreshController,
+                onRefresh: () async {
+                  context.read<MainViewModel>().updateChannels();
+                  _refreshController.refreshCompleted();
+                },
+                child: getChannelsContent(categories),
+              ),
+            );
+          } else {
+            return const Text("No active channels");
+          }
+        } else {
+          return Text("State: ${snapshot.connectionState}");
+        }
+      },
+    );
+  }
+
   Widget _horizontalListView(
       {required String image,
       required List<QueryModel> channelList,
@@ -37,7 +124,8 @@ class _AppHomePageState extends State<AppHomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: channelList.length,
               itemBuilder: (BuildContext context, int index) => _buildBox(
-                  image: context.read<VM>().categoryList[categoryName]!,
+                  image:
+                      context.read<MainViewModel>().categoryList[categoryName]!,
                   channel: channelList[index],
                   context: context),
             ),
@@ -53,7 +141,7 @@ class _AppHomePageState extends State<AppHomePage> {
           required BuildContext context}) =>
       InkWell(
           onTap: () {
-            context.read<VM>().setJoinPrefs(
+            context.read<MainViewModel>().setJoinPrefs(
                   channel.channelid!,
                   channel.channelname!,
                   channel.username!,
@@ -105,12 +193,11 @@ class _AppHomePageState extends State<AppHomePage> {
                 ),
               ],
             ),
-          ));
-
-  final _refreshController = RefreshController(initialRefresh: false);
+          ),
+      );
 
   Widget getChannelsContent(Map<String, List<QueryModel>> categories) {
-    if(categories.isNotEmpty) {
+    if (categories.isNotEmpty) {
       return ListView.builder(
           shrinkWrap: true,
           itemCount: categories.length,
@@ -120,145 +207,14 @@ class _AppHomePageState extends State<AppHomePage> {
                 channelList: categories[categories.keys.elementAt(index)]!,
                 categoryName: categories.keys.elementAt(index));
           });
-    }
-    else {
+    } else {
       return const Center(
           child: Text(
-            "No active channels at the moment",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
-          ));
+        "No active channels at the moment",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20),
+      ));
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
-        child: AppBar(
-          leading: InkWell(
-            onTap: () {
-              Navigator.of(context).pushNamed(constants.menu);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Center(
-                    child: Icon(Icons.account_circle_outlined),
-                  ),
-                  Center(
-                    child: Text(
-                      context.watch<VM>().getUsername() ?? 'Gäst',
-                      style: const TextStyle(fontSize: 13.0),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ])),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          title: Column(
-            children: [
-              Text(
-                context.read<VM>().title.toUpperCase(),
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Din moderna radioapp',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const Text(
-            'Live just nu',
-            style: TextStyle(fontSize: 20),
-          ),
-
-          /// Used to fetch live channels and display them in a list.
-          StreamBuilder(
-              stream: context.watch<VM>().databaseAPI.channelController.stream,
-              initialData: 0,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  context.read<VM>().updateChannels();
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.connectionState == ConnectionState.active ||
-                    snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return const Text("error");
-                  } else if (snapshot.hasData) {
-                    List<QueryModel> channels = snapshot.data;
-                    Map<String, List<QueryModel>> categories =
-                        context.read<VM>().getCategoryNumber(channels);
-                    return Expanded(
-                      child: SmartRefresher(
-                        header: const ClassicHeader(
-                          releaseText: "Släpp för att uppdatera",
-                          refreshingText: "Uppdaterar radiokanaler",
-                          completeText: 'Radiokanaler uppdaterade',
-                          idleText: "Dra ner för att uppdatera radiokanaler",
-                        ),
-                        controller: _refreshController,
-                        onRefresh: () async {
-                          context.read<VM>().updateChannels();
-                          _refreshController.refreshCompleted();
-                        },
-                        child: getChannelsContent(categories),
-                      ),
-                    );
-                  } else {
-                    return const Text("No active channels");
-                  }
-                } else {
-                  return Text("State: ${snapshot.connectionState}");
-                }
-              }),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Sök',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.house),
-            label: 'Hem',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mic_none),
-            label: 'Gå live!',
-          ),
-        ],
-        onTap: (value) {
-          setState(() {
-            NaviHandler().setContext(context);
-            NaviHandler().changePage(value);
-          });
-        },
-        currentIndex: NaviHandler().index,
-      ),
-    );
   }
 }
 
@@ -283,7 +239,7 @@ class AlertMessage extends StatelessWidget {
         TextButton(
           child: const Text("OK"),
           onPressed: () {
-            context.read<VM>().createAccountPrompt(context);
+            context.read<MainViewModel>().createAccountPrompt(context);
           },
         ),
       ],

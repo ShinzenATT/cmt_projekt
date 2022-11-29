@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +16,7 @@ class WebChannelSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(context.watch<VM>().categoryList.toString());
+    debugPrint(context.watch<MainViewModel>().categoryList.toString());
     return Center(
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
@@ -37,7 +37,7 @@ class WebChannelSettings extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        context.read<VM>().getEmail() ?? 'Gäst',
+                        context.read<MainViewModel>().getEmail() ?? 'Gäst',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ],
@@ -45,7 +45,7 @@ class WebChannelSettings extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      controller: context.watch<VM>().channelName,
+                      controller: context.watch<MainViewModel>().channelName,
                       decoration: InputDecoration(
                         labelText: 'Namn på radiokanal',
                         suffixIcon: IconButton(
@@ -67,13 +67,13 @@ class WebChannelSettings extends StatelessWidget {
                         labelText: 'Kategori',
                         border: OutlineInputBorder(),
                       ),
-                      value: context.watch<VM>().getCategory,
+                      value: context.watch<MainViewModel>().getCategory,
                       isExpanded: true,
                       validator: (value) => null,
                       autovalidateMode: AutovalidateMode.always,
                       items: categoryList.map(categoryItem).toList(),
                       onChanged: (value) {
-                        context.read<VM>().setCategory(value);
+                        context.read<MainViewModel>().setCategory(value);
                       },
                     ),
                   ),
@@ -84,7 +84,7 @@ class WebChannelSettings extends StatelessWidget {
                   height: 60,
                   child: GradientElevatedButton.icon(
                     onPressed: () {
-                      context.read<VM>().setChannelSettings();
+                      context.read<MainViewModel>().setChannelSettings();
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,

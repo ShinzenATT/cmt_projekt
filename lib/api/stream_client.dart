@@ -35,9 +35,8 @@ class Client {
         channelName: Prefs().storedData.getString("channelName"),
       )));
     }
-    foodStreamController!.stream.listen((event) {
-      sendData(event);
-    });
+
+    foodStreamController!.stream.listen((event) { sendData(event); });
   }
 
   void listen(context) {

@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +47,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<VM>().getUsername().toString(),
+                      context.read<MainViewModel>().getUsername().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -67,7 +67,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<VM>().getEmail().toString(),
+                      context.read<MainViewModel>().getEmail().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -87,7 +87,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<VM>().getPhone().toString(),
+                      context.read<MainViewModel>().getPhone().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),

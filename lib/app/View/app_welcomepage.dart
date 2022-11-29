@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/viewmodel/vm.dart';
+import 'package:cmt_projekt/viewmodel/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +32,7 @@ class AppWelcomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    context.read<VM>().title.toUpperCase(),
+                    context.read<MainViewModel>().title.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 50,
