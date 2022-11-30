@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 import 'package:provider/provider.dart';
 
-import '../viewmodel/main_vm.dart';
+import '../view_models/main_vm.dart';
 
 
 ///This is a reusable AppBar which is used in almost every view. It's created
