@@ -4,7 +4,6 @@ import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 ///The page responsible for displaying what the host sees when streaming.
@@ -183,7 +182,7 @@ class _AppHostPageState extends State<AppHostPage> {
                       endIndent: MediaQuery.of(context).size.width * 0.05,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
                           liveNotification(context),

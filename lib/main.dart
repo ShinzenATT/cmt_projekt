@@ -5,7 +5,7 @@ import 'package:cmt_projekt/views/welcome_view.dart';
 import 'package:cmt_projekt/--Bin%20(Deprecated)/demo_stream_vm.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
