@@ -61,17 +61,26 @@ INSERT INTO Account VALUES('simon@gmail.com', '123', '072-123000','Sambach');
 INSERT INTO Account VALUES('maxper@gmail.com', '124','072-124000','MaxPers');
 INSERT INTO Account VALUES('eddi@gmail.com', '123', '072-125000','Medusa');
 INSERT INTO Account VALUES('dan@gmail.com', '124','072-126000','Fransson');
+INSERT INTO Account VALUES('alen@gmail.com', '123', '072-127000','Alen');
+INSERT INTO Account VALUES('andin@gmail.com', '124','072-128000','Andin');
+INSERT INTO Account VALUES('tomas@gmail.com', '123', '072-129000','Tomas');
+INSERT INTO Account VALUES('henning@gmail.com', '124','072-120000','Henning');
 INSERT INTO Category VALUES('Sport');
 INSERT INTO Category VALUES('Rock');
 INSERT INTO Category VALUES('Jazz');
 INSERT INTO Category VALUES('Pop');
 INSERT INTO Category VALUES('Tjööt');
+--INSERT INTO Category VALUES('Disco'); Add image url in model first.
 
 --Mockup channels only fore test purpose, they don't stream any content!
-INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Sambach'),'DiscoDunk!','Pop','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Sambach'),'DiscoDunk!','Tjööt','t');
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='MaxPers'),'Prat','Tjööt','t');
-INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Medusa'),'DiscoTjo!','Rock','t');
-INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Fransson'),'DiscoHej!','Jazz','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Medusa'),'DiscoTjo!','Tjööt','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Fransson'),'DiscoHej!','Tjööt','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Alen'),'KodSnack','Sport','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Andin'),'RockPodden','Rock','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Tomas'),'DansPodden','Jazz','t');
+INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Henning'),'FlyttPodden','Pop','t');
 --SELECT * FROM Account;
 
 CREATE FUNCTION channel_update()
