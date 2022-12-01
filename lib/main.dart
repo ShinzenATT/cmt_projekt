@@ -1,17 +1,15 @@
-import 'package:cmt_projekt/api/navigation_handler.dart';
-import 'package:cmt_projekt/api/prefs.dart';
-import 'package:cmt_projekt/app/View/app_homepage.dart';
-import 'package:cmt_projekt/app/View/app_welcomepage.dart';
-import 'package:cmt_projekt/viewmodel/demo_stream_vm.dart';
-import 'package:cmt_projekt/viewmodel/vm.dart';
-import 'package:cmt_projekt/viewmodel/page_navigator_vm.dart';
-import 'package:cmt_projekt/viewmodel/stream_vm.dart';
-import 'package:cmt_projekt/website/View/web_homepage.dart';
-import 'package:cmt_projekt/website/View/web_loginpage.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cmt_projekt/apis/navigation_handler.dart';
+import 'package:cmt_projekt/apis/prefs.dart';
+import 'package:cmt_projekt/views/home_view.dart';
+import 'package:cmt_projekt/views/welcome_view.dart';
+import 'package:cmt_projekt/--Bin%20(Deprecated)/demo_stream_vm.dart';
+import 'package:cmt_projekt/view_models/main_vm.dart';
+import 'package:cmt_projekt/view_models/stream_vm.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'constantsflutter.dart' as constant;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +18,7 @@ void main() async {
   await Prefs().setUp();
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (_) => VM()),
+      ChangeNotifierProvider(create: (_) => MainViewModel()),
       ChangeNotifierProvider(create: (_) => StreamViewModel()),
       ChangeNotifierProvider(create: (_) => DemoStreamViewModel()),
     ],
@@ -41,19 +39,13 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(),
       ),
       home: checkLogin(),
-      routes: PageNavigator().routes,
+      routes: constant.routingData,
     );
   }
 
   Widget checkLogin() {
     if (Prefs().storedData.getString("email") != null) {
-      if (kIsWeb) {
-        return const WebHomePage();
-      }
       return const AppHomePage();
-    }
-    if (kIsWeb) {
-      return const WebLoginPage();
     }
     return const AppWelcomePage();
   }
