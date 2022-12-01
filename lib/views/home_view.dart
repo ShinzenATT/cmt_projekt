@@ -107,7 +107,7 @@ class _AppHomePageState extends State<AppHomePage> {
       required List<QueryModel> channelList,
       required String categoryName}) {
     return SizedBox(
-      height: 150,
+      height: 285,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
