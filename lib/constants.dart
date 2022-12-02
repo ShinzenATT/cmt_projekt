@@ -1,6 +1,8 @@
 import 'package:logger/logger.dart';
 
-/// All the constants used throughout the project.
+
+
+/// All constant data used throughout the project is collected here.
 
 //Page-references
 const String home = '/Home';
@@ -13,6 +15,7 @@ const String goLive2 = '/goLive2';
 const String login = '/login';
 const String menu = '/AppMenu';
 const String welcome = '/AppWelcome';
+
 
 //dbLogic
 const String dbLogin = "0";
