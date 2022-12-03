@@ -54,7 +54,7 @@ class AppListenPage extends StatelessWidget {
 
   Widget buildStream(BuildContext context) {
     return StreamBuilder(
-      stream: context.watch<StreamViewModel>().smodel.c!.msgController.stream,
+      stream: context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
       initialData:
           QueryModel.fromJson({"total": 0, "channelname": "", "usename": ""}),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {

@@ -92,7 +92,6 @@ void main() async {
         QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
     );
 
-    res["total"] = room.connectedAudioClients.length;
     res = jsonEncode(res);
 
     sendData(room.streamAudioHost, res);
@@ -112,7 +111,6 @@ void main() async {
       webSocket.sink.close(10006, "lämnade servern");
       connectedUsers.remove(webSocket);
 
-      res["total"] = room.connectedAudioClients.length;
       res = jsonEncode(res);
 
       sendData(room.streamAudioHost, res);

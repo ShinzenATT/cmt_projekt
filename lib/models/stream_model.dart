@@ -8,5 +8,5 @@ class StreamModel {
 
   bool isInitiated = false;
 
-  Client? c;
+  StreamClient? streamClient;
 }

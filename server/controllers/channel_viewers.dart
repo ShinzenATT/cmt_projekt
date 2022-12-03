@@ -24,7 +24,7 @@ class ChannelViewersController {
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.insertViewer(body.uid!, body.channelid!);
-      data = await db.getChannel(body.uid!);
+      data = await db.getChannel(body.channelid!);
     }
     on PostgreSQLException catch (e) { // when combination of uid and channelid already exists
       logger.e(e.message, [e, e.stackTrace]);
@@ -53,7 +53,7 @@ class ChannelViewersController {
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.delViewer(body.uid!, body.channelid!);
-      data = await db.getChannel(body.uid!);
+      data = await db.getChannel(body.channelid!);
     }
     on PostgreSQLException catch (e) { // on db errors
       logger.e(e.message, [e, e.stackTrace]);

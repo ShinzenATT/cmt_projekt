@@ -12,7 +12,7 @@ import '../widgets/dialog_timer.dart';
 import '../constants.dart';
 import '../environment.dart';
 
-class Client {
+class StreamClient {
   late WebSocketChannel client;
   late FlutterSoundPlayer? _player;
   StreamController<Food>? foodStreamController =
@@ -20,7 +20,7 @@ class Client {
   StreamController<QueryModel> msgController =
       StreamController<QueryModel>.broadcast();
 
-  Client(FlutterSoundPlayer? player) {
+  StreamClient(FlutterSoundPlayer? player) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
@@ -70,7 +70,7 @@ class Client {
 
   sendUpdate(StreamMessage msg){
     msg.intent = "u";
-    client.sink.add(msg);
+    client.sink.add(jsonEncode(msg));
   }
 
   void channelClosedDialog(context) {

@@ -33,6 +33,7 @@ class StreamMessage {
     required this.channelType,
     required this.uid
 }){
+    hostId = uid;
     intent = "u";
 }
 

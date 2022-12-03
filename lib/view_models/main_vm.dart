@@ -99,7 +99,7 @@ class MainViewModel with ChangeNotifier {
 
   ///Returns the users uID.
   String? getUid() {
-    return Prefs().storedData.get("uid").toString();
+    return Prefs().storedData.getString("uid");
   }
 
   ///Creates a showdialog with webprofilewidget.
