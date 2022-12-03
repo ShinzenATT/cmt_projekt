@@ -6,7 +6,7 @@ import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 
 class GoLiveSettings extends StatelessWidget {
-  const GoLiveSettings({Key? key}) : super(key: key);
+  const GoLiveSettings({Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +71,14 @@ class GoLiveSettings extends StatelessWidget {
                   child: GradientElevatedButton.icon(
                     onPressed: () {
                       context.read<MainViewModel>().setChannelSettings();
-                      context.read<StreamViewModel>().startup(context);
                       Navigator.pop(context);
-                      Navigator.of(context).popAndPushNamed(hostChannel);
+                      if(context.read<StreamViewModel>().smodel.isInitiated){
+                        logger.i("uwu");
+                        context.read<StreamViewModel>().sendUpdate(context);
+                      } else {
+                        context.read<StreamViewModel>().startup(context);
+                        Navigator.of(context).popAndPushNamed(hostChannel);
+                      }
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,

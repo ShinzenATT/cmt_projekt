@@ -1,7 +1,10 @@
 import 'package:cmt_projekt/models/stream_model.dart';
 import 'package:cmt_projekt/apis/stream_client.dart';
+import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
+
+import '../apis/prefs.dart';
 
 typedef Fn = void Function();
 
@@ -11,21 +14,21 @@ class StreamViewModel with ChangeNotifier {
   void startup(context) {
     smodel.player = FlutterSoundPlayer();
     smodel.recorder = FlutterSoundRecorder();
-    smodel.c = Client(smodel.player);
+    smodel.streamClient = StreamClient(smodel.player);
     init().then((value) {
       smodel.isInitiated = true;
-      smodel.c!.listen(context);
+      smodel.streamClient!.listen(context);
     });
   }
 
   Future<bool> closeClient() async {
-    if (smodel.c != null) {
+    if (smodel.streamClient != null) {
       smodel.player!.stopPlayer();
       smodel.recorder!.stopRecorder();
-      smodel.c!.stopSound();
+      smodel.streamClient!.stopSound();
       smodel.isInitiated = false;
-      smodel.c!.client.sink.close();
-      smodel.c = null;
+      smodel.streamClient!.client.sink.close();
+      smodel.streamClient = null;
     }
 
     return true;
@@ -83,7 +86,7 @@ class StreamViewModel with ChangeNotifier {
     await smodel.recorder!.startRecorder(
       codec: Codec.pcm16,
       toStream: smodel
-          .c!.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
+          .streamClient!.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
       sampleRate: 44000,
       numChannels: 1,
     );
@@ -109,5 +112,15 @@ class StreamViewModel with ChangeNotifier {
     } else {
       record();
     }
+  }
+
+  sendUpdate(BuildContext context){
+    final StreamClient c = smodel.streamClient!;
+    c.sendUpdate(StreamMessage.update(
+        channelName:  Prefs().storedData.getString("channelName"),
+        category: Prefs().storedData.getString("category"),
+        channelType: "a",
+        uid: Prefs().storedData.getString("uid")!
+    ));
   }
 }

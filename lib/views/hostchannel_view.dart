@@ -56,7 +56,7 @@ class _AppHostPageState extends State<AppHostPage> {
         ),
         body: StreamBuilder(
             stream:
-                context.watch<StreamViewModel>().smodel.c!.msgController.stream,
+                context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
             initialData: QueryModel.fromJson(
                 {"total": 0, "channelname": "", "username": ""}),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -241,7 +241,9 @@ class _AppHostPageState extends State<AppHostPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          context.read<MainViewModel>().channelSettings(context);
+        },
         child: const Text("Lägg till information"),
       ),
     );
