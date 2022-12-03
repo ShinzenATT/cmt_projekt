@@ -19,7 +19,7 @@ void main() async {
 
   ///This function is called when a host connects to the server and creates a radio channel with the host id.
   ///Also sets up a extra stream internally for the host-web socket for creating multiple listen functions.
-  Future<void> initHostStream(StreamMessage message, webSocket) async {
+  Future<void> initHostStream(StreamMessage message, WebSocketChannel webSocket) async {
     logger.v("A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
 
     ///Creates a radio channel
@@ -29,22 +29,41 @@ void main() async {
     rooms[message.hostId!] = channel;
 
     ///Adds the radiochannel to the database if it doesn't already exist. After that the radio channel is toggled as online.
-    await DatabaseApi.postRequest( '/channel' ,QueryModel.createChannel(
+    final res = await DatabaseApi.postRequest( '/channel' ,QueryModel.createChannel(
         uid: message.uid,
         channelname: message.channelName,
-        category: message.category));
+        category: message.category
+    ));
+    sendData(webSocket, jsonEncode(res));
 
     ///Sets up a listen function specifically for the host. It is used to let the host send messages to all clients connected to the hosts radio channel.
     ///OnDone disconnects all clients from the radio channel and removes the channel from the list.
-    connectedUsers[webSocket]!.stream.asBroadcastStream().listen((message) {
+    connectedUsers[webSocket]!.stream.asBroadcastStream().listen((message) async {
       if (message.runtimeType != String) {
         for (WebSocketChannel sock in channel.connectedAudioClients) {
           sendData(sock, message);
         }
+      } else {
+        StreamMessage msg = StreamMessage.fromJson(jsonDecode(message));
+        if(msg.intent == "u"){
+          var res = await DatabaseApi.postRequest('/channel', QueryModel.createChannel(
+              uid: msg.uid,
+              channelname: msg.channelName,
+              category: msg.category
+          ));
+
+          res = jsonEncode(res);
+
+          sendData(webSocket, res);
+          for(WebSocketChannel sock in channel.connectedAudioClients){
+            sendData(sock, res);
+          }
+
+        }
       }
     }, onDone: () async {
       for (WebSocketChannel client in channel.connectedAudioClients) {
-        client.sink.close(100005, "Rum ${channel.channelId} stängdes");
+        client.sink.close(1000, "Rum ${channel.channelId} stängdes");
       }
       logger.v("Channel ${message.uid} closed");
       rooms.remove(channel.channelId);
@@ -61,29 +80,45 @@ void main() async {
         "A new client ${message.uid} has connected: and wants to join room ${message.hostId}");
 
     ///Picks out the desired radio channel from the list of all radio channels.
-    RadioChannel? room = rooms[message.hostId];
+    RadioChannel room = rooms[message.hostId]!;
 
     ///Adds the client to the radio channels list of all connected clients.
     //room!.connectedAudioClients.add(webSocket);
-    room!.addAudioViewer(webSocket);
+    room.addAudioViewer(webSocket);
 
     ///Adds the viewer of said radio channel to the database.
-    await DatabaseApi.postRequest(
+    var res = await DatabaseApi.postRequest(
         '/channel/viewers',
         QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
     );
+
+    res["total"] = room.connectedAudioClients.length;
+    res = jsonEncode(res);
+
+    sendData(room.streamAudioHost, res);
+    for(WebSocketChannel sock in room.connectedAudioClients){
+      sendData(sock, res);
+    }
 
     ///Sets up a listen function with the sole purpose of disconnecting clients with onDone.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {},
         onDone: () async {
       logger.v("Client ${message.uid} left ${message.hostId}");
-      await DatabaseApi.deleteRequest(
+      var res = await DatabaseApi.deleteRequest(
           '/channel/viewers',
           QueryModel.delViewer(channelid: message.hostId, uid: message.uid)
       ); // -
       room.disconnectAudioViewer(webSocket);
       webSocket.sink.close(10006, "lämnade servern");
       connectedUsers.remove(webSocket);
+
+      res["total"] = room.connectedAudioClients.length;
+      res = jsonEncode(res);
+
+      sendData(room.streamAudioHost, res);
+      for(WebSocketChannel sock in room.connectedAudioClients){
+        sendData(sock, res);
+      }
     });
   }
 
@@ -103,14 +138,14 @@ void main() async {
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {
       if (event.runtimeType == String) {
         StreamMessage message = StreamMessage.fromJson(jsonDecode(event));
-        if (message.hostOrJoin == "h" && !rooms.containsKey(message.hostId)) {
+        if (message.intent == "h" && !rooms.containsKey(message.hostId)) {
           initHostStream(message, webSocket);
-        } else if (message.hostOrJoin == "j" &&
+        } else if (message.intent == "j" &&
             rooms.containsKey(message.hostId)) {
           initClientStream(message, webSocket);
-        } else if (message.hostOrJoin == "j" &&
+        } else if (message.intent == "j" &&
             !rooms.containsKey(message.hostId)) {
-          webSocket.sink.close(100009, "rummet finns inte");
+          webSocket.sink.close(4400, "rummet finns inte");
         }
       }
     });

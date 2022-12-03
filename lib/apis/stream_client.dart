@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../models/query_model.dart';
 import '../widgets/dialog_timer.dart';
 import '../constants.dart';
 import '../environment.dart';
@@ -16,6 +17,8 @@ class Client {
   late FlutterSoundPlayer? _player;
   StreamController<Food>? foodStreamController =
       StreamController<Food>.broadcast();
+  StreamController<QueryModel> msgController =
+      StreamController<QueryModel>.broadcast();
 
   Client(FlutterSoundPlayer? player) {
     _player = player;
@@ -41,7 +44,13 @@ class Client {
 
   void listen(context) {
     client.stream.listen((event) {
-      playSound(event);
+      if(event.runtimeType == String){
+        final msg = QueryModel.fromJson(jsonDecode(event));
+        logger.d(msg);
+        msgController.sink.add(msg);
+      } else {
+        playSound(event);
+      }
     }, onDone: () {channelClosedDialog(context);});
   }
 
@@ -57,6 +66,11 @@ class Client {
   void sendData(data) {
     FoodData fd = data;
     client.sink.add(fd.data);
+  }
+
+  sendUpdate(StreamMessage msg){
+    msg.intent = "u";
+    client.sink.add(msg);
   }
 
   void channelClosedDialog(context) {

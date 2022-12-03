@@ -2,7 +2,7 @@
 ///The purpose of this class is to relay information between the server and client.
 class StreamMessage {
   String uid;
-  String? hostOrJoin;
+  String? intent;
   String? hostId;
   String channelType;
   String? channelName;
@@ -16,7 +16,7 @@ class StreamMessage {
     required this.category,
   }) {
     hostId = uid;
-    hostOrJoin = "h";
+    intent = "h";
   }
 
   ///An instance of StreamMessage for a join request.
@@ -24,13 +24,22 @@ class StreamMessage {
     required this.uid,
     required this.hostId,
     required this.channelType}) {
-    hostOrJoin = "j";
+    intent = "j";
   }
+
+  StreamMessage.update({
+    required this.channelName,
+    required this.category,
+    required this.channelType,
+    required this.uid
+}){
+    intent = "u";
+}
 
   ///Konverterar meddelandet till json
   Map<String, dynamic> toJson() => {
         'uid': uid,
-        'hostOrJoin': hostOrJoin,
+        'hostOrJoin': intent,
         'hostId': hostId,
         'channelType': channelType,
         'channelName': channelName,
@@ -40,7 +49,7 @@ class StreamMessage {
   ///Creates an instance of StreamMessage from jason.
   StreamMessage.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
-        hostOrJoin = json['hostOrJoin'],
+        intent = json['hostOrJoin'],
         hostId = json['hostId'],
         channelType = json['channelType'],
         channelName = json['channelName'],
