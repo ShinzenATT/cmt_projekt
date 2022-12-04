@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/apis/prefs.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
-import 'package:cmt_projekt/widgets/ChannelClosedDialog.dart';
+import 'package:cmt_projekt/widgets/channel_closed_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -94,7 +94,7 @@ class StreamClient {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap a button!
-      builder: ChannelClosedDialog().build,
+      builder: const ChannelClosedDialog().build,
     );
   }
 }
