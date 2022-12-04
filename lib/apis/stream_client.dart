@@ -3,37 +3,39 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/apis/prefs.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
+import 'package:cmt_projekt/widgets/ChannelClosedDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
-import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../models/query_model.dart';
-import '../view_models/main_vm.dart';
-import '../view_models/stream_vm.dart';
-import '../widgets/dialog_timer.dart';
-import '../constants.dart';
 import '../environment.dart';
 
+/// A Class for handling a websocket stream to the server
 class StreamClient {
+  /// The websocket connection to the stream server
   late WebSocketChannel client;
+  /// The player object that plays sound
   late FlutterSoundPlayer? _player;
+  /// A stream controller used by recorders to forward data to the websocket connection
   StreamController<Food>? foodStreamController =
       StreamController<Food>.broadcast();
+  /// A stream controller for forwarding updated channel data to various pages.
   StreamController<QueryModel> msgController =
       StreamController<QueryModel>.broadcast();
 
+  /// Initiates the Flutter sound player and setups a connection to the server
   StreamClient(FlutterSoundPlayer? player) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
-    if (Prefs().getIntent() == "j") {
+    if (Prefs().getIntent() == "j") { // sends a json msg to server on which host to join/listen
       debugPrint(Prefs().getIntent().toString());
       client.sink.add(jsonEncode(StreamMessage.join(
           uid: Prefs().storedData.get("uid").toString(),
           channelType: "a",
           hostId: Prefs().storedData.get("joinChannelID").toString())));
-    } else {
+    } else { // sends a json msg to server with intent to host
       client.sink.add(jsonEncode(StreamMessage.host(
         uid: Prefs().storedData.get("uid").toString(),
         channelType: "a",
@@ -42,14 +44,17 @@ class StreamClient {
       )));
     }
 
-    foodStreamController!.stream.listen((event) { sendData(event); });
+    // when the stream gets recording data then send it to the stream server
+    foodStreamController!.stream.listen((event) { sendData(event as FoodData); });
   }
 
+  /// A handler for receiving data from the server.
+  /// It differentiates between string and binary data so strings are json decoded and sent to [msgController].
+  /// While binary (sound) data is handled by the [playSound] method.
   void listen(context) {
     client.stream.listen((event) {
       if(event.runtimeType == String){
         final msg = QueryModel.fromJson(jsonDecode(event));
-        logger.d(msg);
         msgController.sink.add(msg);
       } else {
         playSound(event);
@@ -62,107 +67,34 @@ class StreamClient {
     });
   }
 
+  ///Stops audio playback, see [FlutterSoundPlayer.stopPlayer].
   Future<void> stopSound() async {
     await _player!.stopPlayer();
   }
 
-  Future<void> playSound(event) async {
+  /// Plays audio data provided and adds to the players foodsink. See [FlutterSoundPlayer.foodSink].
+  Future<void> playSound(TypedData event) async {
     Uint8List list = Uint8List.sublistView(event);
     _player!.foodSink!.add(FoodData(list));
   }
 
-  void sendData(data) {
-    FoodData fd = data;
-    client.sink.add(fd.data);
+  /// Sends binary audio data to the server
+  void sendData(FoodData data) {
+    client.sink.add(data.data);
   }
 
+  /// Sends a json message to the server with intent to update channel info.
   sendUpdate(StreamMessage msg){
     msg.intent = "u";
     client.sink.add(jsonEncode(msg));
   }
 
+  /// Shows a [ChannelClosedDialog]
   void channelClosedDialog(context) {
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap a button!
-      builder: (context) {
-        return Dialog(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))
-          ),
-          child: Container(
-            height: MediaQuery.of(context).size.height*0.4,
-            width: MediaQuery.of(context).size.width*0.9,
-            decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2,
-                ),
-                borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-                gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.greenAccent,
-                      Colors.blueAccent,
-                    ])
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Text('Sändningen är avslutad',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const Text('Byter till ny kanal om:',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const DialogTimer(time: 10,), //change textstyle in widget
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<StreamViewModel>().closeClient();
-                    context.read<MainViewModel>().willPopCallback();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black45),
-                    foregroundColor: MaterialStateProperty.all(Colors.white)
-                  ),
-                  child: const Text('Tillbaka till startsidan',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.black45),
-                    foregroundColor: MaterialStateProperty.all(Colors.white)
-                  ),
-                  child: const Text('Byt kanal',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: ChannelClosedDialog().build,
     );
   }
 }

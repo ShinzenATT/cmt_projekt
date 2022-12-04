@@ -73,7 +73,6 @@ class GoLiveSettings extends StatelessWidget {
                       context.read<MainViewModel>().setChannelSettings();
                       Navigator.pop(context);
                       if(context.read<StreamViewModel>().smodel.isInitiated){
-                        logger.i("uwu");
                         context.read<StreamViewModel>().sendUpdate(context);
                       } else {
                         context.read<StreamViewModel>().startup(context);

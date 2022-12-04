@@ -14,6 +14,8 @@ class ChannelViewersController {
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
   ///
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
   /// 409 when viewer already watched that channel.
@@ -43,6 +45,8 @@ class ChannelViewersController {
   /// removes a viewer so it no longer watched the channel.
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
+  ///
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned &
   /// 400 when the request body doesn't contain the expected values.
