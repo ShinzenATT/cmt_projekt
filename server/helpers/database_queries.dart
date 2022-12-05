@@ -25,7 +25,7 @@ class DatabaseQueries {
       final results = await connection.mappedResultsQuery(
           "SELECT password FROM Account WHERE (email = '$login' OR phone = '$login')");
       if (results.length == 1 && DBCrypt().checkpw(pass, results[0]["account"]!["password"] as String)) {
-        return getInfo(login);
+        return getAccount(login);
       }
       return null;
   }
@@ -34,11 +34,11 @@ class DatabaseQueries {
   Future<Map<String, dynamic>> createAccount(String email, String pass, String phone, String username) async {
       await connection
           .query("INSERT INTO Account VALUES('$email', '$pass', '$phone', '$username')");
-      return (getInfo(email));
+      return (getAccount(email));
   }
 
   /// Gets account info based on the search parameter, if nothing is found then an [Exception] is thrown.
-  Future<Map<String, dynamic>> getInfo(String login) async {
+  Future<Map<String, dynamic>> getAccount(String login) async {
       final results = await connection.mappedResultsQuery(
           "SELECT email, uid, phone, username FROM Account WHERE ((email = '$login' OR phone = '$login'))");
 
@@ -49,7 +49,7 @@ class DatabaseQueries {
       return results[0]['account'] as Map<String, dynamic>;
   }
 
-  /// sets a channel to offline whom mtches the supplies channelid
+  /// sets a channel to offline whom matches the supplies channelid
   Future<void> goOffline(String uid) async {
     try {
       await connection.query(
@@ -65,10 +65,11 @@ class DatabaseQueries {
           "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
   }
 
-  /// Gets a list of available channels that may or may not be live
+  /// Gets a list of available channels that are live
   Future<List<Map<String, dynamic>>> getOnlineChannels() async {
       final results = await connection.mappedResultsQuery(
-          "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) FROM Channel JOIN Account on uid = channelid;");
+          "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+              "FROM Channel JOIN Account on uid = channelid WHERE isonline = true;");
 
       List<Map<String, dynamic>> response = [];
 
@@ -81,6 +82,24 @@ class DatabaseQueries {
       }
 
       return response;
+  }
+
+  /// gets data of a single channel using the uid, throws an exception if none is found.
+  Future<Map<String, dynamic>> getChannel(String uid) async{
+    final result = await connection.mappedResultsQuery(
+        "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+            "FROM Channel JOIN Account on uid = channelid WHERE channelid = '$uid';");
+
+    if(result.isEmpty){
+      throw Exception("Channel not found");
+    }
+
+    Map<String, dynamic> m = {};
+    m.addAll(result[0][""]!);
+    m.addAll(result[0]["account"]!);
+    m.addAll(result[0]["channel"]!);
+
+    return m;
   }
 
   /// adds a viewer to an online channel
