@@ -31,19 +31,19 @@ class ChannelController {
   ///
   /// **Request Body** a [QueryModel] that contains channelname, uid and category.
   ///
-  /// **Response Body** a [List<QueryModel>] that contains channels without account info.
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
   /// 404 when uid doesn't match an account.
   static addChannel(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
-    final List<Map<String, dynamic>> data;
+    final Map<String, dynamic> data;
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.createChannel(body.channelname!, body.uid!, body.category!);
-      data = await db.getOnlineChannels();
+      data = await db.getChannel(body.uid!);
     }
     on PostgreSQLException catch (e){ // when uid does not match an account
       logger.e(e.message, [e, e.stackTrace]);
@@ -64,19 +64,19 @@ class ChannelController {
   ///
   /// **Request Body** a [QueryModel] that contains the channelid in the uid field.
   ///
-  /// **Response Body** a [List<QueryModel>] that contains channels without account info.
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
   /// 404 when uid doesn't match a channel.
   static makeOffline(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
-    final List<Map<String, dynamic>> data;
+    final Map<String, dynamic> data;
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.goOffline(body.uid!);
-      data = await db.getOnlineChannels();
+      data = await db.getChannel(body.uid!);
     }
     on PostgreSQLException catch (e){ // when uid does not match a channel
       logger.e(e.message, [e, e.stackTrace]);

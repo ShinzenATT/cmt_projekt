@@ -1,5 +1,4 @@
 import 'package:cmt_projekt/apis/navigation_handler.dart';
-import 'package:cmt_projekt/apis/prefs.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
@@ -55,147 +54,134 @@ class _AppHostPageState extends State<AppHostPage> {
             ),
           ),
         ),
-        body: Container(
-          color: Colors.black,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Text(
-                          context.watch<MainViewModel>().channelName.value.text,
-                          style: const TextStyle(
-                            color: Colors.greenAccent,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+        body: StreamBuilder(
+            stream:
+                context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
+            initialData: QueryModel.fromJson(
+                {"total": 0, "channelname": "", "username": ""}),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.active ||
+                  snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Text("error");
+                } else if (snapshot.hasData) {
+                  QueryModel channel = snapshot.data;
+                  return Container(
+                    color: Colors.black,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    channel.channelname as String,
+                                    style: const TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  channel.username as String,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        context.watch<MainViewModel>().getEmail().toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
-                    StreamBuilder(
-                        stream: context
-                            .watch<MainViewModel>()
-                            .databaseAPI
-                            .channelController
-                            .stream,
-                        initialData: 0,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<dynamic> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.connectionState ==
-                                  ConnectionState.active ||
-                              snapshot.connectionState ==
-                                  ConnectionState.done) {
-                            if (snapshot.hasError) {
-                              return const Text("error");
-                            } else if (snapshot.hasData) {
-                              QueryModel? channel = context
-                                  .read<MainViewModel>()
-                                  .getChannel(
-                                      snapshot.data,
-                                      Prefs()
-                                          .storedData
-                                          .getString("channelName")!);
-                              return Padding(
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                              Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  channel != null
-                                      ? channel.total.toString()
-                                      : "0",
+                                  channel.total.toString(),
                                   //Här ska countern läggas in för aktiva lyssnare.
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                   ),
                                 ),
-                              );
-                            } else {
-                              return const Text("No active channels");
-                            }
-                          } else {
-                            return Text("State: ${snapshot.connectionState}");
-                          }
-                        }),
-                    const Text(
-                      'lyssnare',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
+                              ),
+                              const Text(
+                                'lyssnare',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            border: Border.all(
+                              color: Colors.white30,
+                              width: 3,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.play_arrow_outlined,
+                                color: Colors.white,
+                                size: MediaQuery.of(context).size.height * 0.15,
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.white,
+                                indent:
+                                    MediaQuery.of(context).size.width * 0.05,
+                                endIndent:
+                                    MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    liveNotification(context),
+                                    descriptionBox(context),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(3),
-                padding: const EdgeInsets.all(3),
-                height: MediaQuery.of(context).size.height * 0.4,
-                width: double.infinity,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(
-                    color: Colors.white30,
-                    width: 3,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.play_arrow_outlined,
-                      color: Colors.white,
-                      size: MediaQuery.of(context).size.height * 0.15,
-                    ),
-                    Divider(
-                      thickness: 1,
-                      color: Colors.white,
-                      indent: MediaQuery.of(context).size.width * 0.05,
-                      endIndent: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          liveNotification(context),
-                          descriptionBox(context),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+                  );
+                } else {
+                  return const Text("No active channels");
+                }
+              } else {
+                return Text("State: ${snapshot.connectionState}");
+              }
+            }),
         floatingActionButton: Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 20),
@@ -252,14 +238,15 @@ class _AppHostPageState extends State<AppHostPage> {
     } else {
 
      */
-      return SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {},
-          child: const Text("Lägg till information"),
-        ),
-      );
-
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          context.read<MainViewModel>().channelSettings(context);
+        },
+        child: const Text("Lägg till information"),
+      ),
+    );
   }
 
   Widget liveNotification(BuildContext context) {

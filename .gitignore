@@ -32,7 +32,7 @@
 /build/
 
 # Web related
-lib/--Bin (Deprecated)/generated_plugin_registrant.dart
+lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols

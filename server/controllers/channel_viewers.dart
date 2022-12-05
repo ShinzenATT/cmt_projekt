@@ -14,15 +14,19 @@ class ChannelViewersController {
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
   ///
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
   /// 409 when viewer already watched that channel.
   static addViewer(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
+    final Map<String, dynamic> data;
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.insertViewer(body.uid!, body.channelid!);
+      data = await db.getChannel(body.channelid!);
     }
     on PostgreSQLException catch (e) { // when combination of uid and channelid already exists
       logger.e(e.message, [e, e.stackTrace]);
@@ -35,21 +39,25 @@ class ChannelViewersController {
       return e.toString();
     }
 
-    return null;
+    return data;
   }
 
   /// removes a viewer so it no longer watched the channel.
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
   ///
+  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned &
   /// 400 when the request body doesn't contain the expected values.
   static deleteViewer(HttpRequest req, HttpResponse res) async {
     final QueryModel body;
+    final Map<String, dynamic> data;
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       await db.delViewer(body.uid!, body.channelid!);
+      data = await db.getChannel(body.channelid!);
     }
     on PostgreSQLException catch (e) { // on db errors
       logger.e(e.message, [e, e.stackTrace]);
@@ -62,7 +70,7 @@ class ChannelViewersController {
       return e.toString();
     }
 
-    return null;
+    return data;
   }
 
   /// Clears all viewers from a channel.
