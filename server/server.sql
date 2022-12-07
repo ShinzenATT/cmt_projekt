@@ -36,6 +36,7 @@ CREATE TABLE Channel (
                          channelName TEXT NOT NULL,
                          category   TEXT NOT NULL,
                          isonline BOOLEAN NOT NULL,
+                         description TEXT,
                          FOREIGN KEY (channelid) REFERENCES Account(uid),
                          FOREIGN KEY (category) REFERENCES Category(category),
 
@@ -48,6 +49,16 @@ CREATE TABLE Viewers
     viewer  uuid,
     channel uuid,
     PRIMARY KEY (viewer, channel)
+);
+
+CREATE TABLE Timetable
+(
+    id SERIAL PRIMARY KEY,
+    channel UUID REFERENCES Channel NOT NULL,
+    startTime TIMESTAMP NOT NULL,
+    endTime TIMESTAMP,
+    description TEXT,
+    UNIQUE(channel, startTime)
 );
 
 --CREATE TABLE Online (
