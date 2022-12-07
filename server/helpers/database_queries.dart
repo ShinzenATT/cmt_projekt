@@ -68,8 +68,8 @@ class DatabaseQueries {
   /// Gets a list of available channels that are live
   Future<List<Map<String, dynamic>>> getOnlineChannels() async {
       final results = await connection.mappedResultsQuery(
-          "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
-              "FROM Channel JOIN Account on uid = channelid WHERE isonline = true;");
+          "SELECT c.*, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+              "FROM Channel c JOIN Account on uid = c.channelid WHERE c.isonline = true;");
 
       List<Map<String, dynamic>> response = [];
 
@@ -87,17 +87,33 @@ class DatabaseQueries {
   /// gets data of a single channel using the uid, throws an exception if none is found.
   Future<Map<String, dynamic>> getChannel(String uid) async{
     final result = await connection.mappedResultsQuery(
-        "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
-            "FROM Channel JOIN Account on uid = channelid WHERE channelid = '$uid';");
+        "SELECT c.*, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+            "FROM Channel c JOIN Account on uid = c.channelid WHERE c.channelid = '$uid';");
 
     if(result.isEmpty){
       throw Exception("Channel not found");
     }
 
+    final table = await connection.mappedResultsQuery(
+        "SELECT  * FROM timetable WHERE channel = '$uid' "
+            "AND COALESCE(endtime, starttime) > current_timestamp ORDER BY starttime;"
+    );
+
     Map<String, dynamic> m = {};
     m.addAll(result[0][""]!);
     m.addAll(result[0]["account"]!);
     m.addAll(result[0]["channel"]!);
+
+    List<Map<String, dynamic>> t = [];
+    for(Map it in table){
+      // convert datetime objects to string
+      it["timetable"]["starttime"] = it["timetable"]["starttime"].toString();
+      if(it["timetable"]["endtime"] != null){
+        it["timetable"]["endtime"] = it["timetable"]["endtime"].toString();
+      }
+      t.add(it["timetable"]);
+    }
+    m["timetable"] = t;
 
     return m;
   }

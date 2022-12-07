@@ -53,12 +53,11 @@ CREATE TABLE Viewers
 
 CREATE TABLE Timetable
 (
-    id SERIAL PRIMARY KEY,
-    channel UUID REFERENCES Channel NOT NULL,
-    startTime TIMESTAMP NOT NULL,
+    channel UUID REFERENCES Channel,
+    startTime TIMESTAMP,
     endTime TIMESTAMP,
     description TEXT,
-    UNIQUE(channel, startTime)
+    PRIMARY KEY(channel, startTime)
 );
 
 --CREATE TABLE Online (
