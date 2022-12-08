@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/models/query_model.dart';
-import 'package:cmt_projekt/models/channel_model.dart';
+import 'package:cmt_projekt/models/radio_channel_model.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
