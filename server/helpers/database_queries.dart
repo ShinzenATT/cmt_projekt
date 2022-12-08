@@ -104,15 +104,12 @@ class DatabaseQueries {
     m.addAll(result[0]["account"]!);
     m.addAll(result[0]["channel"]!);
 
-    List<Map<String, dynamic>> t = [];
-    for(Map it in table){
-      // convert datetime objects to string
-      it["timetable"]["starttime"] = it["timetable"]["starttime"].toString();
-      if(it["timetable"]["endtime"] != null){
-        it["timetable"]["endtime"] = it["timetable"]["endtime"].toString();
-      }
-      t.add(it["timetable"]);
-    }
+    List<Map<String, dynamic>> t = table.map((e) {
+      Map<String, dynamic> el = e['timetable']!;
+      el['starttime'] = el['starttime'].toString();
+      el['endtime'] = el['endtime']?.toString();
+      return el;
+    }).toList();
     m["timetable"] = t;
 
     return m;

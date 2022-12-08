@@ -40,7 +40,7 @@ class StreamMessage {
   ///Konverterar meddelandet till json
   Map<String, dynamic> toJson() => {
         'uid': uid,
-        'hostOrJoin': intent,
+        'intent': intent,
         'hostId': hostId,
         'channelType': channelType,
         'channelName': channelName,
@@ -50,7 +50,7 @@ class StreamMessage {
   ///Creates an instance of StreamMessage from jason.
   StreamMessage.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
-        intent = json['hostOrJoin'],
+        intent = json['intent'],
         hostId = json['hostId'],
         channelType = json['channelType'],
         channelName = json['channelName'],
