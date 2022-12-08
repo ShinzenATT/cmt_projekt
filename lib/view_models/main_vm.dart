@@ -166,7 +166,6 @@ class MainViewModel with ChangeNotifier {
 
   /// From loginpageviewmodel
   /// Check password length else return ErrorDialog
-  /// TODO Find out if user input(mail), are connected to any account
   void loginAttempt(context) async {
     RegExp exp = RegExp(r"[^\s]{8,50}$");
     if (exp.hasMatch(password.value.text)) {

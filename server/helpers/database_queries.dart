@@ -29,6 +29,16 @@ class DatabaseQueries {
       }
       return null;
   }
+  /// Query database to find if any account are connected to a given email address or phone number
+  Future<bool> checkLogin(String login) async {
+    final checkUserInput = await connection.mappedResultsQuery(
+        "SELECT email FROM Account WHERE (email = '$login' OR phone = '$login')");
+    if (checkUserInput.isNotEmpty) {
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   /// Tries to create a new account in the db, if there are conflicts then a [PostgreSQLException] is thrown.
   Future<Map<String, dynamic>> createAccount(String email, String pass, String phone, String username) async {
