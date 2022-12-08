@@ -16,7 +16,7 @@ import 'package:uuid/uuid.dart';
 import 'package:cmt_projekt/constants.dart' as constant;
 import 'package:dbcrypt/dbcrypt.dart';
 
-import '../views/createaccount_view.dart';
+import '../views/show_error_dialog.dart';
 
 //final navigatorKey = GlobalKey<NavigatorState>(); // For test purpose
 
@@ -165,12 +165,34 @@ class MainViewModel with ChangeNotifier {
   }
 
   /// From loginpageviewmodel
+  /// Check password length else return ErrorDialog
+  /// TODO Find out if user input(mail), are connected to any account
   void loginAttempt(context) async {
-    setUpResponseStreamLogin(context);
-    databaseAPI.postAndSaveToStreamCtrl(
-        '/account/login',
-        QueryModel.login(email: login.value.text, password: password.value.text)
-    );
+    RegExp exp = RegExp(r"[^\s]{8,50}$");
+    if (exp.hasMatch(password.value.text)) {
+      setUpResponseStreamLogin(context);
+      try {
+        await
+         databaseAPI.postAndSaveToStreamCtrl(
+          '/account/login',
+          QueryModel.login(
+              email: login.value.text, password: password.value.text
+          ),
+        );
+      } on HttpException catch (e) {
+        await showErrorDialog(context, e.message);
+      } on TimeoutException {
+        await showErrorDialog(context, 'Servern svarar inte');
+      } catch (e) {
+        constant.logger.i(e.runtimeType);
+        await showErrorDialog(context, e.toString());
+      }
+    } else {
+      await showErrorDialog(
+          context,
+          "Lösenorden är mellan 8 och 50 tecken långt och innehåller inga blanksteg"
+      );
+    }
   }
 
   /// From loginpageviewmodel
@@ -220,7 +242,6 @@ class MainViewModel with ChangeNotifier {
   /// Check length of password and that it don't contains any white spaces.
   Future<void> checkPwlength(var context) async {
     RegExp exp = RegExp(r"[^\s]{8,50}$");
-    print(password1.value.text);
     if (exp.hasMatch(password1.value.text)) {
       checkPhonenumber(context);
     } else {
