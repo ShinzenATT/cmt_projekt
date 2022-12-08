@@ -114,6 +114,7 @@ class StreamServer {
       } else { // decodes json messages, updates channel info and forwards new channel info to all clients
         StreamMessage msg = StreamMessage.fromJson(jsonDecode(message));
         if (msg.intent == "u") {
+          logger.v("in stream server: sending channel data");
           dynamic res;
           try {
             res = await DatabaseApi.postRequest(
@@ -136,6 +137,12 @@ class StreamServer {
             for (WebSocketChannel sock in channel.connectedAudioClients) {
               sendData(sock, res);
             }
+          }
+        }else if(msg.intent == "broadcast"){
+          logger.v("in stream server: sending isBroadcasting data");
+          sendData(webSocket, message);
+          for (WebSocketChannel sock in channel.connectedAudioClients) {
+            sendData(sock, message);
           }
         }
       }

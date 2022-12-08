@@ -7,6 +7,7 @@ class StreamMessage {
   String channelType;
   String? channelName;
   String? category;
+  bool? isBroadcasting;
 
   ///An instance of StreamMessage for a host request.
   StreamMessage.host({
@@ -37,6 +38,15 @@ class StreamMessage {
     intent = "u";
 }
 
+  StreamMessage.isBroadcasting({
+    required this.channelType,
+    required this.uid,
+    required this.isBroadcasting,
+  }){
+    hostId = uid;
+    intent = "broadcasting";
+  }
+
   ///Konverterar meddelandet till json
   Map<String, dynamic> toJson() => {
         'uid': uid,
@@ -45,6 +55,7 @@ class StreamMessage {
         'channelType': channelType,
         'channelName': channelName,
         'category': category,
+        'isBroadcasting' : isBroadcasting,
       };
 
   ///Creates an instance of StreamMessage from jason.
@@ -54,5 +65,6 @@ class StreamMessage {
         hostId = json['hostId'],
         channelType = json['channelType'],
         channelName = json['channelName'],
-        category = json['category'];
+        category = json['category'],
+        isBroadcasting = json['isBroadcasting'];
 }

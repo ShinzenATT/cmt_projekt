@@ -104,9 +104,15 @@ class StreamViewModel with ChangeNotifier {
   }
 
   void getRecFn() {
+    final StreamClient c = smodel.streamClient!;
     if (!smodel.isInitiated) {
       return;
     }
+    c.sendIsBroadcasting(StreamMessage.isBroadcasting(
+        channelType: "a",
+        uid: Prefs().storedData.getString("uid")!,
+        isBroadcasting: !smodel.recorder!.isRecording
+    ));
     if (smodel.recorder!.isRecording) {
       stop();
     } else {

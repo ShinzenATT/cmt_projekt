@@ -12,6 +12,7 @@ class QueryModel {
   String? username;
   bool? isonline;
   int? total;
+  bool? isBroadcasting;
 
   ///En Querymodel för att lägga till lyssnare
   QueryModel.addViewers({required this.channelid, required this.uid}){
@@ -71,7 +72,8 @@ class QueryModel {
         channelid = json['channelid'],
         isonline = json['isonline'],
         username = json['username'],
-        total = json['total'];
+        total = json['total'],
+        isBroadcasting = json['isBroadcasting'];
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -85,9 +87,10 @@ class QueryModel {
         'isonline': isonline,
         'username': username,
         'total' : total,
+        'isBroadcasting' : isBroadcasting,
       };
   @override
   String toString() {
-    return "email: $email phone: $phone password: $password uid: $uid code: $code channelname: $channelname category: $category channelid: $channelid isonline: $isonline username: $username total: $total" ;
+    return "email: $email phone: $phone password: $password uid: $uid code: $code channelname: $channelname category: $category channelid: $channelid isonline: $isonline username: $username total: $total isBroadcasting: $isBroadcasting" ;
   }
 }

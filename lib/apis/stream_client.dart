@@ -89,6 +89,12 @@ class StreamClient {
     client.sink.add(jsonEncode(msg));
   }
 
+  /// Sends a json message to the server with intent to tell listeners if broadcasting or not.
+  sendIsBroadcasting(StreamMessage msg){
+    msg.intent = "broadcasting";
+    client.sink.add(jsonEncode(msg));
+  }
+
   /// Shows a [ChannelClosedDialog]
   void channelClosedDialog(context) {
     showDialog(

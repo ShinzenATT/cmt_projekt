@@ -4,6 +4,8 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../constants.dart';
+
 ///The page responsible for displaying what the viewer sees when listening to a stream.
 class AppListenPage extends StatelessWidget {
   const AppListenPage({Key? key}) : super(key: key);
@@ -56,7 +58,7 @@ class AppListenPage extends StatelessWidget {
     return StreamBuilder(
       stream: context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
       initialData:
-          QueryModel.fromJson({"total": 0, "channelname": "", "usename": ""}),
+          QueryModel.fromJson({"total": 0, "channelname": "", "usename": "", "isBroadcasting": false}),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -66,6 +68,8 @@ class AppListenPage extends StatelessWidget {
             return const Text("error");
           } else if (snapshot.hasData) {
             QueryModel channel = snapshot.data;
+            logger.v("in streambuilder listen view: snapshot has data. "
+                     "isBroadcasting ${channel.isBroadcasting.toString()}");
             return Container(
               color: Colors.black,
               child: Column(
@@ -166,11 +170,11 @@ class AppListenPage extends StatelessWidget {
                                                   .width *
                                               0.05,
                                         ),
-                                        const Padding(
-                                          padding: EdgeInsets.all(8.0),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            "No information",
-                                            style: TextStyle(
+                                            (channel.isBroadcasting ?? false) ? "Broadcasting" : "No information",
+                                            style: const TextStyle(
                                               fontSize: 20,
                                               color: Colors.white,
                                             ),
