@@ -56,8 +56,7 @@ class AccountController {
 
     try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
-      data =
-      await db.compareCredentials(body.email ?? body.phone!, body.password!);
+      data = await db.compareCredentials(body.email ?? body.phone!, body.password!);
 
       // when credentials don't match, check mail and phone number
       if (data == null) {
