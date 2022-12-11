@@ -1,3 +1,5 @@
+import 'package:cmt_projekt/environment.dart';
+
 class ChannelDataModel {
   String channelid;
   String channelname;
@@ -6,6 +8,8 @@ class ChannelDataModel {
   String? description;
   bool isonline;
   int total;
+  Uri? profileImageUrl;
+  Uri? channelImageUrl;
   List<TimetableEntry> timetable;
 
   ChannelDataModel({
@@ -16,8 +20,13 @@ class ChannelDataModel {
       this.isonline = true,
       this.total = 0,
       this.description,
+      String? profileImageUrl,
+      String? channelImageUrl,
       this.timetable = const []
-  });
+  }):
+        profileImageUrl = (profileImageUrl != null ? Uri.http(localServer, profileImageUrl): null),
+        channelImageUrl = (channelImageUrl != null ? Uri.http(localServer, channelImageUrl): null)
+  ;
 
   factory ChannelDataModel.parseMap(Map<String, dynamic> map){
     return ChannelDataModel(
@@ -28,6 +37,8 @@ class ChannelDataModel {
         isonline: map['isonline'],
         total: map['total'],
         description: map['description'],
+        profileImageUrl: map['profileimageurl'],
+        channelImageUrl: map['imageurl'],
         timetable: (map['timetable'] as List).map((element) => TimetableEntry.parseMap(element)).toList()
     );
   }
@@ -41,6 +52,8 @@ class ChannelDataModel {
       'isonline': isonline,
       'total': total,
       'description': description,
+      'profileimageurl': profileImageUrl?.path,
+      'imageurl': channelImageUrl?.path,
       'timetable': timetable.map((e) => e.toMap()).toList()
     };
   }

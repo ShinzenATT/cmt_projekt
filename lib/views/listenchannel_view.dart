@@ -1,4 +1,4 @@
-import 'package:cmt_projekt/models/query_model.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +56,7 @@ class AppListenPage extends StatelessWidget {
     return StreamBuilder(
       stream: context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
       initialData:
-          QueryModel.fromJson({"total": 0, "channelname": "", "usename": ""}),
+          ChannelDataModel(channelid: '', category: '', channelname: ''),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -65,7 +65,7 @@ class AppListenPage extends StatelessWidget {
           if (snapshot.hasError) {
             return const Text("error");
           } else if (snapshot.hasData) {
-            QueryModel channel = snapshot.data;
+            ChannelDataModel channel = snapshot.data;
             return Container(
               color: Colors.black,
               child: Column(
@@ -79,7 +79,7 @@ class AppListenPage extends StatelessWidget {
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Text(
-                              channel.channelname as String,
+                              channel.channelname,
                               style: const TextStyle(
                                 color: Colors.greenAccent,
                                 fontSize: 24,
@@ -89,7 +89,7 @@ class AppListenPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          channel.username as String,
+                          channel.username,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,

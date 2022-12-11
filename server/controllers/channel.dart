@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:alfred/alfred.dart';
 import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:postgres/postgres.dart';
 
@@ -12,7 +13,7 @@ class ChannelController {
 
   /// Gets all the available channels and responds with them as a List.
   ///
-  /// **Response Body** a [List<QueryModel>] that contains a list of channels but excluding account info.
+  /// **Response Body** a [List<ChannelDataModel>] that contains a list of channels but excluding account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned &
   /// 500 on a exception or database error.
@@ -31,7 +32,7 @@ class ChannelController {
   ///
   /// **Request Body** a [QueryModel] that contains channelname, uid and category.
   ///
-  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  /// **Response Body** a [ChannelDataModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
@@ -64,7 +65,7 @@ class ChannelController {
   ///
   /// **Request Body** a [QueryModel] that contains the channelid in the uid field.
   ///
-  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  /// **Response Body** a [ChannelDataModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &

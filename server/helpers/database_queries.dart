@@ -87,7 +87,7 @@ class DatabaseQueries {
   /// gets data of a single channel using the uid, throws an exception if none is found.
   Future<Map<String, dynamic>> getChannel(String uid) async{
     final result = await connection.mappedResultsQuery(
-        "SELECT c.*, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+        "SELECT c.*, username, profileImageUrl, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
             "FROM Channel c JOIN Account on uid = c.channelid WHERE c.channelid = '$uid';");
 
     if(result.isEmpty){

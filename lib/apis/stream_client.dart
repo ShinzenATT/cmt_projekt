@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/apis/prefs.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:cmt_projekt/widgets/channel_closed_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../models/query_model.dart';
 import '../environment.dart';
 
 /// A Class for handling a websocket stream to the server
@@ -21,8 +21,8 @@ class StreamClient {
   StreamController<Food>? foodStreamController =
       StreamController<Food>.broadcast();
   /// A stream controller for forwarding updated channel data to various pages.
-  StreamController<QueryModel> msgController =
-      StreamController<QueryModel>.broadcast();
+  StreamController<ChannelDataModel> msgController =
+      StreamController<ChannelDataModel>.broadcast();
 
   /// Initiates the Flutter sound player and setups a connection to the server
   StreamClient(FlutterSoundPlayer? player) {
@@ -54,7 +54,7 @@ class StreamClient {
   void listen(context) {
     client.stream.listen((event) {
       if(event.runtimeType == String){
-        final msg = QueryModel.fromJson(jsonDecode(event));
+        final msg = ChannelDataModel.parseMap(jsonDecode(event));
         msgController.sink.add(msg);
       } else {
         playSound(event);

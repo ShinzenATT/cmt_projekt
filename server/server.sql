@@ -11,6 +11,7 @@ CREATE TABLE Account (
                          phone char(10) NOT NULL CHECK(char_length(phone) = 10),
                          username TEXT NOT NULL,
                          uid uuid DEFAULT uuid_generate_v4(),
+                         profileImageUrl TEXT,
                          UNIQUE(phone),
                          UNIQUE(email),
                          UNIQUE(username),
@@ -37,6 +38,7 @@ CREATE TABLE Channel (
                          category   TEXT NOT NULL,
                          isonline BOOLEAN NOT NULL,
                          description TEXT,
+                         imageUrl TEXT,
                          FOREIGN KEY (channelid) REFERENCES Account(uid),
                          FOREIGN KEY (category) REFERENCES Category(category),
 
