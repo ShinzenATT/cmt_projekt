@@ -16,7 +16,7 @@ import 'package:uuid/uuid.dart';
 import 'package:cmt_projekt/constants.dart' as constant;
 import 'package:dbcrypt/dbcrypt.dart';
 
-import '../views/createaccount_view.dart';
+import '../views/show_error_dialog.dart';
 
 //final navigatorKey = GlobalKey<NavigatorState>(); // For test purpose
 
@@ -165,12 +165,33 @@ class MainViewModel with ChangeNotifier {
   }
 
   /// From loginpageviewmodel
+  /// Check password length else return ErrorDialog
   void loginAttempt(context) async {
-    setUpResponseStreamLogin(context);
-    databaseAPI.postAndSaveToStreamCtrl(
-        '/account/login',
-        QueryModel.login(email: login.value.text, password: password.value.text)
-    );
+    RegExp exp = RegExp(r"[^\s]{8,50}$");
+    if (exp.hasMatch(password.value.text)) {
+      setUpResponseStreamLogin(context);
+      try {
+        await
+         databaseAPI.postAndSaveToStreamCtrl(
+          '/account/login',
+          QueryModel.login(
+              email: login.value.text, password: password.value.text
+          ),
+        );
+      } on HttpException catch (e) {
+        await showErrorDialog(context, e.message);
+      } on TimeoutException {
+        await showErrorDialog(context, 'Servern svarar inte');
+      } catch (e) {
+        constant.logger.i(e.runtimeType);
+        await showErrorDialog(context, e.toString());
+      }
+    } else {
+      await showErrorDialog(
+          context,
+          "Lösenorden är mellan 8 och 50 tecken långt och innehåller inga blanksteg"
+      );
+    }
   }
 
   /// From loginpageviewmodel
@@ -208,7 +229,7 @@ class MainViewModel with ChangeNotifier {
   /// Check so that passwords matches
   Future<void> comparePw(var context) async {
     if (password1.value.text == password2.value.text) {
-      checkPhonenumber(context);
+      checkPwlength(context);
     } else {
       await showErrorDialog(
           context,
@@ -217,16 +238,56 @@ class MainViewModel with ChangeNotifier {
     }
   }
   /// From createaccountviewmodel
+  /// Check length of password and that it don't contains any white spaces.
+  Future<void> checkPwlength(var context) async {
+    RegExp exp = RegExp(r"[^\s]{8,50}$");
+    if (exp.hasMatch(password1.value.text)) {
+      checkPhonenumber(context);
+    } else {
+      await showErrorDialog(
+          context,
+          "Lösenorden måste var mellan 8 och 50 tecken långt och får ej innehålla några blanksteg"
+      );
+    }
+  }
+  /// From createaccountviewmodel
   /// Check so that phone number is a ten digit number
   Future<void> checkPhonenumber(var context) async {
     RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
     if (exp.hasMatch(phone.value.text)) {
-      setUpResponseStreamCA(context);
-      createAccount(context);
+      checkMail(context);
     } else {
       await showErrorDialog(
           context,
           "Telefonnumret behöver vara på 10 siffror"
+      );
+    }
+  }
+  /// From createaccountviewmodel
+  /// Check so that email address at least looks like a valid email address.
+  Future<void> checkMail(var context) async {
+    RegExp exp = RegExp(r"^[\w!#$%&’*+/=?`{|}~^-]+(?:\.[\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$");
+    if (exp.hasMatch(email.value.text)) {
+      checkUsername(context);
+    }
+    else {
+      await showErrorDialog(
+          context,
+          "Du måste ange en giltlig mejladress"
+      );
+    }
+  }
+  /// From createaccountviewmodel
+  /// Check so that username are [3,20] characters long
+  Future<void> checkUsername(var context) async {
+    RegExp exp = RegExp(r"^[a-zåäöA-ZÅÄÖ0-9_-]{3,20}$");
+    if (exp.hasMatch(username.value.text)) {
+      setUpResponseStreamCA(context);
+      createAccount(context);
+    }else {
+      await showErrorDialog(
+          context,
+          "Användarnamnte måste vara mella 3 och 20 tecken långt och får endast innehålla små och stora bockstäver, siffror, _ och -"
       );
     }
   }
