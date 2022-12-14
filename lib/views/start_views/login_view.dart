@@ -1,60 +1,38 @@
 import 'package:cmt_projekt/view_models/main_vm.dart';
+import 'package:cmt_projekt/widgets/comment_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
+import '../../view_models/navigation_vm.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
 
-import '../constants.dart' as constant;
 
 ///First version of loginpage for the app.
-
-class AppLoginPage extends StatelessWidget {
-  const AppLoginPage({Key? key}) : super(key: key);
+class LoginView extends StatelessWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    MainVM mainVM = Provider.of<MainVM>(context, listen: false);
+    NavVM navVM = Provider.of<NavVM>(context, listen: false);
+
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                  Colors.greenAccent,
-                  Colors.blueAccent,
-                ])),
-          ),
-          elevation: 0,
-          centerTitle: true,
-          title: Column(
-            children: [
-              Text(
-                context.read<MainViewModel>().title,
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Din moderna radioapp',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-      ),
+      appBar: CommentAppBar(),
       body: Container(
         padding: const EdgeInsets.all(30),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [//All children are wrapped in flexible to adjust when keyboard is used
+          //All children are wrapped in flexible to adjust when keyboard is used
+          children: [
             Flexible(
                 flex: 3,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [//All children are wrapped in flexible to adjust when keyboard is used
+                  //All children are wrapped in flexible to adjust when keyboard is used
+                  children: [
                     const Flexible(
                       flex: 2,
                       child: Text(
@@ -81,9 +59,7 @@ class AppLoginPage extends StatelessWidget {
                     Flexible(
                       flex: 3,
                       child: TextFormField(
-                        controller: context
-                            .watch<MainViewModel>()
-                            .login,
+                        onChanged: (String value) => mainVM.newUserData.eMail = value,
                         textInputAction: TextInputAction.next, // Moves focus to next text field.
                         decoration: const InputDecoration(
                           labelText: 'E-post eller telefonnummer',
@@ -93,9 +69,7 @@ class AppLoginPage extends StatelessWidget {
                     Flexible(
                       flex: 3,
                       child: TextFormField(
-                        controller: context
-                            .watch<MainViewModel>()
-                            .password,
+                        onChanged: (String value) => mainVM.newUserData.password = value,
                         textInputAction: TextInputAction.done, // Close keyboard.
                         decoration: InputDecoration(
                           labelText: 'Lösenord',
@@ -105,22 +79,16 @@ class AppLoginPage extends StatelessWidget {
                             splashColor: Colors.transparent,
                             icon: Icon(
                               // Based on passwordVisible state choose the icon
-                              context
-                                  .read<MainViewModel>()
-                                  .passwordVisibilityLogin
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Theme
-                                  .of(context)
-                                  .primaryColorDark,
+                              mainVM.showPassword ? Icons.visibility : Icons.visibility_off,
+                              color: Theme.of(context).primaryColorDark,
                             ),
                             onPressed: () {
                               // Update the state i.e. toogle the state of passwordVisible variable
-                              context.read<MainViewModel>().changePasswordVisibilityLogin();
+                              mainVM.toggleShowPassword();
                             },
                           ),
                         ),
-                        obscureText: !context.watch<MainViewModel>().passwordVisibilityLogin,
+                        obscureText: !mainVM.showPassword,
                       ),
                     ),
                     Flexible(
@@ -128,9 +96,7 @@ class AppLoginPage extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(
-                          onPressed: () {
-                            /// Implement password reset
-                          },
+                          onPressed: () { },        // TODO: Implement password reset
                           child: const Text('Glömt ditt lösenord?'),
                         ),
                       ),
@@ -156,7 +122,7 @@ class AppLoginPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            context.read<MainViewModel>().loginAttempt(context);
+                            mainVM.loginAttempt(context);
                           },
                           gradient: const LinearGradient(
                               begin: Alignment.centerLeft,
@@ -190,7 +156,7 @@ class AppLoginPage extends StatelessWidget {
                             highlightColor: Colors.transparent,
                             hoverColor: Colors.transparent,
                             onTap: () {
-                              context.read<MainViewModel>().guestSign(context);
+                              mainVM.guestSign(context);
                             },
                             child: const Text(
                               "gäst",
@@ -221,9 +187,7 @@ class AppLoginPage extends StatelessWidget {
                               highlightColor: Colors.transparent,
                               hoverColor: Colors.transparent,
                               onTap: () {
-                                context
-                                    .read<MainViewModel>()
-                                    .changePage(context, constant.createAcc);
+                                navVM.pushView(constants.createAccount);
                               },
                               child: const Text(
                                 "Registrera dig här",

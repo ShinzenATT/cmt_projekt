@@ -1,15 +1,19 @@
 import 'package:cmt_projekt/view_models/main_vm.dart';
+import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
 
-import '../constants.dart' as constant;
-
-///First version of welcomepage for the app.
-class AppWelcomePage extends StatelessWidget {
-  const AppWelcomePage({Key? key}) : super(key: key);
+///The welcomepage for the app.
+class WelcomeView extends StatelessWidget {
+  const WelcomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    NavVM navVM = Provider.of<NavVM>(context, listen: false);
+    MainVM mainVM = Provider.of<MainVM>(context, listen: false);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -32,7 +36,7 @@ class AppWelcomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 150),
                   child: Text(
-                    context.read<MainViewModel>().title.toUpperCase(),
+                    mainVM.app.title.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 50,
@@ -40,9 +44,9 @@ class AppWelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Text(
-                  'Din moderna radioapp',
-                  style: TextStyle(
+                Text(
+                  mainVM.app.subTitle,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -64,7 +68,7 @@ class AppWelcomePage extends StatelessWidget {
                               side: const BorderSide(
                                   color: Colors.white, width: 3))),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(constant.createAcc);
+                        navVM.pushView(constants.createAccount);
                       },
                       child: const Text(
                         'Skapa konto',
@@ -88,7 +92,7 @@ class AppWelcomePage extends StatelessWidget {
                             side: const BorderSide(
                                 color: Colors.white, width: 3))),
                     onPressed: () {
-                      Navigator.of(context).pushNamed(constant.login);
+                      navVM.pushView(constants.login);
                     },
                     child: const Text(
                       'Logga in',

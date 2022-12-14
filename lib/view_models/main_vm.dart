@@ -1,70 +1,69 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cmt_projekt/apis/database_api.dart';
-import 'package:cmt_projekt/apis/navigation_handler.dart';
 import 'package:cmt_projekt/apis/prefs.dart';
-import 'package:cmt_projekt/views/golivesettings_view.dart';
-import 'package:cmt_projekt/views/home_view.dart';
-import 'package:cmt_projekt/views/profile_view.dart';
-import 'package:cmt_projekt/models/main_model.dart';
+import 'package:cmt_projekt/view_models/navigation_vm.dart';
+import 'package:cmt_projekt/widgets/error_dialog_box.dart';
+import 'package:cmt_projekt/models/app_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:uuid/uuid.dart';
-import 'package:cmt_projekt/constants.dart' as constant;
+import 'package:provider/provider.dart';
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
+import '../models/user_model.dart';
+import '../widgets/no_account_dialog.dart';
+import '../widgets/profile_information_box.dart';
+import 'package:cmt_projekt/widgets/no_account_dialog.dart';
 
-import '../views/show_error_dialog.dart';
+/// The MainViewModel is used to deliver, modify and perform functions on data
+/// retrieved from the MainModel. Its purpose is to act as an intermediary
+/// between the views and the MainModel. Views should never directly access
+/// the MainModel, but instead use MainViewModel to get what they need to build
+/// their UI.
+class MainVM with ChangeNotifier {
 
-//final navigatorKey = GlobalKey<NavigatorState>(); // For test purpose
+  /// Persistent Models & API's with routing getters///
 
-///The MainViewModel is used to deliver, modify and perform functions on data
-///retrieved from the MainModel. Its purpose is to act as an intermediary
-///between the views and the MainModel. Views should never directly access
-///the MainModel, but instead use MainViewModel to get what they need to build
-///their UI.
-
-class MainViewModel with ChangeNotifier {
-
-  ///MainModel to use for data access.
-  static final MainModel _mainModel = MainModel();
-
-  ///Getter functions
-  String get title => _mainModel.title;
-  String get subtitle => _mainModel.subTitle;
-  double get appBarHeight => _mainModel.appBarHeight;
+  /// AppModel with App data & DatabaseAPI ///
+  // For general and mostly constant App-data and API connection to database.
+  static final AppModel appModel = AppModel();
+  AppModel get app => appModel;
+  DatabaseApi get dbClient => app.databaseApi;
 
 
+  /// UserModel for User & NewUserAccount data & locally stored/Shared preferences ///
+  // Stores all relevant user & account data. Default to empty userdata fields
+  // and with 'isGuest' & 'isSignedIn' == false.
+  static final UserModel userModel = UserModel();
+  UserModel get user => userModel;
 
-  Map<String, String> get categoryList => _mainModel.categoryAndStandardImg;
-  get getCategory => _mainModel.category;
-  void setCategory(var item) {
-    _mainModel.category = item;
-  }
 
-  bool get passwordVisibilityLogin => _mainModel.passwordVisibilityLogin;
-  TextEditingController get login => _mainModel.login;
-  TextEditingController get password => _mainModel.password;
+  /// ChannelModel ///
+  // ChannelModel stores all relevant channel data, whether it is for
+  // listening or for hosting.
+  ///static final ChannelModel channelModel = ChannelModel();
+  String? _category;
 
-  DatabaseApi get databaseAPI => _mainModel.databaseAPI;
 
-  bool get passwordVisibilityCreate => _mainModel.passwordVisibilityCreate;
-  TextEditingController get email => _mainModel.createEmail;
-  TextEditingController get phone => _mainModel.createPhone;
-  TextEditingController get password1 => _mainModel.createPassword;
-  TextEditingController get password2 => _mainModel.createPassword2;
-  TextEditingController get username => _mainModel.createUsername;
-  DatabaseApi get client => _mainModel.databaseAPI;
+  /// Settings & Helpers ///
+  bool get isSignedIn => user.isSignedIn;
 
-  TextEditingController get channelName => _mainModel.channelName;
+  // For CreateAccountView & LoginView
+  bool showPassword = false; // Controlls the show/hide password feature.
+  UserData get newUserData => user.newUser;
+  void toggleShowPassword() => showPassword = !showPassword;
+
+  // For ChannelView
+  Map<String, String> get categoryImageList => app.categoryAndStandardImg;
+  void setCategory(var item) => _category = item;
+  String? get category => _category;
+  TextEditingController get channelName => appModel.channelName;
 
   void setChannelSettings() {
     Prefs().storedData.setString("channelName", channelName.value.text);
-    Prefs().storedData.setString("category", getCategory);
+    Prefs().storedData.setString("category", category!);
     Prefs().storedData.setString("intent", "h");
-
   }
 
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
@@ -75,14 +74,119 @@ class MainViewModel with ChangeNotifier {
       );
 
   dynamic categoryToDropdownMenuItemList() {
-    return _mainModel.categoryAndStandardImg.keys.map(categoryItem).toList();
+    return appModel.categoryAndStandardImg.keys.map(categoryItem).toList();
   }
 
-  Future<bool> willPopCallback() async {
-    NaviHandler().index = 1;
-    notifyListeners();
-    return true;
+
+  /// Create Account Helpers ///
+  /// Check so that passwords matches
+  Future<void> comparePw(var context) async {
+    if (newUserData.password == newUserData.password2) {
+      checkPhonenumber(context);
+    } else {
+      await ErrorDialogBox().pop(
+          context,
+          "Lösenorden stämmer inte överens"
+      );
+    }
   }
+
+  /// Check that phone number is a ten digit number
+  Future<void> checkPhonenumber(var context) async {
+    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
+    if (exp.hasMatch(newUserData.phoneNr!)) {
+      setUpResponseStreamCA(context);
+      createAccount(context);
+    } else {
+      await ErrorDialogBox().pop(
+          context,
+          "Telefonnumret behöver vara på 10 siffror"
+      );
+    }
+  }
+
+  /// Create the new account ///
+  void createAccount(var ctx) async {
+    var hashedPassword = DBCrypt().hashpw(newUserData.password!, DBCrypt().gensalt());
+    try {
+      await dbClient.postAndSaveToStreamCtrl(
+        '/account/register',
+        QueryModel.account(
+          email: newUserData.eMail,
+          phone: newUserData.phoneNr,
+          password: hashedPassword,
+          username: newUserData.userName,
+        ),
+      );
+    } on HttpException catch(e){
+      await ErrorDialogBox().pop(ctx, e.message);
+    } on TimeoutException {
+      await ErrorDialogBox().pop(ctx, 'Kunde inte nå servern');
+    } catch(e){
+      constants.logger.i(e.runtimeType);
+      await ErrorDialogBox().pop(ctx, e.toString());
+    }
+  }
+
+  ///Initiates a function that runs when a new value comes from the response stream for the client.
+  void setUpResponseStreamCA(context) {
+    dbClient.streamController.stream.listen((QueryModel message) async {
+      var _context = context;
+      await Prefs().storedData.setString("uid", message.uid!);
+      await Prefs().storedData.setString("email", message.email!);
+      await Prefs().storedData.setString("phone", message.phone!);
+      await Prefs().storedData.setString("username", message.username!);
+
+      user.setNewUser();
+      dbClient.loadOnlineChannels();
+      Provider.of<NavVM>(_context).pushInitialRoute(context); // Reroutes to MainNavigatorView
+    });
+  }
+
+
+  /// Log in! ///
+  void loginAttempt(context) async {
+    setUpResponseStreamLogin(context);
+    dbClient.postAndSaveToStreamCtrl(
+        '/account/login',
+        QueryModel.login(email: newUserData.eMail!, password: newUserData.password!)
+    );
+  }
+
+  /// Guest log in! ///
+  void guestSign(context) async {
+    setUpResponseStreamLogin(context);
+    Prefs().storedData.setString("uid" ,Uri().toString());
+    Prefs().storedData.get("uid");
+    user.isGuest = true;
+    user.isSignedIn = true;
+    Provider.of<NavVM>(context, listen: false).pushInitialRoute(context);
+  }
+
+  /// Database response stream for Login ///
+  //Initiates a function that listens for new values
+  void setUpResponseStreamLogin(context) {
+    debugPrint("void setUpResponseStreamLogin(context)");
+    dbClient.streamController.stream.listen((QueryModel message) async {
+      await Prefs().storedData.setString("uid", message.uid!);
+      await Prefs().storedData.setString("email", message.email!);
+      await Prefs().storedData.setString("phone", message.phone!);
+      await Prefs().storedData.setString("username", message.username!);
+
+      user.setNewUser();
+      dbClient.loadOnlineChannels();
+      Provider.of<NavVM>(context, listen: false).pushInitialRoute(context);
+      debugPrint("void setUpResponseStreamLogin(context)- DONE!");
+    });
+  }
+
+  /// Log out! ///
+  void logOut(context) {
+    Prefs().storedData.clear();
+    user.logOut();
+    Provider.of<NavVM>(context, listen: false).reset();
+  }
+
 
   ///Returns the users email.
   String? getEmail() {
@@ -102,240 +206,27 @@ class MainViewModel with ChangeNotifier {
     return Prefs().storedData.getString("uid");
   }
 
-  ///Creates a showdialog with webprofilewidget.
-  void profileInformation(context) {
-    if (getEmail() == null) {
+  void userData(context) {
+    if (Prefs().getEmail() == null) {
       showDialog(
           context: context,
           builder: (context) {
             return const AlertMessage();
           });
-      return;
-    }
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const AppProfileWidget();
-        });
-  }
-
-  void channelSettings(context) {
-    if (getEmail() == null) {
+    } else {
       showDialog(
-          context: context,
-          builder: (context) {
-            return const AlertMessage();
-          });
-      return;
-    }
-    showDialog(
         context: context,
         builder: (context) {
-          return const GoLiveSettings();
-        });
-  }
-
-  void createAccountPrompt(context) {
-    Prefs().storedData.clear();
-    NaviHandler().index = 1;
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.of(context).pushNamed(constant.createAcc);
-  }
-
-  void logOut(context) {
-    Prefs().storedData.clear();
-    NaviHandler().index = 1;
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    if (kIsWeb) {
-      Navigator.of(context).pushReplacementNamed(constant.login);
-    } else {
-      Navigator.of(context).pushReplacementNamed(constant.welcome);
-    }
-  }
-
-  /// From loginpageviewmodel
-  void changePasswordVisibilityLogin() {
-    _mainModel.passwordVisibilityLogin = !passwordVisibilityLogin;
-    notifyListeners();
-  }
-
-  /// From loginpageviewmodel
-  void changePage(var context, String route) {
-    Navigator.of(context).pushNamed(route);
-  }
-
-  /// From loginpageviewmodel
-  /// Check password length else return ErrorDialog
-  void loginAttempt(context) async {
-    RegExp exp = RegExp(r"[^\s]{8,50}$");
-    if (exp.hasMatch(password.value.text)) {
-      setUpResponseStreamLogin(context);
-      try {
-        await
-         databaseAPI.postAndSaveToStreamCtrl(
-          '/account/login',
-          QueryModel.login(
-              email: login.value.text, password: password.value.text
-          ),
-        );
-      } on HttpException catch (e) {
-        await showErrorDialog(context, e.message);
-      } on TimeoutException {
-        await showErrorDialog(context, 'Servern svarar inte');
-      } catch (e) {
-        constant.logger.i(e.runtimeType);
-        await showErrorDialog(context, e.toString());
-      }
-    } else {
-      await showErrorDialog(
-          context,
-          "Lösenorden är mellan 8 och 50 tecken långt och innehåller inga blanksteg"
+          return const ProfileInformation();
+        },
       );
     }
   }
 
-  /// From loginpageviewmodel
-  void guestSign(context) async {
-    setUpResponseStreamLogin(context);
-    Prefs().storedData.setString("uid", const Uuid().v4());
-    Prefs().storedData.get("uid");
-    Navigator.pushNamedAndRemoveUntil(context, constant.home, (route) => route.isFirst);
-  }
 
-  /// From loginpageviewmodel
-  ///Initiates a function that runs when a new value comes from the response stream for the database.
-  void setUpResponseStreamLogin(context) {
-    debugPrint("void setUpResponseStreamLogin(context)");
-    databaseAPI.streamController.stream.listen((QueryModel message) async {
-      await Prefs().storedData.setString("uid", message.uid!);
-      await Prefs().storedData.setString("email", message.email!);
-      await Prefs().storedData.setString("phone", message.phone!);
-      await Prefs().storedData.setString("username", message.username!);
-      // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-      Navigator.of(context).pushNamedAndRemoveUntil(constant.home, (route) => false);
-      //Navigator.of(context)
-      //    .pushReplacementNamed('/Home'); // Changes to HomePage.
-      _mainModel.databaseAPI.loadOnlineChannels();
-    });
-  }
-
-  /// From createaccountviewmodel
-  void changePasswordVisibilityCreate() {
-    _mainModel.passwordVisibilityCreate = !_mainModel.passwordVisibilityCreate;
-    notifyListeners();
-  }
-
-  /// From createaccountviewmodel
-  /// Check so that passwords matches
-  Future<void> comparePw(var context) async {
-    if (password1.value.text == password2.value.text) {
-      checkPwlength(context);
-    } else {
-      await showErrorDialog(
-          context,
-          "Lösenorden stämmer inte överens"
-      );
-    }
-  }
-  /// From createaccountviewmodel
-  /// Check length of password and that it don't contains any white spaces.
-  Future<void> checkPwlength(var context) async {
-    RegExp exp = RegExp(r"[^\s]{8,50}$");
-    if (exp.hasMatch(password1.value.text)) {
-      checkPhonenumber(context);
-    } else {
-      await showErrorDialog(
-          context,
-          "Lösenorden måste var mellan 8 och 50 tecken långt och får ej innehålla några blanksteg"
-      );
-    }
-  }
-  /// From createaccountviewmodel
-  /// Check so that phone number is a ten digit number
-  Future<void> checkPhonenumber(var context) async {
-    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
-    if (exp.hasMatch(phone.value.text)) {
-      checkMail(context);
-    } else {
-      await showErrorDialog(
-          context,
-          "Telefonnumret behöver vara på 10 siffror"
-      );
-    }
-  }
-  /// From createaccountviewmodel
-  /// Check so that email address at least looks like a valid email address.
-  Future<void> checkMail(var context) async {
-    RegExp exp = RegExp(r"^[\w!#$%&’*+/=?`{|}~^-]+(?:\.[\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$");
-    if (exp.hasMatch(email.value.text)) {
-      checkUsername(context);
-    }
-    else {
-      await showErrorDialog(
-          context,
-          "Du måste ange en giltlig mejladress"
-      );
-    }
-  }
-  /// From createaccountviewmodel
-  /// Check so that username are [3,20] characters long
-  Future<void> checkUsername(var context) async {
-    RegExp exp = RegExp(r"^[a-zåäöA-ZÅÄÖ0-9_-]{3,20}$");
-    if (exp.hasMatch(username.value.text)) {
-      setUpResponseStreamCA(context);
-      createAccount(context);
-    }else {
-      await showErrorDialog(
-          context,
-          "Användarnamnte måste vara mella 3 och 20 tecken långt och får endast innehålla små och stora bockstäver, siffror, _ och -"
-      );
-    }
-  }
-  /// From createaccountviewmodel
-  ///Initiates a function that runs when a new value comes from the response stream for the client.
-  void setUpResponseStreamCA(context) {
-    client.streamController.stream.listen((QueryModel message) async {
-      var _context = context;
-      await Prefs().storedData.setString("uid", message.uid!);
-      await Prefs().storedData.setString("email", message.email!);
-      await Prefs().storedData.setString("phone", message.phone!);
-      await Prefs().storedData.setString("username", message.username!);
-      if (kIsWeb) {
-        // Poppar Dialogrutan och gör så att den nuvarande rutan är loginpage.
-        Navigator.of(_context, rootNavigator: true).pop();
-      }
-
-      Navigator.of(_context)
-          .pushReplacementNamed('/Home'); // Byter till homepage.
-      databaseAPI.loadOnlineChannels();
-    });
-  }
-
-  /// From createaccountviewmodel
-  void createAccount(var ctx) async {
-    var hashedPassword = DBCrypt().hashpw(password1.value.text, DBCrypt().gensalt());
-    try {
-      await client.postAndSaveToStreamCtrl(
-        '/account/register',
-        QueryModel.account(
-          email: email.value.text,
-          phone: phone.value.text,
-          password: hashedPassword,
-          username: username.value.text,
-        ),
-      );
-    } on HttpException catch(e){
-      await showErrorDialog(ctx, e.message);
-    } on TimeoutException {
-      await showErrorDialog(ctx, 'Kunde inte nå servern');
-    } catch(e){
-      constant.logger.i(e.runtimeType);
-      await showErrorDialog(ctx, e.toString());
-    }
-  }
 
   void updateChannels() {
-    databaseAPI.loadOnlineChannels();
+    dbClient.loadOnlineChannels();
   }
 
   /// Organizes a list of all channels into a map where each

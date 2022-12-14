@@ -2,33 +2,25 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AppMenu extends StatelessWidget {
-  const AppMenu({Key? key}) : super(key: key);
+
+class MenuView extends StatelessWidget {
+  const MenuView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    MainVM mainVM = Provider.of<MainVM>(context);
+
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 3),
+        preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 5),
         child: AppBar(
-          elevation: 0,
+          automaticallyImplyLeading: false,
+          elevation: 15,
           centerTitle: true,
-          title: Column(
-            children: [
-              Text(
-                context.read<MainViewModel>().title.toUpperCase(),
-                style:
-                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Din moderna radioapp',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
           bottom: PreferredSize(
             preferredSize:
-                Size.fromHeight(MediaQuery.of(context).size.height / 3),
+                Size.fromHeight(MediaQuery.of(context).size.height / 4),
             child: Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: Column(
@@ -65,7 +57,7 @@ class AppMenu extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    context.read<MainViewModel>().getUsername() ?? 'Gäst',
+                    mainVM.getUsername() ?? 'Gäst',
                     style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -104,9 +96,7 @@ class AppMenu extends StatelessWidget {
             ListTile(
               title: const Text('Kontoinställningar'),
               onTap: () {
-                // Update the state of the app.
-                // ...
-                context.read<MainViewModel>().profileInformation(context);
+                context.read<MainVM>().userData(context);
               },
             ),
             ListTile(
@@ -191,7 +181,7 @@ class AppMenu extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                context.read<MainViewModel>().logOut(context);
+                context.read<MainVM>().logOut(context);
               },
             ),
           ],
