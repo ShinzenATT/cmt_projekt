@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cmt_projekt/apis/database_api.dart';
 import 'package:cmt_projekt/apis/prefs.dart';
-import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:cmt_projekt/widgets/error_dialog_box.dart';
 import 'package:cmt_projekt/models/app_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 import '../models/user_model.dart';
@@ -131,7 +129,6 @@ class MainVM with ChangeNotifier {
   ///Initiates a function that runs when a new value comes from the response stream for the client.
   void setUpResponseStreamCA(context) {
     dbClient.streamController.stream.listen((QueryModel message) async {
-      var _context = context;
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
       await Prefs().storedData.setString("phone", message.phone!);
@@ -139,7 +136,6 @@ class MainVM with ChangeNotifier {
 
       user.setNewUser();
       dbClient.loadOnlineChannels();
-      Provider.of<NavVM>(_context).pushInitialRoute(context); // Reroutes to MainNavigatorView
     });
   }
 
@@ -160,7 +156,6 @@ class MainVM with ChangeNotifier {
     Prefs().storedData.get("uid");
     user.isGuest = true;
     user.isSignedIn = true;
-    Provider.of<NavVM>(context, listen: false).pushInitialRoute(context);
   }
 
   /// Database response stream for Login ///
@@ -175,7 +170,6 @@ class MainVM with ChangeNotifier {
 
       user.setNewUser();
       dbClient.loadOnlineChannels();
-      Provider.of<NavVM>(context, listen: false).pushInitialRoute(context);
       debugPrint("void setUpResponseStreamLogin(context)- DONE!");
     });
   }
@@ -184,7 +178,6 @@ class MainVM with ChangeNotifier {
   void logOut(context) {
     Prefs().storedData.clear();
     user.logOut();
-    Provider.of<NavVM>(context, listen: false).reset();
   }
 
 

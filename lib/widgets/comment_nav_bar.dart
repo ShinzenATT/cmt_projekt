@@ -1,6 +1,7 @@
+import 'package:cmt_projekt/models/navigation_model.dart';
+import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/navigation_vm.dart';
 
 class CommentNavBar extends StatelessWidget {
   const CommentNavBar({Key? key}) : super(key: key);

@@ -8,7 +8,7 @@ import 'package:cmt_projekt/constants.dart' as constants;
 /// when notified by MainVM or NavigationVM and thus dynamically changes
 /// its behaviour and design.
 class CommentAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CommentAppBar({Key? key}): super(key: key);
+  const CommentAppBar({Key? key}): super(key: key);
 
   // This override is necessary since it implements PreferredSizeWidget
   @override

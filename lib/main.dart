@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         textTheme: GoogleFonts.latoTextTheme(),
       ),
-      home: const MainNavigatorView(), // We immediately route to our own MainNavigatorView
+      home: const MainViewNavigator(), // We immediately route to our own MainNavigatorView
     );
   }
 
