@@ -1,8 +1,11 @@
+import 'package:cmt_projekt/widgets/comment_app_bar.dart';
 import 'package:cmt_projekt/widgets/comment_nav_bar.dart';
 import 'package:cmt_projekt/models/tab_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/navigation_vm.dart';
+
+import 'go_live/go_live_navigator_view.dart';
 
 
 class MainNavigatorView extends StatefulWidget {
@@ -24,6 +27,7 @@ class _MainNavigatorViewState extends State<MainNavigatorView> {
     return WillPopScope(
         onWillPop: () => Provider.of<NavVM>(context).onWillPop(),
         child: Scaffold(
+          appBar: CommentAppBar(),
           body: Stack(
             children: <Widget>[
               _buildOffstageNavigator(TabId.search),
@@ -39,7 +43,7 @@ class _MainNavigatorViewState extends State<MainNavigatorView> {
   Widget _buildOffstageNavigator(TabId tabId) {
     return Offstage(
       offstage: Provider.of<NavVM>(context).currentTab != tabId,
-        child: TabNavigator (
+        child: GoLiveNavigatorView (
           navigatorKey: Provider.of<NavVM>(context).navKeys[tabId],
           tabId: tabId,
         )

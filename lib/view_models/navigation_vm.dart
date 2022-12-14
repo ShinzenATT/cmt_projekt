@@ -21,12 +21,26 @@ enum TabId { search , home , live }
 /// that is unnecessary for the views to do.
 class NavVM with ChangeNotifier{
 
+  get navKeys => _navKeys;
+  GlobalKey<NavigatorState> get currentNavKey => navKeys[currentTab];
+
+  get currentTab => _currentTab;
+  get currentTabIndex { switch (currentTab) {
+    case TabId.search: return 0;
+    case TabId.home:   return 1;
+    case TabId.live:   return 2; }
+  }
+
+  /// Can currently active NavKey go back/Pop? ///
+  // If it does the AppBar will show a BackButton instead of the user icon.
+  bool get canPop => currentNavKey.currentState!.canPop();
+
+
   final _navKeys = {
     TabId.search: GlobalKey<NavigatorState>(),
     TabId.home:   GlobalKey<NavigatorState>(),
     TabId.live:   GlobalKey<NavigatorState>(),
   };
-
   TabId _currentTab = TabId.home;
 
   void selectTab(TabId tabId) {
@@ -36,15 +50,6 @@ class NavVM with ChangeNotifier{
       _currentTab = tabId;
     }
     notifyListeners();
-  }
-
-  get navKeys => _navKeys;
-
-  get currentTab => _currentTab;
-  get currentTabIndex { switch (currentTab) {
-                          case TabId.search: return 0;
-                          case TabId.home:   return 1;
-                          case TabId.live:   return 2; }
   }
 
   Future<bool> onWillPop() async {
@@ -59,8 +64,26 @@ class NavVM with ChangeNotifier{
     return isFirstRouteInCurrentTab;
   }
 
+  /// PushView navigator function ///
+  /// It is supposed to be the only push you need, it automatically
+  /// knows which NavKey should be used through 'currentNavKey' below.
+  void pushView(route) {
+    currentNavKey.currentState!.pushNamed(route);
+    notifyListeners();
+  }
 
-
+  /// Navigate back by popping ///
+  // For popping to previous route of the currently active navigator but it
+  // also makes sure that the streaming channel gets closed down when the
+  // BackButton is pressed.
+  void goBack(context) {
+    //StreamVM streamVM = Provider.of<StreamVM>(context, listen: false);
+    //if(mainIndex == 2 && streamVM.streamModel.isInitiated) {
+    //  streamVM.closeClient();
+    //}
+    currentNavKey.currentState!.pop();
+    notifyListeners();
+  }
 
 
 
@@ -113,26 +136,6 @@ class NavVM with ChangeNotifier{
     debugPrint("void pushInitialRoute(context)- DONE!");
   }
 
-  /// PushView navigator function ///
-  /// It is supposed to be the only push you need, it automatically
-  /// knows which NavKey should be used through 'activeNavKey' below.
-  void pushView(route) {
-  activeNavKey.navigateTo(route);
-  notifyListeners();
-  }
-
-  /// Navigate back by popping ///
-  // For popping to previous route of the currently active navigator but it
-  // also makes sure that the streaming channel gets closed down when the
-  // BackButton is pressed.
-  void goBack(context) {
-    StreamVM streamVM = Provider.of<StreamVM>(context, listen: false);
-    if(mainIndex == 2 && streamVM.streamModel.isInitiated) {
-      streamVM.closeClient();
-    }
-    activeNavKey.goBack();
-    notifyListeners();
-  }
 
   /// Get active NavKey ///
   // With the help of the 'isSignedIn' & 'mainIndex' variables.
@@ -146,9 +149,7 @@ class NavVM with ChangeNotifier{
   }
 
 
-  /// Can currently active NavKey go back/Pop? ///
-  // If it does the AppBar will show a BackButton instead ofthe user icon.
-  bool get canPop => activeNavKey.canPop();
+
 
 
   /// NavKey instances with a GlobalKey<NavigatorState> inside ///

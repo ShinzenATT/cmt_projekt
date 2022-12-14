@@ -8,44 +8,43 @@ import '../apis/prefs.dart';
 
 typedef Fn = void Function();
 
-class StreamViewModel with ChangeNotifier {
-  StreamModel smodel = StreamModel();
+class StreamVM with ChangeNotifier {
+  StreamModel streamModel = StreamModel();
 
   void startup(context) {
-    smodel.player = FlutterSoundPlayer();
-    smodel.recorder = FlutterSoundRecorder();
-    smodel.streamClient = StreamClient(smodel.player);
+    streamModel.player = FlutterSoundPlayer();
+    streamModel.recorder = FlutterSoundRecorder();
+    streamModel.streamClient = StreamClient(streamModel.player);
     init().then((value) {
-      smodel.isInitiated = true;
-      smodel.streamClient!.listen(context);
+      streamModel.isInitiated = true;
+      streamModel.streamClient!.listen(context);
     });
   }
 
   Future<bool> closeClient() async {
-    if (smodel.streamClient != null) {
-      smodel.player!.stopPlayer();
-      smodel.recorder!.stopRecorder();
-      smodel.streamClient!.stopSound();
-      smodel.isInitiated = false;
-      smodel.streamClient!.client.sink.close();
-      smodel.streamClient = null;
+    if (streamModel.streamClient != null) {
+      streamModel.player!.stopPlayer();
+      streamModel.recorder!.stopRecorder();
+      streamModel.streamClient!.stopSound();
+      streamModel.isInitiated = false;
+      streamModel.streamClient!.client.sink.close();
+      streamModel.streamClient = null;
     }
-
     return true;
   }
 
   Future<void> init() async {
-    await smodel.recorder!.openAudioSession(
+    await streamModel.recorder!.openAudioSession(
       device: AudioDevice.blueToothA2DP,
       audioFlags: allowHeadset | allowEarPiece | allowBlueToothA2DP,
       category: SessionCategory.playAndRecord,
     );
-    await smodel.player!.openAudioSession(
+    await streamModel.player!.openAudioSession(
       device: AudioDevice.blueToothA2DP,
       audioFlags: allowHeadset | allowEarPiece | allowBlueToothA2DP,
       category: SessionCategory.playAndRecord,
     );
-    await smodel.player!.startPlayerFromStream(
+    await streamModel.player!.startPlayerFromStream(
       codec: Codec.pcm16,
       numChannels: 1,
       sampleRate: 44000,
@@ -54,12 +53,12 @@ class StreamViewModel with ChangeNotifier {
 
   Future<void> release() async {
     await stopPlayer();
-    await smodel.player!.closeAudioSession();
-    smodel.player = null;
+    await streamModel.player!.closeAudioSession();
+    streamModel.player = null;
 
     await stopRecorder();
-    await smodel.recorder!.closeAudioSession();
-    smodel.recorder = null;
+    await streamModel.recorder!.closeAudioSession();
+    streamModel.recorder = null;
   }
 
   @override
@@ -69,23 +68,23 @@ class StreamViewModel with ChangeNotifier {
   }
 
   Future<void>? stopRecorder() {
-    if (smodel.recorder != null) {
-      return smodel.recorder!.stopRecorder();
+    if (streamModel.recorder != null) {
+      return streamModel.recorder!.stopRecorder();
     }
     return null;
   }
 
   Future<void>? stopPlayer() {
-    if (smodel.player != null) {
-      return smodel.player!.stopPlayer();
+    if (streamModel.player != null) {
+      return streamModel.player!.stopPlayer();
     }
     return null;
   }
 
   Future<void> record() async {
-    await smodel.recorder!.startRecorder(
+    await streamModel.recorder!.startRecorder(
       codec: Codec.pcm16,
-      toStream: smodel
+      toStream: streamModel
           .streamClient!.foodStreamController!.sink, // ***** THIS IS THE LOOP !!! *****
       sampleRate: 44000,
       numChannels: 1,
@@ -94,20 +93,20 @@ class StreamViewModel with ChangeNotifier {
   }
 
   Future<void> stop() async {
-    if (smodel.recorder != null) {
-      await smodel.recorder!.stopRecorder();
+    if (streamModel.recorder != null) {
+      await streamModel.recorder!.stopRecorder();
     }
-    if (smodel.player != null) {
+    if (streamModel.player != null) {
       //   await _player!.stopPlayer();
     }
     notifyListeners();
   }
 
   void getRecFn() {
-    if (!smodel.isInitiated) {
+    if (!streamModel.isInitiated) {
       return;
     }
-    if (smodel.recorder!.isRecording) {
+    if (streamModel.recorder!.isRecording) {
       stop();
     } else {
       record();
@@ -115,7 +114,7 @@ class StreamViewModel with ChangeNotifier {
   }
 
   sendUpdate(BuildContext context){
-    final StreamClient c = smodel.streamClient!;
+    final StreamClient c = streamModel.streamClient!;
     c.sendUpdate(StreamMessage.update(
         channelName:  Prefs().storedData.getString("channelName"),
         category: Prefs().storedData.getString("category"),

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
 import 'package:cmt_projekt/constants.dart' as constant;
-
+/*
 ///Login page for the website.
 class WebLoginPage extends StatelessWidget {
   const WebLoginPage({Key? key}) : super(key: key);
@@ -261,3 +261,5 @@ class WebLoginPage extends StatelessWidget {
     );
   }
 }
+
+ */

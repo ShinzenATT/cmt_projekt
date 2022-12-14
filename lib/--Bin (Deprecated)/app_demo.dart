@@ -11,7 +11,7 @@ import '../constants.dart';
 /// !!! DEPRECATED !!!
 /// Created by previous group and moved to deprecated to clean up
 /// project structure.
-
+/*
 class StreamLoop extends StatefulWidget {
   const StreamLoop({Key? key}) : super(key: key);
 
@@ -125,3 +125,6 @@ class _StreamLoopState extends State<StreamLoop> {
     );
   }
 }
+
+
+ */

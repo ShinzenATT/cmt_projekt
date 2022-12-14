@@ -9,16 +9,19 @@ import '../../view_models/navigation_vm.dart';
 
 
 class GoLiveNavigatorView extends StatelessWidget {
-  const GoLiveNavigatorView({Key? key}) : super(key: key);
+  const GoLiveNavigatorView({
+    Key? key,
+    required this.navigatorKey,
+    required this.tabId}) : super(key: key);
 
-  final GlobalKey<NavigatorState>? navigatorKey;
+  final GlobalKey<NavigatorState> navigatorKey;
   final TabId tabId;
 
   @override
   Widget build(BuildContext context) {
 
     return Navigator(
-      key: Provider.of<NavVM>(context).,
+      key: navigatorKey,
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           settings: settings,

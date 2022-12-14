@@ -4,7 +4,7 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
-
+/*
 ///Homepage för hemsidan.
 class WebHomePage extends StatefulWidget {
   const WebHomePage({Key? key}) : super(key: key);
@@ -343,3 +343,5 @@ class _WebHomePageState extends State<WebHomePage> {
     );
   }
 }
+
+ */

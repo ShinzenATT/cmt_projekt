@@ -2,7 +2,7 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
-
+/*
 class WebChannelSettings extends StatelessWidget {
   WebChannelSettings({Key? key}) : super(key: key);
   final categoryList = ['Sport', 'Rock', 'Jazz', 'Pop', 'Tjööt'];
@@ -118,3 +118,4 @@ class WebChannelSettings extends StatelessWidget {
     );
   }
 }
+*/

@@ -23,7 +23,6 @@ class GoLiveView1 extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      //mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding:
