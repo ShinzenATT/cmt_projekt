@@ -123,8 +123,7 @@ class StreamViewModel with ChangeNotifier {
             category: Prefs().storedData.getString("category")!,
             channelid: Prefs().storedData.getString("uid")!
         ),
-        channelType: "a",
-        uid: Prefs().storedData.getString("uid")!
+        channelType: "a"
     ));
   }
 }

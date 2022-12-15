@@ -11,13 +11,12 @@ class StreamMessage {
 
   ///An instance of StreamMessage for a host request.
   StreamMessage.host({
-    required this.uid,
     required this.channelType,
     required this.channelData
-  }) {
-    hostId = uid;
+  }):
+    uid = channelData!.channelid,
+    hostId = channelData.channelid,
     intent = "h";
-  }
 
   ///An instance of StreamMessage for a join request.
   StreamMessage.join({
@@ -29,12 +28,11 @@ class StreamMessage {
 
   StreamMessage.update({
     required this.channelData,
-    required this.channelType,
-    required this.uid
-}){
-    hostId = uid;
+    required this.channelType
+}):
+    uid = channelData!.channelid,
+    hostId = channelData.channelid,
     intent = "u";
-}
 
   ///Konverterar meddelandet till en map med string keys
   Map<String, dynamic> toMap() => {

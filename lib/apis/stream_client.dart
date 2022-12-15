@@ -37,7 +37,6 @@ class StreamClient {
           hostId: Prefs().storedData.get("joinChannelID").toString())));
     } else { // sends a json msg to server with intent to host
       client.sink.add(jsonEncode(StreamMessage.host(
-        uid: Prefs().storedData.get("uid").toString(),
         channelType: "a",
         channelData: ChannelDataModel(
             channelname: Prefs().storedData.getString("channelName")!,

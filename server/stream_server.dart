@@ -78,13 +78,7 @@ class StreamServer {
     final Map<String, dynamic> res;
     try {
       ///Adds the radiochannel to the database if it doesn't already exist. After that the radio channel is toggled as online.
-      res = await DatabaseApi.postRequest(
-          '/channel',
-          QueryModel.createChannel(
-              uid: message.uid,
-              channelname: message.channelData!.channelname,
-              category: message.channelData!.category
-          ));
+      res = await DatabaseApi.postRequest('/channel', message.channelData!.toMap());
     } on HttpReqException catch(e){
       logger.e(e.message, e);
       webSocket.sink.close(1011, e.message);
@@ -116,12 +110,7 @@ class StreamServer {
         if (msg.intent == "u") {
           dynamic res;
           try {
-            res = await DatabaseApi.postRequest(
-                '/channel',
-                QueryModel.createChannel(
-                    uid: msg.uid,
-                    channelname: msg.channelData!.channelname,
-                    category: msg.channelData!.category));
+            res = await DatabaseApi.postRequest('/channel', msg.channelData!.toMap());
           } on HttpReqException catch (e) {
             logger.e(e.message, e);
           }  catch (e) {
