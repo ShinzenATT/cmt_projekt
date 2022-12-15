@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/stream_model.dart';
 import 'package:cmt_projekt/apis/stream_client.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
@@ -117,8 +118,11 @@ class StreamViewModel with ChangeNotifier {
   sendUpdate(BuildContext context){
     final StreamClient c = smodel.streamClient!;
     c.sendUpdate(StreamMessage.update(
-        channelName:  Prefs().storedData.getString("channelName"),
-        category: Prefs().storedData.getString("category"),
+        channelData:  ChannelDataModel(
+            channelname: Prefs().storedData.getString("channelName")!,
+            category: Prefs().storedData.getString("category")!,
+            channelid: Prefs().storedData.getString("uid")!
+        ),
         channelType: "a",
         uid: Prefs().storedData.getString("uid")!
     ));

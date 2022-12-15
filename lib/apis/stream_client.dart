@@ -39,8 +39,11 @@ class StreamClient {
       client.sink.add(jsonEncode(StreamMessage.host(
         uid: Prefs().storedData.get("uid").toString(),
         channelType: "a",
-        category: Prefs().storedData.getString("category"),
-        channelName: Prefs().storedData.getString("channelName"),
+        channelData: ChannelDataModel(
+            channelname: Prefs().storedData.getString("channelName")!,
+            channelid: Prefs().storedData.get("uid").toString(),
+            category: Prefs().storedData.getString("category")!
+        ),
       )));
     }
 

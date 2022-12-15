@@ -33,13 +33,13 @@ class ChannelDataModel {
         channelid: map['channelid'],
         channelname: map['channelname'],
         category: map['category'],
-        username: map['username'],
-        isonline: map['isonline'],
-        total: map['total'],
+        username: map['username'] ?? '',
+        isonline: map['isonline'] ?? true,
+        total: map['total'] ?? 0,
         description: map['description'],
         profileImageUrl: map['profileimageurl'],
         channelImageUrl: map['imageurl'],
-        timetable: (map['timetable'] as List).map((element) => TimetableEntry.parseMap(element)).toList()
+        timetable: (map['timetable'] as List? ?? []).map((element) => TimetableEntry.parseMap(element)).toList()
     );
   }
 

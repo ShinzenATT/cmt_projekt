@@ -53,7 +53,7 @@ class StreamServer {
     //Here the connected web socket is checked whether it is a host or client and calls the correct function accordingly.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {
       if (event.runtimeType == String) {
-        StreamMessage message = StreamMessage.fromJson(jsonDecode(event));
+        StreamMessage message = StreamMessage.parseMap(jsonDecode(event));
         if (message.intent == "h" && !rooms.containsKey(message.hostId)) {
           initHostStream(message, webSocket);
         } else if (message.intent == "j" && rooms.containsKey(message.hostId)) {
@@ -72,7 +72,7 @@ class StreamServer {
   Future<void> initHostStream(
       StreamMessage message, WebSocketChannel webSocket) async {
     logger.v(
-        "A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
+        "A new host ${message.uid} has connected: Category: ${message.channelData!.category}, Name: ${message.channelData!.channelname}");
 
 
     final Map<String, dynamic> res;
@@ -82,8 +82,8 @@ class StreamServer {
           '/channel',
           QueryModel.createChannel(
               uid: message.uid,
-              channelname: message.channelName,
-              category: message.category
+              channelname: message.channelData!.channelname,
+              category: message.channelData!.category
           ));
     } on HttpReqException catch(e){
       logger.e(e.message, e);
@@ -112,7 +112,7 @@ class StreamServer {
           sendData(sock, message);
         }
       } else { // decodes json messages, updates channel info and forwards new channel info to all clients
-        StreamMessage msg = StreamMessage.fromJson(jsonDecode(message));
+        StreamMessage msg = StreamMessage.parseMap(jsonDecode(message));
         if (msg.intent == "u") {
           dynamic res;
           try {
@@ -120,8 +120,8 @@ class StreamServer {
                 '/channel',
                 QueryModel.createChannel(
                     uid: msg.uid,
-                    channelname: msg.channelName,
-                    category: msg.category));
+                    channelname: msg.channelData!.channelname,
+                    category: msg.channelData!.category));
           } on HttpReqException catch (e) {
             logger.e(e.message, e);
           }  catch (e) {
