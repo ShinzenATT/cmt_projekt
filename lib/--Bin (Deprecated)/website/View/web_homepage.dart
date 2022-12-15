@@ -56,6 +56,7 @@ class _WebHomePageState extends State<WebHomePage> {
                   channel.channelid!,
                   channel.channelname!,
                   channel.username!,
+                  channel.category!,
                 );
 
             context.read<StreamViewModel>().startup(context);

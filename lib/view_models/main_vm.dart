@@ -365,11 +365,12 @@ class MainViewModel with ChangeNotifier {
     return null;
   }
 
-  void setJoinPrefs(String channelId, String channelName, String username) {
+  void setJoinPrefs(String channelId, String channelName, String username, String category) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
     Prefs().storedData.setString("channelName", channelName);
     Prefs().storedData.setString("hostUsername", username);
+    Prefs().storedData.setString("category", category);
   }
 
   Future<bool> checkMicPermssion() async {

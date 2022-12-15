@@ -145,6 +145,7 @@ class _AppHomePageState extends State<AppHomePage> {
                   channel.channelid!,
                   channel.channelname!,
                   channel.username!,
+                  channel.category!,
                 );
 
             context.read<StreamViewModel>().startup(context);
