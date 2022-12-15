@@ -1,11 +1,9 @@
 import 'package:cmt_projekt/view_models/main_vm.dart';
-import 'package:cmt_projekt/widgets/comment_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import '../../view_models/navigation_vm.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
-
 
 ///First version of loginpage for the app.
 class LoginView extends StatelessWidget {
@@ -13,21 +11,23 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    MainVM mainVM = Provider.of<MainVM>(context, listen: false);
+    MainVM mainVM = Provider.of<MainVM>(context, listen: true);
     NavVM navVM = Provider.of<NavVM>(context, listen: false);
 
-    return Scaffold(
-      appBar: CommentAppBar(),
-      body: Container(
+    String? password;
+    String? login;
+
+    return Container(
         padding: const EdgeInsets.all(30),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //All children are wrapped in flexible to adjust when keyboard is used
-          children: [
-            Flexible(
+        child: Form(
+          key: mainVM.signInFormKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //All children are wrapped in flexible to adjust when keyboard is used
+            children: [
+              Flexible(
                 flex: 3,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +37,8 @@ class LoginView extends StatelessWidget {
                       flex: 2,
                       child: Text(
                         'Välkommen',
-                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const Flexible(
@@ -49,7 +50,6 @@ class LoginView extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const Flexible(
                       flex: 1,
                       child: SizedBox(
@@ -59,7 +59,13 @@ class LoginView extends StatelessWidget {
                     Flexible(
                       flex: 3,
                       child: TextFormField(
-                        onChanged: (String value) => mainVM.newUserData.eMail = value,
+                        onSaved: (value) => login = value,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'You have to provide a login';
+                          }
+                          return null;
+                        },
                         textInputAction: TextInputAction.next, // Moves focus to next text field.
                         decoration: const InputDecoration(
                           labelText: 'E-post eller telefonnummer',
@@ -69,7 +75,13 @@ class LoginView extends StatelessWidget {
                     Flexible(
                       flex: 3,
                       child: TextFormField(
-                        onChanged: (String value) => mainVM.newUserData.password = value,
+                        onSaved: (value) => password = value,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'You have to provide a password';
+                          }
+                          return null;
+                        },
                         textInputAction: TextInputAction.done, // Close keyboard.
                         decoration: InputDecoration(
                           labelText: 'Lösenord',
@@ -79,7 +91,9 @@ class LoginView extends StatelessWidget {
                             splashColor: Colors.transparent,
                             icon: Icon(
                               // Based on passwordVisible state choose the icon
-                              mainVM.showPassword ? Icons.visibility : Icons.visibility_off,
+                              mainVM.showPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Theme.of(context).primaryColorDark,
                             ),
                             onPressed: () {
@@ -96,7 +110,7 @@ class LoginView extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(
-                          onPressed: () { },        // TODO: Implement password reset
+                          onPressed: () {}, // TODO: Implement password reset
                           child: const Text('Glömt ditt lösenord?'),
                         ),
                       ),
@@ -122,7 +136,11 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            mainVM.loginAttempt(context);
+                            if(mainVM.signInFormKey.currentState!.validate()) {
+                              mainVM.signInFormKey.currentState!.save();
+                              mainVM.loginAttempt(context, login, password);
+                            }
+
                           },
                           gradient: const LinearGradient(
                               begin: Alignment.centerLeft,
@@ -136,8 +154,8 @@ class LoginView extends StatelessWidget {
                     ),
                   ],
                 ),
-            ),
-            Flexible(
+              ),
+              Flexible(
                 flex: 1,
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -203,10 +221,10 @@ class LoginView extends StatelessWidget {
                     ),
                   ],
                 ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 }

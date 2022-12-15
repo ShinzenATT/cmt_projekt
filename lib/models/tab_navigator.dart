@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import '../view_models/navigation_vm.dart';
-import 'package:cmt_projekt/constants.dart' as constants;
-
 import 'navigation_model.dart';
 
 
 /// Tab Navigator ///
-///
 // See NavigationModel for the routing data that is used to build the
 // different navigators.
 class TabNavigator extends StatelessWidget {

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 
-import '../view_models/navigation_vm.dart';
-
 ///AlertMessage when you are logged in as a guest.
 ///The guest is asked to create an account to get access to the functionality.
 class AlertMessage extends StatelessWidget {
@@ -25,7 +23,8 @@ class AlertMessage extends StatelessWidget {
         TextButton(
           child: const Text("OK"),
           onPressed: () {
-            Provider.of<MainVM>(context).logOut(context);
+            Navigator.of(context).pop();
+            Provider.of<MainVM>(context, listen: false).logOut(context);
           },
         ),
       ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 
+
 ///The welcomepage for the app.
 class WelcomeView extends StatelessWidget {
   const WelcomeView({Key? key}) : super(key: key);

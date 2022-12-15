@@ -24,9 +24,10 @@ class _MainViewNavigatorState extends State<MainViewNavigator> {
     return WillPopScope(
         onWillPop: () => Provider.of<NavVM>(context).onWillPop(),
         child: Scaffold(
-          appBar: CommentAppBar(),
+          appBar: const CommentAppBar(),
           body: Stack(
             children: <Widget>[
+              _buildOffstageNavigator(TabId.welcome),
               _buildOffstageNavigator(TabId.home),
               _buildOffstageNavigator(TabId.live),
             ],

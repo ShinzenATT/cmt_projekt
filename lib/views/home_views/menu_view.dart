@@ -96,7 +96,7 @@ class MenuView extends StatelessWidget {
             ListTile(
               title: const Text('Kontoinställningar'),
               onTap: () {
-                context.read<MainVM>().userData(context);
+                mainVM.userData(context);
               },
             ),
             ListTile(
@@ -181,7 +181,7 @@ class MenuView extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                context.read<MainVM>().logOut(context);
+                mainVM.logOut(context);
               },
             ),
           ],

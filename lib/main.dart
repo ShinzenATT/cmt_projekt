@@ -20,7 +20,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NavVM()),
         ChangeNotifierProvider(create: (_) => StreamVM()),
       ],
-
       child: const MyApp(),
     ),
   );
@@ -42,6 +41,4 @@ class MyApp extends StatelessWidget {
       home: const MainViewNavigator(), // We immediately route to our own MainNavigatorView
     );
   }
-
-
 }

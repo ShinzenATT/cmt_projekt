@@ -6,13 +6,14 @@ import '../views/go_live/host_channel_view.dart';
 import '../views/home_views/channels_view.dart';
 import '../views/home_views/listen_channel_view.dart';
 import '../views/home_views/menu_view.dart';
+import '../views/start_views/create_account_view.dart';
 import '../views/start_views/login_view.dart';
 import '../views/start_views/welcome_view.dart';
 
 
 /// An enum for the different tabs of the NavigationBar, because it's simply
 /// easier to remember what is what.
-enum TabId { search , home , live }
+enum TabId { welcome, search , home , live }
 
 /// NavigationModel for all persistent navigation data ///
 class NavigationModel {
@@ -21,9 +22,10 @@ class NavigationModel {
   Map<TabId, GlobalKey<NavigatorState>> get navKeys => _navKeys;
 
   final Map<TabId, GlobalKey<NavigatorState>> _navKeys = {
-    TabId.search: GlobalKey<NavigatorState>(),
-    TabId.home:   GlobalKey<NavigatorState>(),
-    TabId.live:   GlobalKey<NavigatorState>(),
+    TabId.welcome: GlobalKey<NavigatorState>(),
+    TabId.search:  GlobalKey<NavigatorState>(),
+    TabId.home:    GlobalKey<NavigatorState>(),
+    TabId.live:    GlobalKey<NavigatorState>(),
   };
 
   /// Routing Data for all view navigators ///
@@ -31,6 +33,7 @@ class NavigationModel {
 
   static final Map<TabId, Map<String, Widget>> _routingData =
                                           <TabId, Map<String, Widget>>{
+    TabId.welcome : _welcomeRD,
     TabId.live : _goLiveRD,
     TabId.home : _homeRD
   };
@@ -50,13 +53,10 @@ class NavigationModel {
     constants.menu :  const MenuView(),
   };
 
-
-  // 'HomeNavigatorView' & 'GoLiveNavigatorView' are built differently and can
-  // be found in their respective classes.
-  static final Map<String, WidgetBuilder> appRoutingData = <String, WidgetBuilder>{
-    //constants.mainApp : (context) => const MainNavigatorView(),
-    constants.welcome: (context) => const WelcomeView(),
-    constants.login: (context) => const LoginView(),
-    //constants.createAccount: (context) => const CreateAccountView(),
+  /// Home view navigator
+  static final Map<String, Widget> _welcomeRD = <String, Widget>{
+    constants.welcome: const WelcomeView(),
+    constants.login: const LoginView(),
+    constants.createAccount: const CreateAccountView(),
   };
 }

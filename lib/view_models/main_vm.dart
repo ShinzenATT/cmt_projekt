@@ -9,10 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
+import 'package:provider/provider.dart';
+import '../models/navigation_model.dart';
 import '../models/user_model.dart';
 import '../widgets/no_account_dialog.dart';
 import '../widgets/profile_information_box.dart';
 import 'package:cmt_projekt/widgets/no_account_dialog.dart';
+import 'navigation_vm.dart';
 
 /// The MainViewModel is used to deliver, modify and perform functions on data
 /// retrieved from the MainModel. Its purpose is to act as an intermediary
@@ -20,6 +23,8 @@ import 'package:cmt_projekt/widgets/no_account_dialog.dart';
 /// the MainModel, but instead use MainViewModel to get what they need to build
 /// their UI.
 class MainVM with ChangeNotifier {
+
+  MainVM() { checkLogIn(); }
 
   /// Persistent Models & API's with routing getters///
 
@@ -36,21 +41,77 @@ class MainVM with ChangeNotifier {
   static final UserModel userModel = UserModel();
   UserModel get user => userModel;
 
-
   /// ChannelModel ///
   // ChannelModel stores all relevant channel data, whether it is for
   // listening or for hosting.
   ///static final ChannelModel channelModel = ChannelModel();
   String? _category;
 
-
   /// Settings & Helpers ///
   bool get isSignedIn => user.isSignedIn;
+
+  void checkLogIn() {
+    if (Prefs().storedData.getString("email") != null) {
+      user.setUserFromPrefs();
+      notifyListeners();
+    }
+  }
+
+  /// Guest log in ///
+  void guestSign(context) async {
+    Prefs().storedData.setString("uid", Uri().toString());
+    Prefs().storedData.get("uid");
+    user.isGuest = true;
+    user.isSignedIn = true;
+    Provider.of<NavVM>(context, listen: false).selectTab(TabId.home);
+  }
+
+  /// Log in ///
+  final signInFormKey = GlobalKey<FormState>();
+
+  void loginAttempt(context, login, password) {
+    setUpResponseStreamLogin(context);
+    dbClient.postAndSaveToStreamCtrl(
+        '/account/login',
+        QueryModel.login(email: login!, password: password!)
+    );
+
+  }
+
+  /// Database response stream for Login ///
+  //Initiates a function that listens for new values
+  Future<void> setUpResponseStreamLogin(context) async {
+    dbClient.streamController.stream.listen((QueryModel message) async {
+      await Prefs().storedData.setString("uid", message.uid!);
+      await Prefs().storedData.setString("email", message.email!);
+      await Prefs().storedData.setString("phone", message.phone!);
+      await Prefs().storedData.setString("username", message.username!);
+      newUserData.uid = message.uid;
+      newUserData.eMail = message.email;
+      newUserData.phoneNr = message.phone;
+      newUserData.userName = message.username;
+      user.setNewUser();
+      dbClient.loadOnlineChannels();
+      Provider.of<NavVM>(context, listen: false).selectTab(TabId.home);
+    });
+  }
+
+  /// Log out! ///
+  void logOut(context) {
+    Prefs().storedData.clear();
+    user.logOut();
+    Provider.of<NavVM>(context, listen: false).loggedOut();
+    notifyListeners();
+  }
+
 
   // For CreateAccountView & LoginView
   bool showPassword = false; // Controlls the show/hide password feature.
   UserData get newUserData => user.newUser;
-  void toggleShowPassword() => showPassword = !showPassword;
+  void toggleShowPassword() {
+    showPassword = !showPassword;
+    notifyListeners();
+  }
 
   // For ChannelView
   Map<String, String> get categoryImageList => app.categoryAndStandardImg;
@@ -138,48 +199,6 @@ class MainVM with ChangeNotifier {
       dbClient.loadOnlineChannels();
     });
   }
-
-
-  /// Log in! ///
-  void loginAttempt(context) async {
-    setUpResponseStreamLogin(context);
-    dbClient.postAndSaveToStreamCtrl(
-        '/account/login',
-        QueryModel.login(email: newUserData.eMail!, password: newUserData.password!)
-    );
-  }
-
-  /// Guest log in! ///
-  void guestSign(context) async {
-    setUpResponseStreamLogin(context);
-    Prefs().storedData.setString("uid" ,Uri().toString());
-    Prefs().storedData.get("uid");
-    user.isGuest = true;
-    user.isSignedIn = true;
-  }
-
-  /// Database response stream for Login ///
-  //Initiates a function that listens for new values
-  void setUpResponseStreamLogin(context) {
-    debugPrint("void setUpResponseStreamLogin(context)");
-    dbClient.streamController.stream.listen((QueryModel message) async {
-      await Prefs().storedData.setString("uid", message.uid!);
-      await Prefs().storedData.setString("email", message.email!);
-      await Prefs().storedData.setString("phone", message.phone!);
-      await Prefs().storedData.setString("username", message.username!);
-
-      user.setNewUser();
-      dbClient.loadOnlineChannels();
-      debugPrint("void setUpResponseStreamLogin(context)- DONE!");
-    });
-  }
-
-  /// Log out! ///
-  void logOut(context) {
-    Prefs().storedData.clear();
-    user.logOut();
-  }
-
 
   ///Returns the users email.
   String? getEmail() {

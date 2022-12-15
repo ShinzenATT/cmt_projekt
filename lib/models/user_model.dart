@@ -1,3 +1,4 @@
+import '../apis/prefs.dart';
 
 class UserModel {
 
@@ -14,6 +15,14 @@ class UserModel {
   UserData get newUser => newUserData;
 
   /// Methods
+
+  void setUserFromPrefs() {
+    data.eMail = Prefs().storedData.getString("email");
+    data.userName = Prefs().storedData.getString("username");
+    data.phoneNr = Prefs().storedData.getString("phone");
+    isSignedIn = true;
+  }
+
   void setNewUser() {
     data = newUserData;
     newUserData = UserData();
@@ -31,6 +40,7 @@ class UserModel {
 /// UserData class ///
 class UserData {
 
+  String? uid;
   String? eMail;
   String? userName;
   String? phoneNr;

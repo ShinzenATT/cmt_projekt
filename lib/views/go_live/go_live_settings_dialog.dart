@@ -82,7 +82,7 @@ class GoLiveSettings extends StatelessWidget {
                       } else {
                         streamVM.startup(context);
                       }
-                      Provider.of<NavVM>(context).pushView(constants.hostChannel);
+                      Provider.of<NavVM>(context, listen: false).pushView(constants.hostChannel);
                     },
                     gradient: const LinearGradient(
                         begin: Alignment.centerLeft,
