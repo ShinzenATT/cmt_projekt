@@ -65,19 +65,21 @@ class DatabaseQueries {
     await connection.transaction((c) async {
       await c.query(
       "INSERT INTO channel VALUES("   // insert
-      "'${channel.channelid}',"
-      "'${channel.channelname}',"
-      "'${channel.category}',"
-      "true,"
-      "${channel.description != null? "'" + channel.description! + "'": null},"
-      "${channel.channelImageUrl != null ? "'" + channel.channelImageUrl!.path + "'": null}"
+      "@id:uuid, @name:text, @category:text, true, @description:text, @image:text"
       ") ON CONFLICT (channelid) DO "
       "UPDATE SET "                  // update on conflict
-      "channelname = '${channel.channelname}',"
-      "category = '${channel.category}',"
-      "description = ${channel.description != null ? "'" + channel.description! + "'": null},"
-      "imageurl = ${channel.channelImageUrl != null ? "'" + channel.channelImageUrl!.path + "'": null},"
-      "isonline = true;"
+      "channelname = @name:text,"
+      "category = @category:text,"
+      "description = @description:text,"
+      "imageurl = @image:text,"
+      "isonline = true;",
+        substitutionValues: {
+          'id': channel.channelid,
+          'name': channel.channelname,
+          'category': channel.category,
+          'description': channel.description,
+          'image': channel.channelImageUrl?.path
+        }
       );
 
       await c.query("DELETE FROM timetable WHERE channel = @channel:uuid;", substitutionValues: {'channel': channel.channelid});
