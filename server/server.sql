@@ -1,5 +1,5 @@
 --Init
-SET client_min_messages TO WARNING; -- Less talk please.
+-- SET client_min_messages TO WARNING; -- Less talk please.
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
@@ -41,8 +41,6 @@ CREATE TABLE Channel (
                          imageUrl TEXT,
                          FOREIGN KEY (channelid) REFERENCES Account(uid),
                          FOREIGN KEY (category) REFERENCES Category(category),
-
-    -- UNIQUE(channelName),
                          PRIMARY KEY (channelid)
 );
 
@@ -93,28 +91,6 @@ INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Alen'),'KodS
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Andin'),'RockPodden','Rock','t');
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Tomas'),'DansPodden','Jazz','t');
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Henning'),'FlyttPodden','Pop','t');
---SELECT * FROM Account;
-
-CREATE FUNCTION channel_update()
-    RETURNS trigger AS $$
-BEGIN
-    IF NOT EXISTS (SELECT * FROM Channel WHERE channelid = NEW.channelid) THEN
-        INSERT INTO Channel (channelid,channelname,category,isonline) VALUES (NEW.channelid,NEW.channelname,NEW.category,TRUE);
-    ELSE
-        UPDATE Channel SET isonline = true, channelname = NEW.channelname, category = NEW.category WHERE channelid = NEW.channelid;
-    END IF;
-    RETURN OLD;
-END;
-$$
-    LANGUAGE 'plpgsql';
-
-CREATE VIEW channelview AS
-SELECT * FROM Channel;
-
-CREATE TRIGGER channelTrigger
-    INSTEAD OF INSERT ON channelview
-    FOR EACH ROW
-EXECUTE PROCEDURE channel_update();
 
 -- INSERT INTO channelview VALUES('1','Rocka på','Rock',false);
 -- SELECT * FROM Channel;

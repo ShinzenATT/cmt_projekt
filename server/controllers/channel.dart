@@ -30,7 +30,7 @@ class ChannelController {
   /// Adds a channel to the database where a db trigger handles if a new is
   /// to be made or updates a existing one.
   ///
-  /// **Request Body** a [QueryModel] that contains channelname, uid and category.
+  /// **Request Body** a [ChannelDataModel] that contains channelname, uid and category.
   ///
   /// **Response Body** a [ChannelDataModel] that contains the channel without account info.
   ///
@@ -38,16 +38,16 @@ class ChannelController {
   /// 400 when the request body doesn't contain the expected values &
   /// 404 when uid doesn't match an account.
   static addChannel(HttpRequest req, HttpResponse res) async {
-    final QueryModel body;
+    final ChannelDataModel body;
     final Map<String, dynamic> data;
 
     try {
-      body = QueryModel.fromJson(await req.bodyAsJsonMap);
-      await db.createChannel(body.channelname!, body.uid!, body.category!);
-      data = await db.getChannel(body.uid!);
+      body = ChannelDataModel.parseMap(await req.bodyAsJsonMap);
+      await db.createChannel(body);
+      data = await db.getChannel(body.channelid);
     }
     on PostgreSQLException catch (e){ // when uid does not match an account
-      logger.e(e.message, [e, e.stackTrace]);
+      logger.e(e.message, e);
       res.statusCode = HttpStatus.notFound;
       return e.message;
     }

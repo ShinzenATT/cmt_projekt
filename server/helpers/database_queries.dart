@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:postgres/postgres.dart';
 
@@ -60,9 +61,44 @@ class DatabaseQueries {
   }
 
   /// creates a channel and attaches it to the user account with the supplies uid
-  Future<void> createChannel(String channelName, String uid, String category) async {
-      await connection.query(
-          "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
+  Future<void> createChannel(ChannelDataModel channel) async {
+    await connection.transaction((c) async {
+      await c.query(
+      "INSERT INTO channel VALUES("   // insert
+      "'${channel.channelid}',"
+      "'${channel.channelname}',"
+      "'${channel.category}',"
+      "true,"
+      "${channel.description != null? "'" + channel.description! + "'": null},"
+      "${channel.channelImageUrl != null ? "'" + channel.channelImageUrl!.path + "'": null}"
+      ") ON CONFLICT (channelid) DO "
+      "UPDATE SET "                  // update on conflict
+      "channelname = '${channel.channelname}',"
+      "category = '${channel.category}',"
+      "description = ${channel.description != null ? "'" + channel.description! + "'": null},"
+      "imageurl = ${channel.channelImageUrl != null ? "'" + channel.channelImageUrl!.path + "'": null},"
+      "isonline = true;"
+      );
+
+      await c.query("DELETE FROM timetable WHERE channel = @channel:uuid;", substitutionValues: {'channel': channel.channelid});
+
+      for(final t in channel.timetable){
+        await c.query("INSERT INTO timetable VALUES("
+            "@channel:uuid, "
+            "@start:timestamp, "
+            "@end:timestamp,"
+            "@desc:text"
+            ");",
+            substitutionValues: {
+              'channel': channel.channelid,
+              'start': t.startTime,
+              'end': t.endTime,
+              'desc': t.description
+        });
+      }
+    });
+
+
   }
 
   /// Gets a list of available channels that are live
