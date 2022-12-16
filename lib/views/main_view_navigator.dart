@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/models/navigation_model.dart';
 import 'package:cmt_projekt/widgets/comment_app_bar.dart';
 import 'package:cmt_projekt/widgets/comment_nav_bar.dart';
-import 'package:cmt_projekt/models/tab_navigator.dart';
+import 'package:cmt_projekt/models/tab_navigator_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/navigation_vm.dart';
