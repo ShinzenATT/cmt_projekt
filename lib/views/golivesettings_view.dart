@@ -1,6 +1,7 @@
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,40 @@ class GoLiveSettings extends StatelessWidget {
                       },
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: context.watch<MainViewModel>().channelDescription,
+                      decoration: const InputDecoration(
+                        labelText: 'Kanalens Beskrvning',
+                        suffixIcon: Icon(Icons.description_outlined)
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column( children: [
+                            TextFormField(
+                              readOnly: true,
+
+                              onTap: (){ showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime.now().add(const Duration(days: 365))
+                              ); },
+                              decoration: const InputDecoration(
+                                labelText: "Start Datum",
+                                suffixIcon: Icon(Icons.access_time_outlined)
+                              ),
+                            )
+                          ],),
+                      ),
+                    )
+                  )
                 ],
               ),
               SizedBox(

@@ -59,6 +59,11 @@ class MainViewModel with ChangeNotifier {
   DatabaseApi get client => _mainModel.databaseAPI;
 
   TextEditingController get channelName => _mainModel.channelName;
+  TextEditingController get channelDescription => _mainModel.channelDescription;
+  DateTime get startTimestamp => _mainModel.startTimestamp;
+  set startTimestamp (DateTime e) {_mainModel.startTimestamp = e;}
+  DateTime? get endTimestamp => _mainModel.endTimestamp;
+  TextEditingController get timetableDescription => _mainModel.timetableDescription;
 
   void setChannelSettings() {
     Prefs().storedData.setString("channelName", channelName.value.text);
