@@ -48,7 +48,7 @@ class WebProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getUsername().toString(),
+                      context.read<MainVM>().getUsername().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -68,7 +68,7 @@ class WebProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getEmail().toString(),
+                      context.read<MainVM>().getEmail().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -88,7 +88,7 @@ class WebProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getPhone().toString(),
+                      context.read<MainVM>().getPhone().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),

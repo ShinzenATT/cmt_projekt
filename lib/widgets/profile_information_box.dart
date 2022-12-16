@@ -2,9 +2,9 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-///Widget for the profile page.
-class AppProfileWidget extends StatelessWidget {
-  const AppProfileWidget({Key? key}) : super(key: key);
+///Widget for profile information.
+class ProfileInformation extends StatelessWidget {
+  const ProfileInformation({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getUsername().toString(),
+                      context.read<MainVM>().getUsername().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -67,7 +67,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getEmail().toString(),
+                      context.read<MainVM>().getEmail().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),
@@ -87,7 +87,7 @@ class AppProfileWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      context.read<MainViewModel>().getPhone().toString(),
+                      context.read<MainVM>().getPhone().toString(),
                       style: const TextStyle(
                         fontSize: 18,
                       ),

@@ -1,62 +1,18 @@
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
-import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
 ///The page responsible for displaying what the viewer sees when listening to a stream.
-class AppListenPage extends StatelessWidget {
-  const AppListenPage({Key? key}) : super(key: key);
+class ListenChannelView extends StatelessWidget {
+  const ListenChannelView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> willPopCallback() async {
-      context.read<StreamViewModel>().closeClient();
-      return context.read<MainViewModel>().willPopCallback();
-    }
-
-    return WillPopScope(
-      onWillPop: willPopCallback,
-      child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(80.0),
-            child: AppBar(
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                      Colors.greenAccent,
-                      Colors.blueAccent,
-                    ])),
-              ),
-              elevation: 0,
-              centerTitle: true,
-              title: Column(
-                children: [
-                  Text(
-                    context.read<MainViewModel>().title.toUpperCase(),
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    'Din moderna radioapp',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-            ),
-          ),
-          body: buildStream(context)),
-    );
-  }
-
-  Widget buildStream(BuildContext context) {
     return StreamBuilder(
-      stream: context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
-      initialData:
-          QueryModel.fromJson({"total": 0, "channelname": "", "usename": ""}),
+      stream: context.watch<StreamVM>().streamModel.streamClient!.msgController.stream,
+      initialData: QueryModel.fromJson({"total": 0, "channelname": "", "usename": ""}),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -181,7 +137,8 @@ class AppListenPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ))
+                            ),
+                        ),
                       ],
                     ),
                   ),

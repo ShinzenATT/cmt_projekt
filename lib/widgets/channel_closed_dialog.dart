@@ -1,9 +1,10 @@
+import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cmt_projekt/view_models/stream_vm.dart';
+import 'package:cmt_projekt/widgets/dialog_timer.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
 
-import '../view_models/main_vm.dart';
-import '../view_models/stream_vm.dart';
-import 'dialog_timer.dart';
 
 /// A dialog that shows up when a stream has ended. It has a timer and 2 buttons for navigation.
 class ChannelClosedDialog extends StatelessWidget{
@@ -12,9 +13,12 @@ class ChannelClosedDialog extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    NavVM navVM = Provider.of<NavVM>(context);
+
     return Dialog(
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0))
+          borderRadius: BorderRadius.all(Radius.circular(10.0))
       ),
       child: Container(
         height: MediaQuery.of(context).size.height*0.4,
@@ -53,10 +57,9 @@ class ChannelClosedDialog extends StatelessWidget{
             const DialogTimer(time: 10,), //change textstyle in widget
             ElevatedButton(
               onPressed: () {
-                context.read<StreamViewModel>().closeClient();
-                context.read<MainViewModel>().willPopCallback();
-                Navigator.pop(context);
-                Navigator.pop(context);
+                context.read<StreamVM>().closeClient();
+                Navigator.of(context).pop();
+                navVM.pushView(constants.channels);
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black45),
@@ -71,7 +74,8 @@ class ChannelClosedDialog extends StatelessWidget{
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
+                navVM.pushView(constants.channels);
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black45),
@@ -89,5 +93,4 @@ class ChannelClosedDialog extends StatelessWidget{
       ),
     );
   }
-
 }
