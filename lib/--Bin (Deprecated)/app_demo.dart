@@ -1,3 +1,8 @@
+/// !!! DEPRECATED !!!
+/// Created by previous group and moved to deprecated to clean up
+/// project structure.
+/*
+
 import 'package:cmt_projekt/apis/prefs.dart';
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/--Bin%20(Deprecated)/demo_stream_vm.dart';
@@ -8,10 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
-/// !!! DEPRECATED !!!
-/// Created by previous group and moved to deprecated to clean up
-/// project structure.
-/*
+
 class StreamLoop extends StatefulWidget {
   const StreamLoop({Key? key}) : super(key: key);
 

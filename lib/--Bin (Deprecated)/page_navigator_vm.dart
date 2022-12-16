@@ -1,3 +1,8 @@
+/// !!! DEPRECATED !!!
+/// This class seemed a bit unnecessary since it only contains a final map
+/// (and a getter function for said map) and is never changed. The map has
+/// instead been added to the file constants.dart
+/*
 
 import 'package:cmt_projekt/--Bin%20(Deprecated)/app_demo.dart';
 
@@ -9,11 +14,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart' as constant;
 
 
-/// !!! DEPRECATED !!!
-/// This class seemed a bit unnecessary since it only contains a final map
-/// (and a getter function for said map) and is never changed. The map has
-/// instead been added to the file constants.dart
-/*
+
 class PageNavigator {
   final Map _routes = <String, WidgetBuilder>{
     constant.home: (BuildContext context) =>

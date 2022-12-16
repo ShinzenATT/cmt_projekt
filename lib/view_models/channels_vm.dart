@@ -4,7 +4,7 @@ import '../models/query_model.dart';
 class ChannelsVM {
 
   ///Api for communicating with the database
-  DatabaseApi _databaseAPI = DatabaseApi();
+  final DatabaseApi _databaseAPI = DatabaseApi();
 
   List<QueryModel> _channels = [];
 
