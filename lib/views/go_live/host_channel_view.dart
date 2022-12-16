@@ -1,11 +1,9 @@
-import 'package:cmt_projekt/apis/navigation_handler.dart';
 import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
+import 'package:cmt_projekt/views/go_live/go_live_settings_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../view_models/navigation_vm.dart';
-import 'package:cmt_projekt/constants.dart' as constants;
 
 
 ///The page responsible for displaying what the host sees when streaming.
@@ -187,7 +185,10 @@ class _HostChannelViewState extends State<HostChannelView> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          Provider.of<NavVM>(context).pushView(constants.goLive);
+          showDialog(
+              context: context,
+              builder: const GoLiveSettings().build
+          );
         },
         child: const Text("Lägg till information"),
       ),

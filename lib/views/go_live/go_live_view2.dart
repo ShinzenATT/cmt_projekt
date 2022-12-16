@@ -105,9 +105,8 @@ class GoLiveView2 extends StatelessWidget {
                   if (value) {
                     showDialog(
                     context: context,
-                    builder: (context) {
-                      return const GoLiveSettings();
-                    })
+                    builder: const GoLiveSettings().build
+                    )
                   }
                 });
                 // context.read<StreamViewModel>().startup(context);

@@ -93,7 +93,7 @@ class StreamClient {
   /// Sends a json message to the server with intent to update channel info.
   sendUpdate(StreamMessage msg){
     msg.intent = "u";
-    client.sink.add(jsonEncode(msg));
+    client.sink.add(jsonEncode(msg.toMap()));
   }
 
   /// Shows a [ChannelClosedDialog]
