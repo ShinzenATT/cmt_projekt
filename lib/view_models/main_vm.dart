@@ -100,18 +100,30 @@ class MainVM with ChangeNotifier {
 
   /// Tries to create account
   Future<void> tryCreateAccount(context, eMail, username, phoneNr, password, password2) async {
+    RegExp exp1 = RegExp(r"[^\s]{8,50}$");
+    if (!exp1.hasMatch(password)) {
+      await ErrorDialogBox().pop(
+          context,
+          "Lösenorden måste var mellan 8 och 50 tecken långt och får ej innehålla några blanksteg"
+      );
+      return;
+    }
     // Check so that passwords matches
     if (password != password2) {
       await ErrorDialogBox().pop(
           context,
-          "Lösenorden stämmer inte överens");
+          "Lösenorden stämmer inte överens"
+      );
+      return;
     }
     // Check that phone number is a ten digit number
-    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
-    if (!exp.hasMatch(phoneNr)) {
+    RegExp exp2 = RegExp(r"(?<!\d)\d{10}(?!\d)");
+    if (!exp2.hasMatch(phoneNr)) {
       await ErrorDialogBox().pop(
           context,
-          "Telefonnumret behöver vara på 10 siffror");
+          "Telefonnumret behöver vara på 10 siffror"
+      );
+      return;
     }
     setUpResponseStream(context);
     createAccount(context, eMail, username, phoneNr, password);
