@@ -5,15 +5,19 @@ import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import '../../view_models/navigation_vm.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 
-///First version of loginpage for the app.
+/// The LoginView ///
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    // "Shortcuts" to access the providers later in the code
     MainVM mainVM = Provider.of<MainVM>(context, listen: true);
     NavVM navVM = Provider.of<NavVM>(context, listen: false);
 
+    /// FormState key and variables to handle the user input
+    final _signInFormKey = GlobalKey<FormState>();
     String? password;
     String? login;
 
@@ -22,7 +26,7 @@ class LoginView extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Form(
-          key: mainVM.signInFormKey,
+          key: _signInFormKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             //All children are wrapped in flexible to adjust when keyboard is used
@@ -62,7 +66,7 @@ class LoginView extends StatelessWidget {
                         onSaved: (value) => login = value,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'You have to provide a login';
+                            return 'Du måste ange E-post eller telefonnummer';
                           }
                           return null;
                         },
@@ -78,7 +82,7 @@ class LoginView extends StatelessWidget {
                         onSaved: (value) => password = value,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'You have to provide a password';
+                            return 'Du måste ange lösenord';
                           }
                           return null;
                         },
@@ -136,8 +140,8 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            if(mainVM.signInFormKey.currentState!.validate()) {
-                              mainVM.signInFormKey.currentState!.save();
+                            if(_signInFormKey.currentState!.validate()) {
+                              _signInFormKey.currentState!.save();
                               mainVM.loginAttempt(context, login, password);
                             }
 

@@ -50,6 +50,9 @@ class MainVM with ChangeNotifier {
   /// Settings & Helpers ///
   bool get isSignedIn => user.isSignedIn;
 
+  /// Check login
+  // Performed every time the app is started to check phone storage for
+  // already logged in user.
   void checkLogIn() {
     if (Prefs().storedData.getString("email") != null) {
       user.setUserFromPrefs();
@@ -57,7 +60,27 @@ class MainVM with ChangeNotifier {
     }
   }
 
-  /// Guest log in ///
+  /// Log out
+  void logOut(context) {
+    Prefs().storedData.clear();
+    user.logOut();
+    Provider.of<NavVM>(context, listen: false).loggedOut();
+    notifyListeners();
+  }
+
+
+  /// LoginView & CreateAccountView data & methods///
+
+  // Controls the show/hide password feature.
+  bool showPassword = false;
+  void toggleShowPassword() {
+    showPassword = !showPassword;
+    notifyListeners();
+  }
+
+  UserData get newUserData => user.newUser;
+
+  /// Guest log in
   void guestSign(context) async {
     Prefs().storedData.setString("uid", Uri().toString());
     Prefs().storedData.get("uid");
@@ -66,21 +89,61 @@ class MainVM with ChangeNotifier {
     Provider.of<NavVM>(context, listen: false).selectTab(TabId.home);
   }
 
-  /// Log in ///
-  final signInFormKey = GlobalKey<FormState>();
-
+  /// Tries to login
   void loginAttempt(context, login, password) {
-    setUpResponseStreamLogin(context);
+    setUpResponseStream(context);
     dbClient.postAndSaveToStreamCtrl(
         '/account/login',
         QueryModel.login(email: login!, password: password!)
     );
-
   }
 
-  /// Database response stream for Login ///
-  //Initiates a function that listens for new values
-  Future<void> setUpResponseStreamLogin(context) async {
+  /// Tries to create account
+  Future<void> tryCreateAccount(context, eMail, username, phoneNr, password, password2) async {
+    // Check so that passwords matches
+    if (password != password2) {
+      await ErrorDialogBox().pop(
+          context,
+          "Lösenorden stämmer inte överens");
+    }
+    // Check that phone number is a ten digit number
+    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
+    if (!exp.hasMatch(phoneNr)) {
+      await ErrorDialogBox().pop(
+          context,
+          "Telefonnumret behöver vara på 10 siffror");
+    }
+    setUpResponseStream(context);
+    createAccount(context, eMail, username, phoneNr, password);
+  }
+
+  /// Creates the new account
+  void createAccount(context, eMail, username, phoneNr, password) async {
+    var hashedPassword = DBCrypt().hashpw(password, DBCrypt().gensalt());
+    try {
+      await dbClient.postAndSaveToStreamCtrl(
+        '/account/register',
+        QueryModel.account(
+          email: eMail,
+          phone: phoneNr,
+          password: hashedPassword,
+          username: username,
+        ),
+      );
+    } on HttpException catch(e){
+      await ErrorDialogBox().pop(context, e.message);
+    } on TimeoutException {
+      await ErrorDialogBox().pop(context, 'Kunde inte nå servern');
+    } catch(e){
+      constants.logger.i(e.runtimeType);
+      await ErrorDialogBox().pop(context, e.toString());
+    }
+  }
+
+  /// Database response stream for login and create account
+  // Initiates a method that listens for new values and if it succeeds saves the
+  // credentials and redirects the app to the homeView.
+  Future<void> setUpResponseStream(context) async {
     dbClient.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
       await Prefs().storedData.setString("email", message.email!);
@@ -96,24 +159,8 @@ class MainVM with ChangeNotifier {
     });
   }
 
-  /// Log out! ///
-  void logOut(context) {
-    Prefs().storedData.clear();
-    user.logOut();
-    Provider.of<NavVM>(context, listen: false).loggedOut();
-    notifyListeners();
-  }
 
-
-  // For CreateAccountView & LoginView
-  bool showPassword = false; // Controlls the show/hide password feature.
-  UserData get newUserData => user.newUser;
-  void toggleShowPassword() {
-    showPassword = !showPassword;
-    notifyListeners();
-  }
-
-  // For ChannelView
+  /// ChannelView ///
   Map<String, String> get categoryImageList => app.categoryAndStandardImg;
   void setCategory(var item) => _category = item;
   String? get category => _category;
@@ -136,69 +183,6 @@ class MainVM with ChangeNotifier {
     return appModel.categoryAndStandardImg.keys.map(categoryItem).toList();
   }
 
-
-  /// Create Account Helpers ///
-  /// Check so that passwords matches
-  Future<void> comparePw(var context) async {
-    if (newUserData.password == newUserData.password2) {
-      checkPhonenumber(context);
-    } else {
-      await ErrorDialogBox().pop(
-          context,
-          "Lösenorden stämmer inte överens"
-      );
-    }
-  }
-
-  /// Check that phone number is a ten digit number
-  Future<void> checkPhonenumber(var context) async {
-    RegExp exp = RegExp(r"(?<!\d)\d{10}(?!\d)");
-    if (exp.hasMatch(newUserData.phoneNr!)) {
-      setUpResponseStreamCA(context);
-      createAccount(context);
-    } else {
-      await ErrorDialogBox().pop(
-          context,
-          "Telefonnumret behöver vara på 10 siffror"
-      );
-    }
-  }
-
-  /// Create the new account ///
-  void createAccount(var ctx) async {
-    var hashedPassword = DBCrypt().hashpw(newUserData.password!, DBCrypt().gensalt());
-    try {
-      await dbClient.postAndSaveToStreamCtrl(
-        '/account/register',
-        QueryModel.account(
-          email: newUserData.eMail,
-          phone: newUserData.phoneNr,
-          password: hashedPassword,
-          username: newUserData.userName,
-        ),
-      );
-    } on HttpException catch(e){
-      await ErrorDialogBox().pop(ctx, e.message);
-    } on TimeoutException {
-      await ErrorDialogBox().pop(ctx, 'Kunde inte nå servern');
-    } catch(e){
-      constants.logger.i(e.runtimeType);
-      await ErrorDialogBox().pop(ctx, e.toString());
-    }
-  }
-
-  ///Initiates a function that runs when a new value comes from the response stream for the client.
-  void setUpResponseStreamCA(context) {
-    dbClient.streamController.stream.listen((QueryModel message) async {
-      await Prefs().storedData.setString("uid", message.uid!);
-      await Prefs().storedData.setString("email", message.email!);
-      await Prefs().storedData.setString("phone", message.phone!);
-      await Prefs().storedData.setString("username", message.username!);
-
-      user.setNewUser();
-      dbClient.loadOnlineChannels();
-    });
-  }
 
   ///Returns the users email.
   String? getEmail() {
