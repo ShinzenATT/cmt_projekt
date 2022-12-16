@@ -2,62 +2,30 @@ import 'package:cmt_projekt/apis/navigation_handler.dart';
 import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
-import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../view_models/navigation_vm.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
+
 
 ///The page responsible for displaying what the host sees when streaming.
-class AppHostPage extends StatefulWidget {
-  const AppHostPage({Key? key}) : super(key: key);
+class HostChannelView extends StatefulWidget {
+  const HostChannelView({Key? key}) : super(key: key);
 
   @override
-  _AppHostPageState createState() => _AppHostPageState();
+  _HostChannelViewState createState() => _HostChannelViewState();
 }
 
-class _AppHostPageState extends State<AppHostPage> {
-  Future<bool> willPopCallback() async {
-    context.read<StreamViewModel>().closeClient();
-    return context.read<MainViewModel>().willPopCallback();
-  }
+class _HostChannelViewState extends State<HostChannelView> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: willPopCallback,
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80.0),
-          child: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: Column(
-              children: [
-                Text(
-                  context.read<MainViewModel>().title.toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  'Din moderna radioapp',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                    Colors.greenAccent,
-                    Colors.blueAccent,
-                  ])),
-            ),
-          ),
-        ),
-        body: StreamBuilder(
-            stream:
-                context.watch<StreamViewModel>().smodel.streamClient!.msgController.stream,
+
+    StreamVM streamVM = Provider.of<StreamVM>(context);
+
+    return Scaffold(
+      body: StreamBuilder(
+            stream: context.watch<StreamVM>().streamModel.streamClient!.msgController.stream,
             initialData: QueryModel.fromJson(
                 {"total": 0, "channelname": "", "username": ""}),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -188,40 +156,16 @@ class _AppHostPageState extends State<AppHostPage> {
               EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 20),
           child: FloatingActionButton(
             child: Icon(
-                context.watch<StreamViewModel>().smodel.recorder!.isRecording
+                streamVM.streamModel.recorder!.isRecording
                     ? Icons.mic
                     : Icons.mic_off),
             onPressed: () {
-              context.read<StreamViewModel>().getRecFn();
+              streamVM.getRecFn();
             },
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Sök',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.house),
-              label: 'Hem',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.mic_none),
-              label: 'Gå live!',
-            ),
-          ],
-          onTap: (value) {
-            setState(() {
-              NaviHandler().setContext(context);
-              NaviHandler().changePage(value);
-            });
-          },
-          currentIndex: NaviHandler().index,
-        ),
-      ),
-    );
+      );
   }
 
   Widget descriptionBox(BuildContext context) {
@@ -237,13 +181,13 @@ class _AppHostPageState extends State<AppHostPage> {
             ),
           ));
     } else {
-
      */
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          context.read<MainViewModel>().channelSettings(context);
+          Provider.of<NavVM>(context).pushView(constants.goLive);
         },
         child: const Text("Lägg till information"),
       ),
@@ -251,7 +195,7 @@ class _AppHostPageState extends State<AppHostPage> {
   }
 
   Widget liveNotification(BuildContext context) {
-    if (!context.watch<StreamViewModel>().smodel.recorder!.isRecording) {
+    if (!context.watch<StreamVM>().streamModel.recorder!.isRecording) {
       return const Text(
         'Sändningen är pausad',
         style: TextStyle(

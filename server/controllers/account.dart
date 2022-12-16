@@ -54,26 +54,31 @@ class AccountController {
     final QueryModel body;
     final Map<String, dynamic>? data;
 
-    try{
+    try {
       body = QueryModel.fromJson(await req.bodyAsJsonMap);
       data = await db.compareCredentials(body.email ?? body.phone!, body.password!);
+
+      // when credentials don't match, check mail and phone number
+      if (data == null) {
+        res.statusCode = HttpStatus.notFound;
+        if (await db.checkLogin(body.email ?? body.phone!)) {
+          return 'Lösenordet stämmer ej överens med den angivna mejladressen/mobilnumret';
+        }
+        else {
+          return 'Inget konto är kopplat till den angivna mejladressen/mobilnumret';
+        }
+      }
     }
-    on PostgreSQLException catch (e){// 500 on some db error
+    on PostgreSQLException catch (e) { // 500 on some db error
       logger.e(e.message, [e, e.stackTrace]);
       res.statusCode = HttpStatus.internalServerError;
       return null;
     }
-    catch(e) { // when body doesn't contains email/phone and password
+    catch (e) { // when body doesn't contains email/phone and password
       logger.e(e);
       res.statusCode = HttpStatus.badRequest;
       return e.toString();
     }
-
-    if(data == null){ // when credentials don't match
-      res.statusCode = HttpStatus.notFound;
-      return 'credentials mismatch';
-    }
-
     return data;
   }
 }
