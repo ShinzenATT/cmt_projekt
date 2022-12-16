@@ -31,7 +31,7 @@ class CommentAppBar extends StatelessWidget implements PreferredSizeWidget {
               if(navVM.canPop){
                 return BackButton(
                   onPressed: () {
-                    navVM.goBack();
+                    navVM.goBack(context);
                   },
                 );
               } else {

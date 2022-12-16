@@ -21,6 +21,7 @@ class _MainViewNavigatorState extends State<MainViewNavigator> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
         onWillPop: () => Provider.of<NavVM>(context).onWillPop(),
         child: Scaffold(

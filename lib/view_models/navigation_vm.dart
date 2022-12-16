@@ -1,12 +1,18 @@
 import 'package:cmt_projekt/models/navigation_model.dart';
+import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
+import 'package:provider/provider.dart';
+
+import 'main_vm.dart';
 
 /// The NavigationViewModel is used to deliver, modify and perform operations
 /// on all data concerning the apps navigation, and the building of widgets
 /// that are sensitive to that data. Its purpose is to take care of everything
 /// that is unnecessary for the views to do.
 class NavVM with ChangeNotifier{
+
+  NavVM(context) { startup(context); }
 
   /// NavigationModel ///
   // For all persistent navigation data
@@ -40,10 +46,14 @@ class NavVM with ChangeNotifier{
   /// Navigate back by popping
   // For popping to previous route of the currently active navigator but it
   // also makes sure that the streaming channel gets closed down when the
-  // BackButton is pressed.
-  void goBack() {
+  // BackButton is pressed from the hostChannelView.
+  void goBack(context) {
     currentNavKey.currentState!.pop();
     if(currentTab == TabId.welcome && !canPop) { showAppBar = false; }
+    if(currentTab == TabId.live &&
+          Provider.of<StreamVM>(context, listen: false).streamModel.isInitiated) {
+      Provider.of<StreamVM>(context, listen: false).closeClient();
+    }
     notifyListeners();
   }
 
@@ -56,7 +66,7 @@ class NavVM with ChangeNotifier{
 
   /// Sets currently active tab
   void selectTab(TabId tabId) {
-    if(tabId == TabId.search) { return; }     // TODO: Implement search tab
+    if(tabId == TabId.search) { return; }  // TODO: Implement search tab
     if(tabId == _currentTab) {
       navKeys[tabId]!.currentState!.popUntil((route) => route.isFirst);
     } else {
@@ -84,6 +94,13 @@ class NavVM with ChangeNotifier{
       }
     }
     return isFirstRouteInCurrentTab;
+  }
+
+  void startup(context) {
+    if(Provider.of<MainVM>(context, listen: false).isSignedIn) {
+      showAppBar = true;
+      selectTab(TabId.home);
+    }
   }
 
   /// Logged out ///

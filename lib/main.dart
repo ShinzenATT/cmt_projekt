@@ -7,17 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'models/navigation_model.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Prefs();
-  //NaviHandler();
   await Prefs().setUp();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MainVM()),
-        ChangeNotifierProvider(create: (_) => NavVM()),
+        ChangeNotifierProvider(create: (context) => NavVM(context)),
         ChangeNotifierProvider(create: (_) => StreamVM()),
       ],
       child: const MyApp(),
