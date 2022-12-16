@@ -38,7 +38,7 @@ class StreamMessage {
   Map<String, dynamic> toMap() => {
         'uid': uid,
         'intent': intent,
-        'hostId': hostId,
+        'host_id': hostId,
         'channel_type': channelType,
         'channel_data': channelData?.toMap()
       };
@@ -47,7 +47,7 @@ class StreamMessage {
   StreamMessage.parseMap(Map<String, dynamic> json)
       : uid = json['uid'],
         intent = json['intent'],
-        hostId = json['hostId'],
-        channelType = json['channelType'],
+        hostId = json['host_id'],
+        channelType = json['channel_type'],
         channelData = json['channel_data'] != null ? ChannelDataModel.parseMap(json['channel_data']): null;
 }

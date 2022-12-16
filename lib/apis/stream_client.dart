@@ -31,19 +31,24 @@ class StreamClient {
 
     if (Prefs().getIntent() == "j") { // sends a json msg to server on which host to join/listen
       debugPrint(Prefs().getIntent().toString());
-      client.sink.add(jsonEncode(StreamMessage.join(
-          uid: Prefs().storedData.get("uid").toString(),
-          channelType: "a",
-          hostId: Prefs().storedData.get("joinChannelID").toString())));
+      client.sink.add(jsonEncode(
+          StreamMessage.join(
+              uid: Prefs().storedData.get("uid").toString(),
+              channelType: "a",
+              hostId: Prefs().storedData.get("joinChannelID").toString()
+          ).toMap()
+      ));
     } else { // sends a json msg to server with intent to host
-      client.sink.add(jsonEncode(StreamMessage.host(
-        channelType: "a",
-        channelData: ChannelDataModel(
-            channelname: Prefs().storedData.getString("channelName")!,
-            channelid: Prefs().storedData.get("uid").toString(),
-            category: Prefs().storedData.getString("category")!
-        ),
-      )));
+      client.sink.add(jsonEncode(
+          StreamMessage.host(
+            channelType: "a",
+            channelData: ChannelDataModel(
+                channelname: Prefs().storedData.getString("channelName")!,
+                channelid: Prefs().storedData.get("uid").toString(),
+                category: Prefs().storedData.getString("category")!
+            ),
+          ).toMap()
+      ));
     }
 
     // when the stream gets recording data then send it to the stream server
