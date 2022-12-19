@@ -25,7 +25,7 @@ class StreamClient {
       StreamController<ChannelDataModel>.broadcast();
 
   /// Initiates the Flutter sound player and setups a connection to the server
-  StreamClient(FlutterSoundPlayer? player) {
+  StreamClient({FlutterSoundPlayer? player, ChannelDataModel? channel}) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
@@ -42,11 +42,7 @@ class StreamClient {
       client.sink.add(jsonEncode(
           StreamMessage.host(
             channelType: "a",
-            channelData: ChannelDataModel(
-                channelname: Prefs().storedData.getString("channelName")!,
-                channelid: Prefs().storedData.get("uid").toString(),
-                category: Prefs().storedData.getString("category")!
-            ),
+            channelData: channel!,
           ).toMap()
       ));
     }

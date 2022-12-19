@@ -78,7 +78,7 @@ class GoLiveSettings extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
-                          //controller: mainVM.channelDescription,
+                          controller: mainVM.app.channelDescription,
                           decoration: const InputDecoration(
                             labelText: 'Kanalens Beskrvning',
                             suffixIcon: Icon(Icons.description_outlined)
@@ -97,13 +97,19 @@ class GoLiveSettings extends StatelessWidget {
                                 ),
                                 TextFormField(
                                   readOnly: true,
+                                  controller: mainVM.app.timetableStartDateStr,
 
-                                  onTap: (){ showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now().add(const Duration(days: 365))
-                                  ); },
+                                  onTap: () async {
+                                    final d = await showDatePicker(
+                                        context: context,
+                                        initialDate: mainVM.timetableStartTimestamp,
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.now().add(const Duration(days: 365))
+                                      );
+                                    if(d != null) {
+                                      mainVM.timetableStartTimestamp  = d;
+                                    }
+                                  },
                                   decoration: const InputDecoration(
                                     labelText: "Start Datum",
                                     suffixIcon: Icon(Icons.event)
@@ -111,26 +117,36 @@ class GoLiveSettings extends StatelessWidget {
                                 ),
                                 TextFormField(
                                   readOnly: true,
+                                  controller: mainVM.app.timetableStartTimeStr,
 
-                                  onTap: (){ showTimePicker(
+                                  onTap: () async {
+                                    final t = await showTimePicker(
                                       context: context,
-                                      initialTime: TimeOfDay.now()
-                                  ); },
+                                      initialTime: mainVM.timetableStartTime
+                                    );
+                                    if(t != null){
+                                      mainVM.timetableStartTime = t;
+                                    }
+                                  },
                                   decoration: const InputDecoration(
                                       labelText: "Start Tid",
                                       suffixIcon: Icon(Icons.access_time_outlined)
                                   ),
                                 ),
-                                const Divider(thickness: 1),
                                 TextFormField(
                                   readOnly: true,
-
-                                  onTap: (){ showDatePicker(
+                                  controller: mainVM.app.timetableEndDateStr,
+                                  onTap: () async {
+                                    final v = await showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime.now(),
                                       lastDate: DateTime.now().add(const Duration(days: 365))
-                                  ); },
+                                    );
+                                    if(v != null){
+                                      mainVM.timetableEndTimestamp = v;
+                                    }
+                                  },
                                   decoration: const InputDecoration(
                                       labelText: "Slut Datum",
                                       suffixIcon: Icon(Icons.event)
@@ -138,24 +154,30 @@ class GoLiveSettings extends StatelessWidget {
                                 ),
                                 TextFormField(
                                   readOnly: true,
-
-                                  onTap: (){ showTimePicker(
+                                  controller: mainVM.app.timetableEndTimeStr,
+                                  onTap: () async {
+                                    final v = await showTimePicker(
                                       context: context,
-                                      initialTime: TimeOfDay.now()
-                                  ); },
+                                      initialTime: mainVM.timetableEndTime
+                                    );
+                                    if(v != null){
+                                      mainVM.timetableEndTime = v;
+                                    }
+                                  },
                                   decoration: const InputDecoration(
                                       labelText: "Slut Tid",
                                       suffixIcon: Icon(Icons.access_time_outlined)
                                   ),
                                 ),
                                 TextFormField(
+                                  controller: mainVM.app.timetableDescription,
                                   decoration: const InputDecoration(
                                     labelText: "Tabellrads beskrivning",
                                     suffixIcon: Icon(Icons.description)
                                   )
                                 ),
                                 ElevatedButton(
-                                    onPressed: (){},
+                                    onPressed: () => mainVM.addToTimetable(),
                                     child: const Text("Lägg till"),
                                     style: ButtonStyle(
                                       minimumSize: MaterialStateProperty.all(const Size.fromHeight(40)),
@@ -165,6 +187,30 @@ class GoLiveSettings extends StatelessWidget {
                                 const Text(
                                     "Befintlig Tidstabell",
                                     style: TextStyle(fontSize: 16),
+                                ),
+                                ListView.builder(
+                                    itemCount: context.watch<MainVM>().app.timetable.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (ctx, i) => Card(
+                                      elevation: 4,
+                                      margin: const EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          Text(mainVM.app.timetable[i].startTime.toString()),
+                                          Text(mainVM.app.timetable[i].endTime.toString()),
+                                          Text(mainVM.app.timetable[i].description.toString()),
+                                          ElevatedButton(
+                                              onPressed: (){
+                                                mainVM.app.timetable.removeAt(i);
+                                              },
+                                              child: const Icon(Icons.delete),
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                              )
+                                          )
+                                        ],
+                                      )
+                                    )
                                 )
                               ],)
                           )
@@ -182,9 +228,9 @@ class GoLiveSettings extends StatelessWidget {
                       mainVM.setChannelSettings();
                       Navigator.pop(context);
                       if(streamVM.streamModel.isInitiated){
-                        streamVM.sendUpdate(context);
+                        streamVM.sendUpdate(context, mainVM.channelData);
                       } else {
-                        streamVM.startup(context);
+                        streamVM.startup(context, mainVM.channelData);
                         Provider.of<NavVM>(context, listen: false).pushView(constants.hostChannel);
                       }
                     },
