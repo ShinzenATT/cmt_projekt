@@ -40,67 +40,137 @@ class GoLiveSettings extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: mainVM.channelName,
-                      decoration: const InputDecoration(
-                        labelText: 'Namn på radiokanal',
-                        suffixIcon: Icon(Icons.note_alt_outlined),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.8 - 130,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView(
+                        shrinkWrap: true,
+                        clipBehavior: Clip.hardEdge,
+                        children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: mainVM.channelName,
+                          decoration: const InputDecoration(
+                            labelText: 'Namn på radiokanal',
+                            suffixIcon: Icon(Icons.note_alt_outlined),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        labelText: 'Kategori',
-                        border: OutlineInputBorder(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            labelText: 'Kategori',
+                            border: OutlineInputBorder(),
+                          ),
+                          value: mainVM.category,
+                          isExpanded: true,
+                          validator: (value) => null,
+                          autovalidateMode: AutovalidateMode.always,
+                          items:
+                          mainVM.categoryToDropdownMenuItemList(),
+                          onChanged: (value) {
+                            mainVM.setCategory(value);
+                          },
+                        ),
                       ),
-                      value: mainVM.category,
-                      isExpanded: true,
-                      validator: (value) => null,
-                      autovalidateMode: AutovalidateMode.always,
-                      items:
-                      mainVM.categoryToDropdownMenuItemList(),
-                      onChanged: (value) {
-                        mainVM.setCategory(value);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      //controller: mainVM.channelDescription,
-                      decoration: const InputDecoration(
-                        labelText: 'Kanalens Beskrvning',
-                        suffixIcon: Icon(Icons.description_outlined)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          //controller: mainVM.channelDescription,
+                          decoration: const InputDecoration(
+                            labelText: 'Kanalens Beskrvning',
+                            suffixIcon: Icon(Icons.description_outlined)
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column( children: [
-                            TextFormField(
-                              readOnly: true,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column( children: [
+                                const Text(
+                                  "Uppdatera Tidstabellen",
+                                  style: TextStyle(fontSize: 16)
+                                ),
+                                TextFormField(
+                                  readOnly: true,
 
-                              onTap: (){ showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(const Duration(days: 365))
-                              ); },
-                              decoration: const InputDecoration(
-                                labelText: "Start Datum",
-                                suffixIcon: Icon(Icons.access_time_outlined)
-                              ),
-                            )
-                          ],),
-                      ),
-                    )
+                                  onTap: (){ showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime.now().add(const Duration(days: 365))
+                                  ); },
+                                  decoration: const InputDecoration(
+                                    labelText: "Start Datum",
+                                    suffixIcon: Icon(Icons.event)
+                                  ),
+                                ),
+                                TextFormField(
+                                  readOnly: true,
+
+                                  onTap: (){ showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now()
+                                  ); },
+                                  decoration: const InputDecoration(
+                                      labelText: "Start Tid",
+                                      suffixIcon: Icon(Icons.access_time_outlined)
+                                  ),
+                                ),
+                                const Divider(thickness: 1),
+                                TextFormField(
+                                  readOnly: true,
+
+                                  onTap: (){ showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime.now().add(const Duration(days: 365))
+                                  ); },
+                                  decoration: const InputDecoration(
+                                      labelText: "Slut Datum",
+                                      suffixIcon: Icon(Icons.event)
+                                  ),
+                                ),
+                                TextFormField(
+                                  readOnly: true,
+
+                                  onTap: (){ showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now()
+                                  ); },
+                                  decoration: const InputDecoration(
+                                      labelText: "Slut Tid",
+                                      suffixIcon: Icon(Icons.access_time_outlined)
+                                  ),
+                                ),
+                                TextFormField(
+                                  decoration: const InputDecoration(
+                                    labelText: "Tabellrads beskrivning",
+                                    suffixIcon: Icon(Icons.description)
+                                  )
+                                ),
+                                ElevatedButton(
+                                    onPressed: (){},
+                                    child: const Text("Lägg till"),
+                                    style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(const Size.fromHeight(40)),
+                                    ),
+                                ),
+                                const Divider(),
+                                const Text(
+                                    "Befintlig Tidstabell",
+                                    style: TextStyle(fontSize: 16),
+                                )
+                              ],)
+                          )
+                        )
+                      )
+                    ])
                   )
                 ],
               ),
