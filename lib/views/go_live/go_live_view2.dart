@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/buttons/gradient_elevated_button.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
-import 'go_live_settings_dialog.dart';
+import '../../widgets/go_live_settings_dialog.dart';
 
 class GoLiveView2 extends StatelessWidget {
   const GoLiveView2({Key? key}) : super(key: key);

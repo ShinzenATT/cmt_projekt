@@ -1,7 +1,7 @@
 import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
-import 'package:cmt_projekt/views/go_live/go_live_settings_dialog.dart';
+import 'package:cmt_projekt/widgets/go_live_settings_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
