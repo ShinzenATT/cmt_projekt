@@ -61,7 +61,7 @@ class AccountController {
       // when credentials don't match, check mail and phone number
       if (data == null) {
         res.statusCode = HttpStatus.notFound;
-        if (await db.checkLogin(body.email ?? body.phone!)) {
+        if (await db.accountExists(body.email ?? body.phone!)) {
           return 'Lösenordet stämmer ej överens med den angivna mejladressen/mobilnumret';
         }
         else {
