@@ -336,6 +336,8 @@ class MainVM with ChangeNotifier {
     notifyListeners();
   }
 
+  /// collects data from various [TextEditingController]s and [DateTime]s found in [AppModel]
+  /// in order to add a new [TimetableEntry] to the [AppModel.timetable].
   void addToTimetable(){
     app.timetable.add(TimetableEntry(
         channel: getUid()!,
