@@ -215,7 +215,7 @@ class MainVM with ChangeNotifier {
   }
 
   void userData(context) {
-    if (Prefs().getEmail() == null) {
+    if (Prefs().getEmail == null) {
       showDialog(
           context: context,
           builder: (context) {

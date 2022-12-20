@@ -28,7 +28,7 @@ class DatabaseApi {
   ///
   /// **Throws** [TimeoutException] when no response has been received after 20 seconds
   ///
-  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  /// **Throws** ClientSocketException when a connection cannot be established to the server
   ///
   /// **Example usage:**
   /// ```Dart
@@ -73,7 +73,7 @@ class DatabaseApi {
   ///
   /// **Throws** [TimeoutException] when no response has been received after 20 seconds
   ///
-  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  /// **Throws** ClientSocketException when a connection cannot be established to the server
   ///
   /// **Example usage:**
   /// ```Dart
@@ -127,7 +127,7 @@ class DatabaseApi {
   ///
   /// **Throws** [TimeoutException] when no response has been received after 20 seconds
   ///
-  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  /// **Throws** ClientSocketException when a connection cannot be established to the server
   ///
   /// **Example usage:**
   /// ```Dart
@@ -181,7 +181,7 @@ class DatabaseApi {
   ///
   /// **Throws** [TimeoutException] when no response has been received after 20 seconds
   ///
-  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  /// **Throws** ClientSocketException when a connection cannot be established to the server
   ///
   /// **Example usage:**
   /// ```Dart
@@ -235,7 +235,7 @@ class DatabaseApi {
   ///
   /// **Throws** [TimeoutException] when no response has been received after 20 seconds
   ///
-  /// **Throws** [_ClientSocketException] when a connection cannot be established to the server
+  /// **Throws** ClientSocketException when a connection cannot be established to the server
   ///
   /// **Example usage:**
   /// ```Dart

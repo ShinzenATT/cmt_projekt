@@ -13,7 +13,16 @@ import '../views/start_views/welcome_view.dart';
 
 /// An enum for the different tabs of the NavigationBar, because it's simply
 /// easier to remember what is what.
-enum TabId { welcome, search , home , live }
+enum TabId {
+  /// tab id for the welcome landing page
+  welcome,
+  /// tab id for the search page
+  search,
+  /// tab id for the home/channels page
+  home ,
+  /// tab id for the go live page
+  live
+}
 
 /// NavigationModel for all persistent navigation data ///
 class NavigationModel {

@@ -29,8 +29,8 @@ class StreamClient {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
-    if (Prefs().getIntent() == "j") { // sends a json msg to server on which host to join/listen
-      debugPrint(Prefs().getIntent().toString());
+    if (Prefs().getIntent == "j") { // sends a json msg to server on which host to join/listen
+      debugPrint(Prefs().getIntent.toString());
       client.sink.add(jsonEncode(StreamMessage.join(
           uid: Prefs().storedData.get("uid").toString(),
           channelType: "a",

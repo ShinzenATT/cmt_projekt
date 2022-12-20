@@ -1,4 +1,6 @@
-///A class that contains user id, request iformation, and information about the requested radiochannel.
+import 'package:cmt_projekt/models/channel_model.dart';
+
+///A class that contains user id, request information, and information about the requested [RadioChannel].
 ///The purpose of this class is to relay information between the server and client.
 class StreamMessage {
   String uid;
