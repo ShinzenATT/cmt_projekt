@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cmt_projekt/apis/database_api.dart';
 import 'package:cmt_projekt/apis/prefs.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/widgets/error_dialog_box.dart';
 import 'package:cmt_projekt/models/app_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
@@ -177,6 +178,58 @@ class MainVM with ChangeNotifier {
   void setCategory(var item) => _category = item;
   String? get category => _category;
   TextEditingController get channelName => appModel.channelName;
+  DateTime get timetableStartTimestamp => app.timetableStartTimestamp;
+  set timetableStartTimestamp (DateTime v) {
+    app.timetableStartTimestamp = DateTime.utc(
+        v.year,
+        v.month,
+        v.day,
+        timetableStartTimestamp.hour,
+        timetableStartTimestamp.minute
+    );
+    app.timetableStartDateStr.text = '${v.year}-${v.month}-${v.day}';
+  }
+  TimeOfDay get timetableStartTime => TimeOfDay.fromDateTime(app.timetableStartTimestamp);
+  set timetableStartTime (TimeOfDay v) {
+    app.timetableStartTimestamp = DateTime.utc(
+        timetableStartTimestamp.year,
+        timetableStartTimestamp.month,
+        timetableStartTimestamp.day,
+        v.hour,
+        v.minute
+    );
+    app.timetableStartTimeStr.text = '${v.hour}:${v.minute}';
+  }
+  DateTime get timetableEndTimestamp => app.timetableEndTimestamp ?? DateTime.now();
+  set timetableEndTimestamp (DateTime v) {
+    app.timetableEndTimestamp = DateTime.utc(
+        v.year,
+        v.month,
+        v.day,
+        timetableEndTimestamp.hour,
+        timetableEndTimestamp.minute
+    );
+    app.timetableEndDateStr.text = '${v.year}-${v.month}-${v.day}';
+  }
+  TimeOfDay get timetableEndTime => TimeOfDay.fromDateTime(timetableEndTimestamp);
+  set timetableEndTime (TimeOfDay v) {
+    app.timetableEndTimestamp = DateTime.utc(
+        timetableEndTimestamp.year,
+        timetableEndTimestamp.month,
+        timetableEndTimestamp.day,
+        v.hour,
+        v.minute
+    );
+    app.timetableEndTimeStr.text = '${v.hour}:${v.minute}';
+  }
+  ChannelDataModel get channelData => ChannelDataModel(
+      channelid: getUid()!,
+      channelname: channelName.text,
+      category: _category!,
+      description: app.channelDescription.text.isNotEmpty ? app.channelDescription.text: null,
+      timetable: app.timetable,
+      username: getUsername()!
+  );
 
   void setChannelSettings() {
     Prefs().storedData.setString("channelName", channelName.value.text);
@@ -281,5 +334,16 @@ class MainVM with ChangeNotifier {
   Future<void> grantMicPermsission() async {
     await Permission.microphone.request();
     notifyListeners();
+  }
+
+  /// collects data from various [TextEditingController]s and [DateTime]s found in [AppModel]
+  /// in order to add a new [TimetableEntry] to the [AppModel.timetable].
+  void addToTimetable(){
+    app.timetable.add(TimetableEntry(
+        channel: getUid()!,
+        startTime: timetableStartTimestamp,
+        endTime: app.timetableEndTimestamp,
+        description: app.timetableDescription.text.isNotEmpty ? app.timetableDescription.text: null
+    ));
   }
 }

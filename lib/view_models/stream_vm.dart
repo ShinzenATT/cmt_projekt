@@ -1,19 +1,19 @@
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/stream_model.dart';
 import 'package:cmt_projekt/apis/stream_client.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
-import '../apis/prefs.dart';
 
 typedef Fn = void Function();
 
 class StreamVM with ChangeNotifier {
   StreamModel streamModel = StreamModel();
 
-  void startup(context) {
+  void startup(BuildContext context, ChannelDataModel? channel) {
     streamModel.player = FlutterSoundPlayer();
     streamModel.recorder = FlutterSoundRecorder();
-    streamModel.streamClient = StreamClient(streamModel.player);
+    streamModel.streamClient = StreamClient(player: streamModel.player, channel: channel);
     init().then((value) {
       streamModel.isInitiated = true;
       streamModel.streamClient!.listen(context);
@@ -112,13 +112,11 @@ class StreamVM with ChangeNotifier {
     }
   }
 
-  sendUpdate(BuildContext context){
+  sendUpdate(BuildContext context, ChannelDataModel channel){
     final StreamClient c = streamModel.streamClient!;
     c.sendUpdate(StreamMessage.update(
-        channelName:  Prefs().storedData.getString("channelName"),
-        category: Prefs().storedData.getString("category"),
-        channelType: "a",
-        uid: Prefs().storedData.getString("uid")!
+        channelData:  channel,
+        channelType: "a"
     ));
   }
 }

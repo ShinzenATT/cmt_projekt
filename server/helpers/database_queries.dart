@@ -1,3 +1,4 @@
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:dbcrypt/dbcrypt.dart';
 import 'package:postgres/postgres.dart';
 
@@ -70,16 +71,53 @@ class DatabaseQueries {
   }
 
   /// creates a channel and attaches it to the user account with the supplies uid
-  Future<void> createChannel(String channelName, String uid, String category) async {
-      await connection.query(
-          "INSERT INTO channelview VALUES('$uid','$channelName','$category')");
+  Future<void> createChannel(ChannelDataModel channel) async {
+    await connection.transaction((c) async {
+      await c.query(
+      "INSERT INTO channel VALUES("   // insert
+      "@id:uuid, @name:text, @category:text, true, @description:text, @image:text"
+      ") ON CONFLICT (channelid) DO "
+      "UPDATE SET "                  // update on conflict
+      "channelname = @name:text,"
+      "category = @category:text,"
+      "description = @description:text,"
+      "imageurl = @image:text,"
+      "isonline = true;",
+        substitutionValues: {
+          'id': channel.channelid,
+          'name': channel.channelname,
+          'category': channel.category,
+          'description': channel.description,
+          'image': channel.channelImageUrl?.path
+        }
+      );
+
+      await c.query("DELETE FROM timetable WHERE channel = @channel:uuid;", substitutionValues: {'channel': channel.channelid});
+
+      for(final t in channel.timetable){
+        await c.query("INSERT INTO timetable VALUES("
+            "@channel:uuid, "
+            "@start:timestamp, "
+            "@end:timestamp,"
+            "@desc:text"
+            ");",
+            substitutionValues: {
+              'channel': channel.channelid,
+              'start': t.startTime,
+              'end': t.endTime,
+              'desc': t.description
+        });
+      }
+    });
+
+
   }
 
   /// Gets a list of available channels that are live
   Future<List<Map<String, dynamic>>> getOnlineChannels() async {
       final results = await connection.mappedResultsQuery(
-          "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
-              "FROM Channel JOIN Account on uid = channelid WHERE isonline = true;");
+          "SELECT c.*, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+              "FROM Channel c JOIN Account on uid = c.channelid WHERE c.isonline = true;");
 
       List<Map<String, dynamic>> response = [];
 
@@ -97,17 +135,30 @@ class DatabaseQueries {
   /// gets data of a single channel using the uid, throws an exception if none is found.
   Future<Map<String, dynamic>> getChannel(String uid) async{
     final result = await connection.mappedResultsQuery(
-        "SELECT category, channelid, channelname, isonline, username, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
-            "FROM Channel JOIN Account on uid = channelid WHERE channelid = '$uid';");
+        "SELECT c.*, username, profileImageUrl, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
+            "FROM Channel c JOIN Account on uid = c.channelid WHERE c.channelid = '$uid';");
 
     if(result.isEmpty){
       throw Exception("Channel not found");
     }
 
+    final table = await connection.mappedResultsQuery(
+        "SELECT  * FROM timetable WHERE channel = '$uid' "
+            "AND COALESCE(endtime, starttime) > current_timestamp ORDER BY starttime;"
+    );
+
     Map<String, dynamic> m = {};
     m.addAll(result[0][""]!);
     m.addAll(result[0]["account"]!);
     m.addAll(result[0]["channel"]!);
+
+    List<Map<String, dynamic>> t = table.map((e) {
+      Map<String, dynamic> el = e['timetable']!;
+      el['starttime'] = el['starttime'].toString();
+      el['endtime'] = el['endtime']?.toString();
+      return el;
+    }).toList();
+    m["timetable"] = t;
 
     return m;
   }

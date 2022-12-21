@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:alfred/alfred.dart';
 import 'package:cmt_projekt/constants.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
 import 'package:postgres/postgres.dart';
 
@@ -14,7 +15,7 @@ class ChannelViewersController {
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
   ///
-  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  /// **Response Body** a [ChannelDataModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned,
   /// 400 when the request body doesn't contain the expected values &
@@ -46,7 +47,7 @@ class ChannelViewersController {
   ///
   /// **Request Body** a [QueryModel] that contains uid of viewer and channelid.
   ///
-  /// **Response Body** a [QueryModel] that contains the channel without account info.
+  /// **Response Body** a [ChannelDataModel] that contains the channel without account info.
   ///
   /// **Error Status Codes** when it's executed successfully then 200 ok is returned &
   /// 400 when the request body doesn't contain the expected values.

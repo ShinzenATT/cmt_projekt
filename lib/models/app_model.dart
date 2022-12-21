@@ -1,4 +1,5 @@
 import 'package:cmt_projekt/apis/database_api.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 
 import 'package:flutter/material.dart';
 
@@ -44,4 +45,13 @@ class AppModel {
 
   ///For Channelsettings
   TextEditingController channelName = TextEditingController();
+  TextEditingController channelDescription = TextEditingController();
+  TextEditingController timetableStartDateStr = TextEditingController();
+  TextEditingController timetableStartTimeStr = TextEditingController();
+  TextEditingController timetableEndDateStr = TextEditingController();
+  TextEditingController timetableEndTimeStr = TextEditingController();
+  DateTime timetableStartTimestamp = DateTime.now();
+  DateTime? timetableEndTimestamp;
+  TextEditingController timetableDescription = TextEditingController();
+  List<TimetableEntry> timetable = [];
 }

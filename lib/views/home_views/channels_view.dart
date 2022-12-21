@@ -122,7 +122,7 @@ class _ChannelsViewState extends State<ChannelsView> {
             channel.channelname!,
             channel.username!,
           );
-          context.read<StreamVM>().startup(context);
+          context.read<StreamVM>().startup(context, null);
           context.read<NavVM>().pushView(constants.listenChannel);
         },
         child: Card(

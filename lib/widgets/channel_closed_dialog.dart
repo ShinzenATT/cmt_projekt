@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:cmt_projekt/widgets/dialog_timer.dart';
-import 'package:cmt_projekt/constants.dart' as constants;
 
 
 /// A dialog that shows up when a stream has ended. It has a timer and 2 buttons for navigation.
@@ -59,7 +58,7 @@ class ChannelClosedDialog extends StatelessWidget{
               onPressed: () {
                 context.read<StreamVM>().closeClient();
                 Navigator.of(context).pop();
-                navVM.pushView(constants.channels);
+                navVM.goBack(context);
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black45),
@@ -74,8 +73,8 @@ class ChannelClosedDialog extends StatelessWidget{
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                navVM.pushView(constants.channels);
+                Navigator.pop(context);
+                navVM.goBack(context);
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.black45),

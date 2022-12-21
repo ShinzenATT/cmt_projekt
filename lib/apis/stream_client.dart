@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cmt_projekt/apis/prefs.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:cmt_projekt/widgets/channel_closed_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../models/query_model.dart';
 import '../environment.dart';
 
 /// A Class for handling a websocket stream to the server
@@ -21,27 +21,30 @@ class StreamClient {
   StreamController<Food>? foodStreamController =
       StreamController<Food>.broadcast();
   /// A stream controller for forwarding updated channel data to various pages.
-  StreamController<QueryModel> msgController =
-      StreamController<QueryModel>.broadcast();
+  StreamController<ChannelDataModel> msgController =
+      StreamController<ChannelDataModel>.broadcast();
 
   /// Initiates the Flutter sound player and setups a connection to the server
-  StreamClient(FlutterSoundPlayer? player) {
+  StreamClient({FlutterSoundPlayer? player, ChannelDataModel? channel}) {
     _player = player;
     client = WebSocketChannel.connect(Uri.parse(serverConnection));
 
     if (Prefs().getIntent() == "j") { // sends a json msg to server on which host to join/listen
       debugPrint(Prefs().getIntent().toString());
-      client.sink.add(jsonEncode(StreamMessage.join(
-          uid: Prefs().storedData.get("uid").toString(),
-          channelType: "a",
-          hostId: Prefs().storedData.get("joinChannelID").toString())));
+      client.sink.add(jsonEncode(
+          StreamMessage.join(
+              uid: Prefs().storedData.get("uid").toString(),
+              channelType: "a",
+              hostId: Prefs().storedData.get("joinChannelID").toString()
+          ).toMap()
+      ));
     } else { // sends a json msg to server with intent to host
-      client.sink.add(jsonEncode(StreamMessage.host(
-        uid: Prefs().storedData.get("uid").toString(),
-        channelType: "a",
-        category: Prefs().storedData.getString("category"),
-        channelName: Prefs().storedData.getString("channelName"),
-      )));
+      client.sink.add(jsonEncode(
+          StreamMessage.host(
+            channelType: "a",
+            channelData: channel!,
+          ).toMap()
+      ));
     }
 
     // when the stream gets recording data then send it to the stream server
@@ -54,7 +57,7 @@ class StreamClient {
   void listen(context) {
     client.stream.listen((event) {
       if(event.runtimeType == String){
-        final msg = QueryModel.fromJson(jsonDecode(event));
+        final msg = ChannelDataModel.parseMap(jsonDecode(event));
         msgController.sink.add(msg);
       } else {
         playSound(event);
@@ -86,7 +89,7 @@ class StreamClient {
   /// Sends a json message to the server with intent to update channel info.
   sendUpdate(StreamMessage msg){
     msg.intent = "u";
-    client.sink.add(jsonEncode(msg));
+    client.sink.add(jsonEncode(msg.toMap()));
   }
 
   /// Shows a [ChannelClosedDialog]
