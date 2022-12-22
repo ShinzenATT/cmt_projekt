@@ -1,19 +1,22 @@
-import '../apis/database_api.dart';
-import '../models/query_model.dart';
+import 'package:cmt_projekt/models/channel_data_model.dart';
 
+import '../apis/database_api.dart';
+
+/// A view model for handling retrieval of  the channel list
 class ChannelsVM {
 
   ///Api for communicating with the database
   final DatabaseApi _databaseAPI = DatabaseApi();
 
-  List<QueryModel> _channels = [];
+  List<ChannelDataModel> _channels = [];
+  /// A list of channels fetched from dbServer
+  List<ChannelDataModel>  get channels => _channels;
 
-  Future<List<QueryModel>> updateChannels() async {
+  /// fetches the channel list from db server and replaces the local list
+  Future<List<ChannelDataModel>> updateChannels() async {
     _channels = await _databaseAPI.loadOnlineChannels();
-    return getChannels();
+    return channels;
   }
-
-  List<QueryModel> getChannels() { return _channels; }
 
   /*
   bool streamConnected = false;

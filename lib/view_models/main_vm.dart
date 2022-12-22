@@ -6,6 +6,7 @@ import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/widgets/error_dialog_box.dart';
 import 'package:cmt_projekt/models/app_model.dart';
 import 'package:cmt_projekt/models/query_model.dart';
+import 'package:cmt_projekt/widgets/go_live_settings_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:dbcrypt/dbcrypt.dart';
@@ -25,35 +26,42 @@ import 'navigation_vm.dart';
 /// their UI.
 class MainVM with ChangeNotifier {
 
+  /// The constructor checks for login information as well
   MainVM() { checkLogIn(); }
 
   /// Persistent Models & API's with routing getters///
 
-  /// AppModel with App data & DatabaseAPI ///
-  // For general and mostly constant App-data and API connection to database.
+  // AppModel with App data & DatabaseAPI //
+  /// For general and mostly constant App-data and API connection to database.
   static final AppModel appModel = AppModel();
+  /// see [appModel]
   AppModel get app => appModel;
+  /// an instance of [DatabaseApi] client
   DatabaseApi get dbClient => app.databaseApi;
 
 
-  /// UserModel for User & NewUserAccount data & locally stored/Shared preferences ///
-  // Stores all relevant user & account data. Default to empty userdata fields
-  // and with 'isGuest' & 'isSignedIn' == false.
+  // UserModel for User & NewUserAccount data & locally stored/Shared preferences //
+  /// Stores all relevant user & account data. Default to empty userdata fields
+  /// and with 'isGuest' & 'isSignedIn' == false.
   static final UserModel userModel = UserModel();
+  /// see [userModel]
   UserModel get user => userModel;
 
-  /// ChannelModel ///
+  // ChannelModel //
   // ChannelModel stores all relevant channel data, whether it is for
   // listening or for hosting.
-  ///static final ChannelModel channelModel = ChannelModel();
+  //static final ChannelModel channelModel = ChannelModel();
+
+  /// the currently selected category set by [GoLiveSettings] dialog
   String? _category;
 
-  /// Settings & Helpers ///
+  // Settings & Helpers //
+
+  /// Indicates if a user is signed in
   bool get isSignedIn => user.isSignedIn;
 
-  /// Check login
-  // Performed every time the app is started to check phone storage for
-  // already logged in user.
+  /// Performed every time the app is started to check phone storage for
+  /// already logged in user.
   void checkLogIn() {
     if (Prefs().storedData.getString("email") != null) {
       user.setUserFromPrefs();
@@ -61,7 +69,7 @@ class MainVM with ChangeNotifier {
     }
   }
 
-  /// Log out
+  /// Log out and clears user data from storage and model
   void logOut(context) {
     Prefs().storedData.clear();
     user.logOut();
@@ -70,18 +78,20 @@ class MainVM with ChangeNotifier {
   }
 
 
-  /// LoginView & CreateAccountView data & methods///
+  // LoginView & CreateAccountView data & methods //
 
-  // Controls the show/hide password feature.
+  /// Controls the show/hide password feature.
   bool showPassword = false;
+  /// toggles if the password is shown or not on account creation or login
   void toggleShowPassword() {
     showPassword = !showPassword;
     notifyListeners();
   }
 
+  /// the user data currently edited in account creation
   UserData get newUserData => user.newUser;
 
-  /// Guest log in
+  /// Logs in as guest and sets sample data
   void guestSign(context) async {
     Prefs().storedData.setString("uid", Uri().toString());
     Prefs().storedData.get("uid");
@@ -90,7 +100,7 @@ class MainVM with ChangeNotifier {
     Provider.of<NavVM>(context, listen: false).selectTab(TabId.home);
   }
 
-  /// Tries to login
+  /// Tries to login by checking with dbServer
   void loginAttempt(context, login, password) {
     setUpResponseStream(context);
     dbClient.postAndSaveToStreamCtrl(
@@ -99,7 +109,7 @@ class MainVM with ChangeNotifier {
     );
   }
 
-  /// Tries to create account
+  /// Tries to create account in dbServer
   Future<void> tryCreateAccount(context, eMail, username, phoneNr, password, password2) async {
     RegExp exp1 = RegExp(r"[^\s]{8,50}$");
     if (!exp1.hasMatch(password)) {
@@ -154,8 +164,8 @@ class MainVM with ChangeNotifier {
   }
 
   /// Database response stream for login and create account
-  // Initiates a method that listens for new values and if it succeeds saves the
-  // credentials and redirects the app to the homeView.
+  /// Initiates a method that listens for new values and if it succeeds saves the
+  /// credentials and redirects the app to the homeView.
   Future<void> setUpResponseStream(context) async {
     dbClient.streamController.stream.listen((QueryModel message) async {
       await Prefs().storedData.setString("uid", message.uid!);
@@ -173,11 +183,17 @@ class MainVM with ChangeNotifier {
   }
 
 
-  /// ChannelView ///
+  // Channel Settings //
+
+  /// Gets a map that connects categories to image urls
   Map<String, String> get categoryImageList => app.categoryAndStandardImg;
+  /// sets the selected channel category
   void setCategory(var item) => _category = item;
+  /// the selected category in [GoLiveSettings] dialog
   String? get category => _category;
+  /// The textfield for channel name
   TextEditingController get channelName => appModel.channelName;
+  /// the start timestamp of the currently edited timetable entry, setter only sets date
   DateTime get timetableStartTimestamp => app.timetableStartTimestamp;
   set timetableStartTimestamp (DateTime v) {
     app.timetableStartTimestamp = DateTime.utc(
@@ -189,6 +205,8 @@ class MainVM with ChangeNotifier {
     );
     app.timetableStartDateStr.text = '${v.year}-${v.month}-${v.day}';
   }
+
+  /// the start time of the currently edited timetable entry, saves to the DateTime version
   TimeOfDay get timetableStartTime => TimeOfDay.fromDateTime(app.timetableStartTimestamp);
   set timetableStartTime (TimeOfDay v) {
     app.timetableStartTimestamp = DateTime.utc(
@@ -200,6 +218,7 @@ class MainVM with ChangeNotifier {
     );
     app.timetableStartTimeStr.text = '${v.hour}:${v.minute}';
   }
+  /// the end timestamp of the currently edited timetable entry, setter only sets date
   DateTime get timetableEndTimestamp => app.timetableEndTimestamp ?? DateTime.now();
   set timetableEndTimestamp (DateTime v) {
     app.timetableEndTimestamp = DateTime.utc(
@@ -211,6 +230,7 @@ class MainVM with ChangeNotifier {
     );
     app.timetableEndDateStr.text = '${v.year}-${v.month}-${v.day}';
   }
+  /// the end time of the currently edited timetable entry, saves to the DateTime version
   TimeOfDay get timetableEndTime => TimeOfDay.fromDateTime(timetableEndTimestamp);
   set timetableEndTime (TimeOfDay v) {
     app.timetableEndTimestamp = DateTime.utc(
@@ -222,6 +242,7 @@ class MainVM with ChangeNotifier {
     );
     app.timetableEndTimeStr.text = '${v.hour}:${v.minute}';
   }
+  /// compiles a model obj from all text fields/pickers in [GoLiveSettings] dialog
   ChannelDataModel get channelData => ChannelDataModel(
       channelid: getUid()!,
       channelname: channelName.text,
@@ -231,12 +252,14 @@ class MainVM with ChangeNotifier {
       username: getUsername()!
   );
 
+  /// saves some channel settings to phone storage, see [Prefs]
   void setChannelSettings() {
     Prefs().storedData.setString("channelName", channelName.value.text);
     Prefs().storedData.setString("category", category!);
     Prefs().storedData.setString("intent", "h");
   }
 
+  /// converts a string to a Dropdown item
   DropdownMenuItem<String> categoryItem(String item) => DropdownMenuItem(
         value: item,
         child: Text(
@@ -244,20 +267,23 @@ class MainVM with ChangeNotifier {
         ),
       );
 
-  dynamic categoryToDropdownMenuItemList() {
+  /// converts categories to a Dropdown list
+  List<DropdownMenuItem<String>> categoryToDropdownMenuItemList() {
     return appModel.categoryAndStandardImg.keys.map(categoryItem).toList();
   }
 
 
-  ///Returns the users email.
+  ///Returns the user's email from phone storage
   String? getEmail() {
     return Prefs().storedData.getString("email");
   }
 
+  /// Returns the user's phone number from phone storage
   String? getPhone() {
     return Prefs().storedData.getString("phone");
   }
 
+  /// Returns the user's username from phone storage
   String? getUsername() {
     return Prefs().storedData.getString("username");
   }
@@ -267,6 +293,7 @@ class MainVM with ChangeNotifier {
     return Prefs().storedData.getString("uid");
   }
 
+  /// renders a dialog with stored user information, see [ProfileInformation]
   void userData(context) {
     if (Prefs().getEmail == null) {
       showDialog(
@@ -285,21 +312,21 @@ class MainVM with ChangeNotifier {
   }
 
 
-
+  /// reloads channel list from dbServer
   void updateChannels() {
     dbClient.loadOnlineChannels();
   }
 
   /// Organizes a list of all channels into a map where each
   /// category references a list of channels.
-  Map<String, List<QueryModel>> getCategoryNumber(List<QueryModel> l) {
-    Map<String, List<QueryModel>> categories = {};
-    for (QueryModel qm in l) {
-      if (qm.isonline!) {
+  Map<String, List<ChannelDataModel>> getCategoryNumber(List<ChannelDataModel> l) {
+    Map<String, List<ChannelDataModel>> categories = {};
+    for (ChannelDataModel qm in l) {
+      if (qm.isonline) {
         if (!categories.containsKey(qm.category)) {
-          categories[qm.category!] = [];
+          categories[qm.category] = [];
         }
-        categories[qm.category!]!.add(qm);
+        categories[qm.category]!.add(qm);
       }
     }
     return categories;
@@ -317,6 +344,7 @@ class MainVM with ChangeNotifier {
     return null;
   }
 
+  /// Sets [Prefs] values for joining a stream
   void setJoinPrefs(String channelId, String channelName, String username) {
     Prefs().storedData.setString("joinChannelID", channelId);
     Prefs().storedData.setString("intent", "j");
@@ -324,6 +352,7 @@ class MainVM with ChangeNotifier {
     Prefs().storedData.setString("hostUsername", username);
   }
 
+  /// checks if mic permission is granted
   Future<bool> checkMicPermssion() async {
     if (await Permission.microphone.isGranted) {
       return true;
@@ -331,6 +360,7 @@ class MainVM with ChangeNotifier {
     return false;
   }
 
+  /// opens a mic permission dialog
   Future<void> grantMicPermsission() async {
     await Permission.microphone.request();
     notifyListeners();

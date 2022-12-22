@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:cmt_projekt/models/query_model.dart';
 import '../environment.dart';
+import '../models/channel_data_model.dart';
 
 
 /// Api for fetching and sending data from the database.
@@ -13,7 +14,7 @@ class DatabaseApi {
   /// A local stream for sending data such as logged in account to various parts of the application
   StreamController<QueryModel> streamController = StreamController<QueryModel>.broadcast();
   /// A local stream for sending a list of channels to various parts of the application
-  StreamController<List<QueryModel>> channelController = StreamController<List<QueryModel>>.broadcast();
+  StreamController<List<ChannelDataModel>> channelController = StreamController<List<ChannelDataModel>>.broadcast();
 
 
   /// Makes a HTTP Get request to the path on the server specified by [localServer]
@@ -272,16 +273,12 @@ class DatabaseApi {
 
   /// Does a Get request to /channel and sends a [List<QueryModel>] to [channelController].
   ///
-  /// **Returns** [Future<List<QueryModel>>] that is a list of channels available.
+  /// **Returns** [Future<List<ChannelDataModel>>] that is a list of channels available.
   ///
   /// **See Also** [getRequest]
-  Future<List<QueryModel>> loadOnlineChannels() async{
+  Future<List<ChannelDataModel>> loadOnlineChannels() async{
     final data = (await getRequest('/channel')) as List<dynamic>;
-    final List<QueryModel> r = [];
-
-    for (var e in data) {
-      r.add(QueryModel.fromJson(e));
-    }
+    final List<ChannelDataModel> r = data.map((e) => ChannelDataModel.parseMap(e)).toList();
 
     channelController.add(r);
 

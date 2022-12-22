@@ -1,8 +1,8 @@
+import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
-import 'package:cmt_projekt/models/query_model.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import '../../view_models/navigation_vm.dart';
@@ -49,8 +49,8 @@ class _ChannelsViewState extends State<ChannelsView> {
           if (snapshot.hasError) {
             return const Text("error");
           } else if (snapshot.hasData) {
-            List<QueryModel> channels = snapshot.data;
-            Map<String, List<QueryModel>> categories =
+            List<ChannelDataModel> channels = snapshot.data;
+            Map<String, List<ChannelDataModel>> categories =
             mainVM.getCategoryNumber(channels);
             return Expanded(
               child: SmartRefresher(
@@ -80,7 +80,7 @@ class _ChannelsViewState extends State<ChannelsView> {
 
   Widget _horizontalListView(
       {required String image,
-        required List<QueryModel> channelList,
+        required List<ChannelDataModel> channelList,
         required String categoryName}) {
     return SizedBox(
       height: 185,
@@ -113,14 +113,14 @@ class _ChannelsViewState extends State<ChannelsView> {
 
   Widget _buildBox(
       {required String image,
-        required QueryModel channel,
+        required ChannelDataModel channel,
         required BuildContext context}) =>
       InkWell(
         onTap: () {
           context.read<MainVM>().setJoinPrefs(
-            channel.channelid!,
-            channel.channelname!,
-            channel.username!,
+            channel.channelid,
+            channel.channelname,
+            channel.username,
           );
           context.read<StreamVM>().startup(context, null);
           context.read<NavVM>().pushView(constants.listenChannel);
@@ -143,7 +143,7 @@ class _ChannelsViewState extends State<ChannelsView> {
                 width: 150,
                 child: Center(
                   child: Text(
-                    channel.channelname!,
+                    channel.channelname,
                     style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -171,7 +171,7 @@ class _ChannelsViewState extends State<ChannelsView> {
         ),
       );
 
-  Widget getChannelsContent(Map<String, List<QueryModel>> categories) {
+  Widget getChannelsContent(Map<String, List<ChannelDataModel>> categories) {
     if (categories.isNotEmpty) {
       return ListView.builder(
           shrinkWrap: true,

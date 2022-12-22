@@ -1,4 +1,3 @@
-import 'package:cmt_projekt/views/go_live/go_live_settings_dialog.dart';
 import 'package:logger/logger.dart';
 
 
@@ -26,7 +25,7 @@ const String menu = '/menuView';
 
 /// Main page of the 'Gå live!' tab where they select the type of stream.
 const String goLive = '/goLive';
-/// Next page, where the microphone is checked and launches the [GoLiveSettings] dialog.
+/// Next page, where the microphone is checked and launches the GoLiveSettings dialog.
 const String goLive2 = '/goLive2';
 /// Where you host a channel and actually are streaming.
 const String hostChannel = '/hostChannelView';

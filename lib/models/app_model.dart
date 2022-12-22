@@ -49,13 +49,24 @@ class AppModel {
   //For Channelsettings used by [GoLiveSettings]
   /// channel name text field
   TextEditingController channelName = TextEditingController();
+  /// Channel description field
   TextEditingController channelDescription = TextEditingController();
+  /// Timetable start date readonly text field, displays the selected date
   TextEditingController timetableStartDateStr = TextEditingController();
+  /// Timetable start time readonly text field, displays selected time
   TextEditingController timetableStartTimeStr = TextEditingController();
+  /// Timetable end date readonly text field, displays selected date
   TextEditingController timetableEndDateStr = TextEditingController();
+  /// Timetable end time readonly text field, displays selected time
   TextEditingController timetableEndTimeStr = TextEditingController();
+  /// The selected timetable start date & time which is saved as a combination from
+  /// the date and time pickers. Defaults to current time.
   DateTime timetableStartTimestamp = DateTime.now();
+  /// The selected timetable end date & time which is saved as a combination from
+  /// the date and time pickers. Is optional.
   DateTime? timetableEndTimestamp;
+  /// the description of the edited timetable entry
   TextEditingController timetableDescription = TextEditingController();
+  /// The locally created timetable
   List<TimetableEntry> timetable = [];
 }

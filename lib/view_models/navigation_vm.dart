@@ -12,41 +12,46 @@ import 'main_vm.dart';
 /// that is unnecessary for the views to do.
 class NavVM with ChangeNotifier{
 
+  /// the constructor sets default values based on if a user is signed in
   NavVM(context) { startup(context); }
 
-  /// NavigationModel ///
-  // For all persistent navigation data
+  // NavigationModel //
+  /// For all persistent navigation data
   static final NavigationModel _navModel = NavigationModel();
 
-  /// Getters ///
+  // Getters //
+  /// the widgets to route to, see [NavigationModel.routingData]
   Map<TabId, Map<String, Widget>> get routingData => _navModel.routingData;
+  /// the keys connected to the bottom navigation, see [NavigationModel.navKeys]
   Map<TabId, GlobalKey<NavigatorState>> get navKeys => _navModel.navKeys;
+  /// the currently selected bottom navigation button
   GlobalKey<NavigatorState> get currentNavKey => navKeys[_currentTab]!;
+  /// the current tab
   TabId get currentTab => _currentTab;
 
 
-  /// App-wide navigation methods ///
+  // App-wide navigation methods //
 
-  // Used by the appbar. Set depending on which view gets popped
+  /// Used by the appbar. Set depending on which view gets popped
   bool showAppBar = false;
 
   /// Can currently active NavKey go back/Pop?
-  // If it does the AppBar will show a BackButton instead of the user icon.
+  /// If it does the AppBar will show a BackButton instead of the user icon.
   bool get canPop => currentNavKey.currentState!.canPop();
 
-  /// PushView
-  // It is supposed to be the only push you need, it automatically
-  // knows which NavKey should be used through 'currentNavKey' below.
+  ///## PushView
+  /// It is supposed to be the only push you need, it automatically
+  /// knows which NavKey should be used through 'currentNavKey' below.
   void pushView(route) {
     if(route != constants.welcome) { showAppBar = true; }
     currentNavKey.currentState!.pushNamed(route);
     notifyListeners();
   }
 
-  /// Navigate back by popping
-  // For popping to previous route of the currently active navigator but it
-  // also makes sure that the streaming channel gets closed down when the
-  // BackButton is pressed from the hostChannelView.
+  ///## Navigate back by popping
+  /// For popping to previous route of the currently active navigator but it
+  /// also makes sure that the streaming channel gets closed down when the
+  /// BackButton is pressed from the hostChannelView.
   void goBack(context) {
     currentNavKey.currentState!.pop();
     if(currentTab == TabId.welcome && !canPop) { showAppBar = false; }
@@ -58,10 +63,10 @@ class NavVM with ChangeNotifier{
   }
 
 
-  /// MainNavigatorView data & methods ///
-  // The MainNavigatorView works slightly different from the other Navigators.
-  // It uses a Stack of navigators, one for each stack. This keeps each tab
-  // intact while navigating in the other tabs.
+  // MainNavigatorView data & methods //
+  /// The MainNavigatorView works slightly different from the other Navigators.
+  /// It uses a Stack of navigators, one for each stack. This keeps each tab
+  /// intact while navigating in the other tabs.
   TabId _currentTab = TabId.welcome;
 
   /// Sets currently active tab
@@ -84,9 +89,10 @@ class NavVM with ChangeNotifier{
       case TabId.welcome: return 1;} // Does not matter cause NavBar is invisible at welcome
   }
 
+  /// may pop if the current route is not the first page of the tab
   Future<bool> onWillPop() async {
-    final isFirstRouteInCurrentTab =
-    !await navKeys[_currentTab]!.currentState!.maybePop();
+    final isFirstRouteInCurrentTab = !await navKeys[_currentTab]!.currentState!.maybePop();
+
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabId.home) {
         selectTab(TabId.home);
@@ -96,6 +102,7 @@ class NavVM with ChangeNotifier{
     return isFirstRouteInCurrentTab;
   }
 
+  /// sets default values based on if the user is signed in
   void startup(context) {
     if(Provider.of<MainVM>(context, listen: false).isSignedIn) {
       showAppBar = true;
@@ -103,8 +110,8 @@ class NavVM with ChangeNotifier{
     }
   }
 
-  /// Logged out ///
-
+  // Logged out //
+ /// pops and reroutes to the welcome screen
   void loggedOut() {
     navKeys[TabId.home]!.currentState!.popUntil((route) => route.isFirst);
     navKeys[TabId.live]!.currentState!.popUntil((route) => route.isFirst);
@@ -112,6 +119,5 @@ class NavVM with ChangeNotifier{
     showAppBar = false;
     selectTab(TabId.welcome);
   }
-
 
 }
