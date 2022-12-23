@@ -1,11 +1,15 @@
 import 'package:cmt_projekt/models/navigation_model.dart';
 import 'package:cmt_projekt/view_models/navigation_vm.dart';
+import 'package:cmt_projekt/views/home_views/menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../view_models/main_vm.dart';
 
+/// The top bar that exists in most views. On the homepage it has a profile button
+/// that leads to [MenuView] while for other views it displays a back button.
 class CommentNavBar extends StatelessWidget {
+  /// A const constructor for [CommentNavBar]
   const CommentNavBar({Key? key}) : super(key: key);
 
   @override

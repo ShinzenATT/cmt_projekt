@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+/// This class if for displaying an error dialog
 class ErrorDialogBox {
 
-  Future<void> pop(BuildContext context, String text) {
+  /// Displays an error dialog with the inputted text argument
+  Future<void> show(BuildContext context, String text) {
     return showDialog(
       context: context,
       builder: (context) {

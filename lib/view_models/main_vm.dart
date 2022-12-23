@@ -113,7 +113,7 @@ class MainVM with ChangeNotifier {
   Future<void> tryCreateAccount(context, eMail, username, phoneNr, password, password2) async {
     RegExp exp1 = RegExp(r"[^\s]{8,50}$");
     if (!exp1.hasMatch(password)) {
-      await ErrorDialogBox().pop(
+      await ErrorDialogBox().show(
           context,
           "Lösenorden måste var mellan 8 och 50 tecken långt och får ej innehålla några blanksteg"
       );
@@ -121,7 +121,7 @@ class MainVM with ChangeNotifier {
     }
     // Check so that passwords matches
     if (password != password2) {
-      await ErrorDialogBox().pop(
+      await ErrorDialogBox().show(
           context,
           "Lösenorden stämmer inte överens"
       );
@@ -130,7 +130,7 @@ class MainVM with ChangeNotifier {
     // Check that phone number is a ten digit number
     RegExp exp2 = RegExp(r"(?<!\d)\d{10}(?!\d)");
     if (!exp2.hasMatch(phoneNr)) {
-      await ErrorDialogBox().pop(
+      await ErrorDialogBox().show(
           context,
           "Telefonnumret behöver vara på 10 siffror"
       );
@@ -154,12 +154,12 @@ class MainVM with ChangeNotifier {
         ),
       );
     } on HttpException catch(e){
-      await ErrorDialogBox().pop(context, e.message);
+      await ErrorDialogBox().show(context, e.message);
     } on TimeoutException {
-      await ErrorDialogBox().pop(context, 'Kunde inte nå servern');
+      await ErrorDialogBox().show(context, 'Kunde inte nå servern');
     } catch(e){
       constants.logger.i(e.runtimeType);
-      await ErrorDialogBox().pop(context, e.toString());
+      await ErrorDialogBox().show(context, e.toString());
     }
   }
 

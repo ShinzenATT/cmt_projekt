@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 
 
-///The welcomepage for the app.
+///The welcomepage for the app. The landing page for logged out users.
 class WelcomeView extends StatelessWidget {
+  /// A const constructor for [WelcomeView]
   const WelcomeView({Key? key}) : super(key: key);
 
   @override

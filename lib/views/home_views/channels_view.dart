@@ -7,7 +7,9 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import '../../view_models/navigation_vm.dart';
 
+/// The home page where the user sees a channel list of active streams
 class ChannelsView extends StatefulWidget {
+  /// A const constructor for [ChannelsView]
   const ChannelsView({Key? key}) : super(key: key);
 
   @override

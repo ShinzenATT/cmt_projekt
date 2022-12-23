@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 ///Widget for profile information.
 class ProfileInformation extends StatelessWidget {
+  /// A const constructor for [ProfileInformation]
   const ProfileInformation({Key? key}) : super(key: key);
 
   @override

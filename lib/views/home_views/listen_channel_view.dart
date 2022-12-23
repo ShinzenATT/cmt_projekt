@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 ///The page responsible for displaying what the viewer sees when listening to a stream.
 class ListenChannelView extends StatelessWidget {
+  /// A const constructor for [ListenChannelView]
   const ListenChannelView({Key? key}) : super(key: key);
 
   @override

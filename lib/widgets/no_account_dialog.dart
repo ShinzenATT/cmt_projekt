@@ -5,6 +5,7 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 ///AlertMessage when you are logged in as a guest.
 ///The guest is asked to create an account to get access to the functionality.
 class AlertMessage extends StatelessWidget {
+  /// A const constructor for [AlertMessage]
   const AlertMessage({Key? key}) : super(key: key);
 
   @override
