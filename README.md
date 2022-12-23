@@ -22,6 +22,7 @@ This project uses Flutter v2 so if you have installed flutter V3 or newer then r
 ```bash
 flutter downgrade 2.10 # downgrades flutter to version 2.10.5
 ```
+If this fails then try going to the flutter directory and do `git checkout 2.10.5` or download from the site.
 
 Use this command to verify that everything is installed correctly:
 ```bash
@@ -63,7 +64,7 @@ flutter build apk # build for android
 flutter install # install app to virtual/physical device (use adb if needed)
 flutter run # builds, installs and runs the app on a device
 
-flutter build ipa # builds for ios (only on macOS)
+flutter build ios # builds for ios (only on macOS)
 flutter run
 
 flutter build web # build website

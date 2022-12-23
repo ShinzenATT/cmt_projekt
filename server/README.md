@@ -10,6 +10,9 @@ the `database_server.dart` to work.
 ### database_server.dart
 Starts a HTTP server on port 5604 and connects to the database as per the `environment.dart` config.
 Tools such as [Insomnia](https://insomnia.rest/) and [Postman](https://www.postman.com/) can be used to test the HTTP API without the app.
+Insomnia has tools for testing websockets as well as HTTP. To find the json formats that is used check 
+the `toMap` or `toJson` methods in models to find the keys and data types. For debugging websockets
+then after connecting send a JSON in StreamMessage format with the intent either `h` (host) or `j` (join stream).
 
 ### stream_server.dart
 Starts a websocket server on port 5605 which handles connection for audio streams and routes the audio to listeners.
