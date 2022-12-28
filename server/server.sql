@@ -1,5 +1,5 @@
 --Init
-SET client_min_messages TO WARNING; -- Less talk please.
+-- SET client_min_messages TO WARNING; -- Less talk please.
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
@@ -11,6 +11,7 @@ CREATE TABLE Account (
                          phone char(10) NOT NULL CHECK(char_length(phone) = 10),
                          username TEXT NOT NULL,
                          uid uuid DEFAULT uuid_generate_v4(),
+                         profileImageUrl TEXT,
                          UNIQUE(phone),
                          UNIQUE(email),
                          UNIQUE(username),
@@ -36,10 +37,10 @@ CREATE TABLE Channel (
                          channelName TEXT NOT NULL,
                          category   TEXT NOT NULL,
                          isonline BOOLEAN NOT NULL,
+                         description TEXT,
+                         imageUrl TEXT,
                          FOREIGN KEY (channelid) REFERENCES Account(uid),
                          FOREIGN KEY (category) REFERENCES Category(category),
-
-    -- UNIQUE(channelName),
                          PRIMARY KEY (channelid)
 );
 
@@ -48,6 +49,15 @@ CREATE TABLE Viewers
     viewer  uuid,
     channel uuid,
     PRIMARY KEY (viewer, channel)
+);
+
+CREATE TABLE Timetable
+(
+    channel UUID REFERENCES Channel,
+    startTime TIMESTAMP,
+    endTime TIMESTAMP,
+    description TEXT,
+    PRIMARY KEY(channel, startTime)
 );
 
 --CREATE TABLE Online (
@@ -98,28 +108,6 @@ INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Ekonomi'),'B
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Halsa'),'Kostpodden','Hälsa','t');
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Traning'),'Allt om träning','Träning','t');
 INSERT INTO Channel VALUES((SELECT uid FROM Account WHERE username='Relationer'),'Relationspodden','Relationer','t');
---SELECT * FROM Account;
-
-CREATE FUNCTION channel_update()
-    RETURNS trigger AS $$
-BEGIN
-    IF NOT EXISTS (SELECT * FROM Channel WHERE channelid = NEW.channelid) THEN
-        INSERT INTO Channel (channelid,channelname,category,isonline) VALUES (NEW.channelid,NEW.channelname,NEW.category,TRUE);
-    ELSE
-        UPDATE Channel SET isonline = true, channelname = NEW.channelname, category = NEW.category WHERE channelid = NEW.channelid;
-    END IF;
-    RETURN OLD;
-END;
-$$
-    LANGUAGE 'plpgsql';
-
-CREATE VIEW channelview AS
-SELECT * FROM Channel;
-
-CREATE TRIGGER channelTrigger
-    INSTEAD OF INSERT ON channelview
-    FOR EACH ROW
-EXECUTE PROCEDURE channel_update();
 
 -- INSERT INTO channelview VALUES('1','Rocka på','Rock',false);
 -- SELECT * FROM Channel;

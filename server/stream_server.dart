@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cmt_projekt/constants.dart';
 import 'package:cmt_projekt/models/query_model.dart';
-import 'package:cmt_projekt/models/channel_model.dart';
+import 'package:cmt_projekt/models/radio_channel_model.dart';
 import 'package:cmt_projekt/models/streammessage_model.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -53,7 +53,7 @@ class StreamServer {
     //Here the connected web socket is checked whether it is a host or client and calls the correct function accordingly.
     connectedUsers[webSocket]!.stream.asBroadcastStream().listen((event) {
       if (event.runtimeType == String) {
-        StreamMessage message = StreamMessage.fromJson(jsonDecode(event));
+        StreamMessage message = StreamMessage.parseMap(jsonDecode(event));
         if (message.intent == "h" && !rooms.containsKey(message.hostId)) {
           initHostStream(message, webSocket);
         } else if (message.intent == "j" && rooms.containsKey(message.hostId)) {
@@ -72,19 +72,13 @@ class StreamServer {
   Future<void> initHostStream(
       StreamMessage message, WebSocketChannel webSocket) async {
     logger.v(
-        "A new host ${message.uid} has connected: Category: ${message.category}, Name: ${message.channelName}");
+        "A new host ${message.uid} has connected: Category: ${message.channelData!.category}, Name: ${message.channelData!.channelname}");
 
 
     final Map<String, dynamic> res;
     try {
       ///Adds the radiochannel to the database if it doesn't already exist. After that the radio channel is toggled as online.
-      res = await DatabaseApi.postRequest(
-          '/channel',
-          QueryModel.createChannel(
-              uid: message.uid,
-              channelname: message.channelName,
-              category: message.category
-          ));
+      res = await DatabaseApi.postRequest('/channel', message.channelData!.toMap());
     } on HttpReqException catch(e){
       logger.e(e.message, e);
       webSocket.sink.close(1011, e.message);
@@ -112,16 +106,11 @@ class StreamServer {
           sendData(sock, message);
         }
       } else { // decodes json messages, updates channel info and forwards new channel info to all clients
-        StreamMessage msg = StreamMessage.fromJson(jsonDecode(message));
+        StreamMessage msg = StreamMessage.parseMap(jsonDecode(message));
         if (msg.intent == "u") {
           dynamic res;
           try {
-            res = await DatabaseApi.postRequest(
-                '/channel',
-                QueryModel.createChannel(
-                    uid: msg.uid,
-                    channelname: msg.channelName,
-                    category: msg.category));
+            res = await DatabaseApi.postRequest('/channel', msg.channelData!.toMap());
           } on HttpReqException catch (e) {
             logger.e(e.message, e);
           }  catch (e) {
@@ -184,7 +173,7 @@ class StreamServer {
     try {
       ///Adds the viewer of said radio channel to the database.
       res = await DatabaseApi.postRequest('/channel/viewers',
-          QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
+          QueryModel.handleViewers(channelid: message.hostId, uid: message.uid)
       );
     } on HttpReqException catch(e){
       logger.e(e.message, e);
@@ -217,7 +206,7 @@ class StreamServer {
       try {
         res = await DatabaseApi.deleteRequest(
             '/channel/viewers',
-            QueryModel.delViewer(
+            QueryModel.handleViewers(
                 channelid: message.hostId, uid: message.uid));
       }  on HttpReqException catch (e){
         logger.e(e.message, e);

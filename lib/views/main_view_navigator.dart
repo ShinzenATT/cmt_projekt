@@ -11,6 +11,7 @@ import 'package:cmt_projekt/view_models/navigation_vm.dart';
 /// Creates TabNavigators and puts them in a stack. Each TabNavigator gets
 /// a NavKey, TabId and routing data from NavVM/NavigationModel
 class MainViewNavigator extends StatefulWidget {
+  /// A const constructor for [MainViewNavigator]
   const MainViewNavigator({Key? key}) : super(key: key);
 
   @override

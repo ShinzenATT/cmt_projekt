@@ -7,6 +7,7 @@ import 'package:cmt_projekt/constants.dart' as constants;
 
 /// The LoginView ///
 class LoginView extends StatelessWidget {
+  /// A const constructor for [LoginView]
   const LoginView({Key? key}) : super(key: key);
 
   @override

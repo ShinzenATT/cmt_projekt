@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 ///Widget for the page with profile information.
 class WebProfileWidget extends StatelessWidget {
+  /// constructs the [WebProfileWidget]
   const WebProfileWidget({Key? key}) : super(key: key);
 
   @override
