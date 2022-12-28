@@ -3,13 +3,19 @@ import 'package:cmt_projekt/models/channel_data_model.dart';
 ///A class that contains user id, request iformation, and information about the requested radiochannel.
 ///The purpose of this class is to relay information between the server and client.
 class StreamMessage {
+  /// the uuid of the user that makes the request
   String uid;
+  /// the intent of the request, for example `h` is to host a stream,
+  /// `j` is to join a stream and `u` to update channel info.
   String? intent;
+  /// the uuid of the target channel that the client wants to join to or host as
   String? hostId;
+  /// the stream type the message concerns, such as `a` for audio stream
   String channelType;
+  /// The channel data to upload to the db in a host/update msg
   ChannelDataModel? channelData;
 
-  ///An instance of StreamMessage for a host request.
+  ///An instance of [StreamMessage] for a host request.
   StreamMessage.host({
     required this.channelType,
     required this.channelData
@@ -18,7 +24,7 @@ class StreamMessage {
     hostId = channelData.channelid,
     intent = "h";
 
-  ///An instance of StreamMessage for a join request.
+  ///An instance of [StreamMessage] for a join request.
   StreamMessage.join({
     required this.uid,
     required this.hostId,
@@ -26,6 +32,7 @@ class StreamMessage {
     intent = "j";
   }
 
+  /// Creates an instance of [StreamMessage] for a update request
   StreamMessage.update({
     required this.channelData,
     required this.channelType
@@ -34,7 +41,7 @@ class StreamMessage {
     hostId = channelData.channelid,
     intent = "u";
 
-  ///Konverterar meddelandet till en map med string keys
+  /// Converts the object to a map with string keys
   Map<String, dynamic> toMap() => {
         'uid': uid,
         'intent': intent,

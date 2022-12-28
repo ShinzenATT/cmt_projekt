@@ -173,7 +173,7 @@ class StreamServer {
     try {
       ///Adds the viewer of said radio channel to the database.
       res = await DatabaseApi.postRequest('/channel/viewers',
-          QueryModel.addViewers(channelid: message.hostId, uid: message.uid)
+          QueryModel.handleViewers(channelid: message.hostId, uid: message.uid)
       );
     } on HttpReqException catch(e){
       logger.e(e.message, e);
@@ -206,7 +206,7 @@ class StreamServer {
       try {
         res = await DatabaseApi.deleteRequest(
             '/channel/viewers',
-            QueryModel.delViewer(
+            QueryModel.handleViewers(
                 channelid: message.hostId, uid: message.uid));
       }  on HttpReqException catch (e){
         logger.e(e.message, e);

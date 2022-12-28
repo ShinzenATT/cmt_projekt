@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 import 'package:provider/provider.dart';
 
-/// The CreateAccountView ///
+/// This view houses all the text fields for account creation and sends the data
+/// to the db server when the user clicks submit.
 class CreateAccountView extends StatelessWidget {
+  /// A const constructor for [CreateAccountView]
   const CreateAccountView({Key? key}) : super(key: key);
 
   @override

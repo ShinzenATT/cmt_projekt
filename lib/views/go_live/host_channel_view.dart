@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 ///The page responsible for displaying what the host sees when streaming.
 class HostChannelView extends StatefulWidget {
+  /// A const constructor for [HostChannelView]
   const HostChannelView({Key? key}) : super(key: key);
 
   @override

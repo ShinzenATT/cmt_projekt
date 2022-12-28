@@ -12,14 +12,17 @@ class AppModel {
 
   /// Api for communicating with the database
   static final DatabaseApi _databaseAPI = DatabaseApi();
+  /// Interface for communicating with the db server using [DatabaseApi] class.
   DatabaseApi get databaseApi => _databaseAPI;
 
-  /// App data constants
-  final String title = 'Comment';                   //Website title.
-  final String subTitle = 'Din moderna radioapp';   //Website subtitle.
+  // App data constants
+  /// Website title.
+  final String title = 'Comment';
+  /// Website subtitle.
+  final String subTitle = 'Din moderna radioapp';
 
 
-  ///For Categories with paired images list
+  /// For Categories with paired images list
   final categoryAndStandardImg = {
     'Rock':
     'https://images.unsplash.com/photo-1459305272254-33a7d593a851?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
@@ -43,15 +46,27 @@ class AppModel {
     'https://images.unsplash.com/photo-1579208570378-8c970854bc23?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=922&q=80'
   };
 
-  ///For Channelsettings
+  //For Channelsettings used by [GoLiveSettings]
+  /// channel name text field
   TextEditingController channelName = TextEditingController();
+  /// Channel description field
   TextEditingController channelDescription = TextEditingController();
+  /// Timetable start date readonly text field, displays the selected date
   TextEditingController timetableStartDateStr = TextEditingController();
+  /// Timetable start time readonly text field, displays selected time
   TextEditingController timetableStartTimeStr = TextEditingController();
+  /// Timetable end date readonly text field, displays selected date
   TextEditingController timetableEndDateStr = TextEditingController();
+  /// Timetable end time readonly text field, displays selected time
   TextEditingController timetableEndTimeStr = TextEditingController();
+  /// The selected timetable start date & time which is saved as a combination from
+  /// the date and time pickers. Defaults to current time.
   DateTime timetableStartTimestamp = DateTime.now();
+  /// The selected timetable end date & time which is saved as a combination from
+  /// the date and time pickers. Is optional.
   DateTime? timetableEndTimestamp;
+  /// the description of the edited timetable entry
   TextEditingController timetableDescription = TextEditingController();
+  /// The locally created timetable
   List<TimetableEntry> timetable = [];
 }

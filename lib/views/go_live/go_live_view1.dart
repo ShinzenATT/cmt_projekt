@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
 
-
+/// This view is a selector for which type of stream the user intends to do such as
+/// audio or video. This view is connected to the go live tab in the bottom navigation.
 class GoLiveView1 extends StatelessWidget {
+  /// A const constructor for [GoLiveView1]
   const GoLiveView1({Key? key}) : super(key: key);
 
   @override

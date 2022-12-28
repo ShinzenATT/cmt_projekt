@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Prefs();
-  await Prefs().setUp();
+  await Prefs().setUp(); // instancing the Prefs singleton
   runApp(
     MultiProvider(
+      // registers the view models
       providers: [
         ChangeNotifierProvider(create: (_) => MainVM()),
         ChangeNotifierProvider(create: (context) => NavVM(context)),
@@ -24,7 +25,9 @@ void main() async {
   );
 }
 
+/// The main class that the is mounted to, it's instanced in main
 class MyApp extends StatelessWidget {
+  /// const constructor for [MyApp]
   const MyApp({Key? key}) : super(key: key);
 
   @override

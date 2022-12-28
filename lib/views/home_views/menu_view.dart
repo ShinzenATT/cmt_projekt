@@ -2,8 +2,10 @@ import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
+/// This view appears when the user taps the profile button in the app bar. This view
+/// displays basic account info and has buttons to different pages like a hamburger menu.
 class MenuView extends StatelessWidget {
+  /// A const constructor for [MenuView]
   const MenuView({Key? key}) : super(key: key);
 
   @override

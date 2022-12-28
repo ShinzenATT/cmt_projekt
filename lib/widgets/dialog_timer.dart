@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 ///Widget that displays a countdown from the given duration to 0 when initialized
 ///Required key time sets the duration in seconds
 class DialogTimer extends StatefulWidget {
-  final int time;
+  /// A const constructor for [DialogTimer]
   const DialogTimer({Key? key, required this.time}) : super(key: key);
+
+  /// the time left on the timer
+  final int time;
 
   @override
   State<DialogTimer> createState() => _DialogTimerState();

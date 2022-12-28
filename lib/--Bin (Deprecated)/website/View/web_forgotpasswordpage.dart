@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_ui_widgets/gradient_ui_widgets.dart';
 
+/// A desktop page for restoring a forgotten password
 class WebForgotPasswordPage extends StatefulWidget {
+  /// constructs the [WebForgotPasswordPage]
   const WebForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
