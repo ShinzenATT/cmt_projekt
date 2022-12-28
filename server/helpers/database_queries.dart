@@ -24,16 +24,20 @@ class DatabaseQueries {
   /// otherwise a obj of account info is returned.
   Future<Map<String, dynamic>?> compareCredentials(String login, String pass) async {
       final results = await connection.mappedResultsQuery(
-          "SELECT password FROM Account WHERE (email = '$login' OR phone = '$login')");
+          "SELECT password FROM Account WHERE (email = @login OR phone = @login)",
+          substitutionValues: { "login": login }
+      );
       if (results.length == 1 && DBCrypt().checkpw(pass, results[0]["account"]!["password"] as String)) {
         return getAccount(login);
       }
       return null;
   }
   /// Query database to find if any account are connected to a given email address or phone number
-  Future<bool> checkLogin(String login) async {
+  Future<bool> accountExists(String login) async {
     final checkUserInput = await connection.mappedResultsQuery(
-        "SELECT email FROM Account WHERE (email = '$login' OR phone = '$login')");
+        "SELECT email FROM Account WHERE (email = @login OR phone = @login)",
+      substitutionValues: {'login': login}
+    );
     if (checkUserInput.isNotEmpty) {
       return true;
     }else{
@@ -43,15 +47,24 @@ class DatabaseQueries {
 
   /// Tries to create a new account in the db, if there are conflicts then a [PostgreSQLException] is thrown.
   Future<Map<String, dynamic>> createAccount(String email, String pass, String phone, String username) async {
-      await connection
-          .query("INSERT INTO Account VALUES('$email', '$pass', '$phone', '$username')");
+      await connection.query(
+          "INSERT INTO Account VALUES(@email:varchar, @pass:text, @phone, @username:text)",
+          substitutionValues: {
+            'email': email,
+            'pass': pass,
+            'phone': phone,
+            'username': username
+          }
+      );
       return (getAccount(email));
   }
 
   /// Gets account info based on the search parameter, if nothing is found then an [Exception] is thrown.
   Future<Map<String, dynamic>> getAccount(String login) async {
       final results = await connection.mappedResultsQuery(
-          "SELECT email, uid, phone, username FROM Account WHERE ((email = '$login' OR phone = '$login'))");
+          "SELECT email, uid, phone, username FROM Account WHERE ((email = @login OR phone = @login))",
+          substitutionValues: { "login": login }
+      );
 
       if (results.isEmpty) {
         throw Exception("Account does not exist");
@@ -64,7 +77,9 @@ class DatabaseQueries {
   Future<void> goOffline(String uid) async {
     try {
       await connection.query(
-          "UPDATE Channel SET isonline = false WHERE channelid = '$uid'");
+          "UPDATE Channel SET isonline = false WHERE channelid = @uid:uuid",
+          substitutionValues: { 'uid': uid }
+      );
     } on PostgreSQLException catch (e) {
       logger.e("error in goOffline\n" + (e.message ?? ""), [e, e.stackTrace]);
     }
@@ -136,7 +151,9 @@ class DatabaseQueries {
   Future<Map<String, dynamic>> getChannel(String uid) async{
     final result = await connection.mappedResultsQuery(
         "SELECT c.*, username, profileImageUrl, (SELECT COUNT('*') as total FROM Viewers WHERE channel = channelid) "
-            "FROM Channel c JOIN Account on uid = c.channelid WHERE c.channelid = '$uid';");
+            "FROM Channel c JOIN Account on uid = c.channelid WHERE c.channelid = @uid:uuid;",
+        substitutionValues: { 'uid': uid }
+    );
 
     if(result.isEmpty){
       throw Exception("Channel not found");
@@ -166,19 +183,31 @@ class DatabaseQueries {
   /// adds a viewer to an online channel
   Future<void> insertViewer(String uid, String channelId) async{
       await connection.query(
-          "INSERT INTO Viewers VALUES('$uid','$channelId')");
+          "INSERT INTO Viewers VALUES(@uid:uuid, @channel:uuid)",
+          substitutionValues: {
+            'uid': uid,
+            'channel': channelId
+          }
+      );
   }
 
   /// removes a viewer from an online channel
   Future<void> delViewer(String uid, String channelId) async{
       await connection.query(
-          "DELETE FROM Viewers WHERE(viewer = '$uid' AND channel = '$channelId')");
+          "DELETE FROM Viewers WHERE(viewer = @uid:uuid AND channel = @channel:uuid)",
+          substitutionValues: {
+            'uid': uid,
+            'channel': channelId
+          }
+      );
   }
 
   /// clears all viewers from a channel
   Future<void> delViewers(String channelId) async{
       await connection.query(
-          "DELETE FROM Viewers WHERE(channel = '$channelId')");
+          "DELETE FROM Viewers WHERE(channel = @channel:uuid)",
+          substitutionValues: { 'channel': channelId }
+      );
   }
 
 }
