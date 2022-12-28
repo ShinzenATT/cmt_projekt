@@ -3,8 +3,8 @@ import 'package:cmt_projekt/view_models/navigation_vm.dart';
 import 'package:cmt_projekt/views/home_views/menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../view_models/main_vm.dart';
+import '../view_models/stream_vm.dart';
 
 /// The top bar that exists in most views. On the homepage it has a profile button
 /// that leads to [MenuView] while for other views it displays a back button.
@@ -36,6 +36,7 @@ class CommentNavBar extends StatelessWidget {
           ],
           currentIndex: navVM.currentTabIndex,
           onTap: (index) {
+            context.read<StreamVM>().closeClient();
             switch (index) {
               case 1: navVM.selectTab(TabId.home);
               break;

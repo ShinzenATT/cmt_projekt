@@ -2,9 +2,13 @@ import 'package:cmt_projekt/models/channel_data_model.dart';
 import 'package:cmt_projekt/view_models/stream_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cmt_projekt/constants.dart' as constants;
+import '../../apis/prefs.dart';
+import '../../view_models/main_vm.dart';
+import '../../view_models/navigation_vm.dart';
 
 
-///The page responsible for displaying what the viewer sees when listening to a stream.
+///The page responsible for displaying what te viewer sees when listening to a stream.
 class ListenChannelView extends StatelessWidget {
   /// A const constructor for [ListenChannelView]
   const ListenChannelView({Key? key}) : super(key: key);
@@ -16,31 +20,61 @@ class ListenChannelView extends StatelessWidget {
       initialData: ChannelDataModel(channelid: '', category: '', channelname: ''),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+              color: Colors.black,
+              child: Column(
+                  children: [
+                SizedBox(
+                height: 200,
+                width: 200,
+                child: Container()
+                ),
+                    const Center(
+                      child:
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(),
+                    )
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    buildActionButtonsRow(context),
+                  ],
+              )
+          );
         } else if (snapshot.connectionState == ConnectionState.active ||
             snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError) {
-            return const Text("error");
+            return Container(
+                color: Colors.black,
+                child: const Center(
+                      child: Text("error",
+                        style: TextStyle(color: Colors.white),
+                    ),
+                )
+            );
           } else if (snapshot.hasData) {
             ChannelDataModel channel = snapshot.data;
             return Container(
-              color: Colors.black,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(
-                              channel.channelname,
-                              style: const TextStyle(
-                                color: Colors.greenAccent,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  channel.channelname,
+                                  style: const TextStyle(
+                                    color: Colors.greenAccent,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -143,16 +177,108 @@ class ListenChannelView extends StatelessWidget {
                       ],
                     ),
                   ),
-                ],
-              ),
+                      buildActionButtonsRow(context),
+                    ],
+                  ),
+
             );
           } else {
-            return const Text("No active channels");
+            return Container(
+                color: Colors.black,
+                child: const Text("No active channels",
+                  style: TextStyle(color: Colors.white),
+                ),
+            );
           }
-        } else {
-          return Text("State: ${snapshot.connectionState}");
-        }
-      },
+            } else {
+              return Container(
+                  color: Colors.black,
+                  child: Text("State: ${snapshot.connectionState}",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+              );
+            }
+            },
+        );
+
+  }
+   ///Two FloatingActionButton buttons used fore navigating between different streaming channels
+  Widget buildActionButtonsRow(BuildContext context) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: FloatingActionButton(
+              onPressed: () async {
+                _loadNextChannel(context, -1);
+              },
+              child: const Icon(Icons.arrow_back_ios),
+              backgroundColor: Colors.black,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+          Expanded(
+            child: FloatingActionButton(
+              onPressed: () async {
+                _loadNextChannel(context, 1);
+              },
+              child: const Icon(Icons.arrow_forward_ios),
+              backgroundColor: Colors.black,
+            ),
+          )
+        ]
     );
+  }
+
+  ///Load next stream.
+  _loadNextChannel(BuildContext context, int step) async {
+    List onlineChannels = await context.read<MainVM>().dbClient.loadOnlineChannels().then((data) => data);
+    int index = _getIndex(onlineChannels, Prefs().storedData.getString("channelName").toString());
+    context.read<StreamVM>().closeClient();
+    if (onlineChannels.isNotEmpty && index != -1) {
+
+      if (index + step < 0){
+        _setPrefs(onlineChannels.length + step, context, onlineChannels);
+      }else if(index + step < onlineChannels.length){
+        _setPrefs(index + step, context, onlineChannels);
+      }else{
+        _setPrefs(0, context, onlineChannels);
+      }
+      context.read<StreamVM>().startup(context, null);
+      context.read<NavVM>().pushView(constants.listenChannel);
+    }else{
+      context.read<NavVM>().pushView(constants.channels);
+    }
+  }
+
+  ///Set Prefs to join a new stream.
+  _setPrefs(int index, BuildContext context, List dataList){
+    context.read<MainVM>().setJoinPrefs(
+      dataList[index].channelid,
+      dataList[index].channelname,
+      dataList[index].username,
+    );
+  }
+
+  ///Return index of the current stream of all available streams.
+  ///Returns -1 if stream of some reason is not on the list.
+  int _getIndex(List dataList, String channelName) {
+    int index = 0;
+    if(dataList.isNotEmpty) {
+      for (var temp in dataList) {
+        if (temp.channelname! == channelName) {
+          break;
+        } else {
+          index += 1;
+        }
+      }
+      if(index < dataList.length) {
+        return index;
+      }
+    }
+    return -1;
   }
 }
