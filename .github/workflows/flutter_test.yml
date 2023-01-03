@@ -126,7 +126,7 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
-      - run: dart compile server/database_server.dart
+      - run: dart compile exe server/database_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
@@ -150,7 +150,7 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
-      - run: dart compile server/stream_server.dart
+      - run: dart compile exe server/stream_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
