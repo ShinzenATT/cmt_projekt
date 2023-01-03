@@ -233,11 +233,13 @@ class ListenChannelView extends StatelessWidget {
     );
   }
 
+  // TODO Move these non-widget methods to a view-model
   ///Load next stream.
   _loadNextChannel(BuildContext context, int step) async {
-    List onlineChannels = await context.read<MainVM>().dbClient.loadOnlineChannels().then((data) => data);
+    List onlineChannels = await context.read<MainVM>().dbClient.loadOnlineChannels();
     int index = _getIndex(onlineChannels, Prefs().storedData.getString("channelName").toString());
     context.read<StreamVM>().closeClient();
+    context.read<NavVM>().goBack(context);
     if (onlineChannels.isNotEmpty && index != -1) {
 
       if (index + step < 0){
@@ -249,8 +251,6 @@ class ListenChannelView extends StatelessWidget {
       }
       context.read<StreamVM>().startup(context, null);
       context.read<NavVM>().pushView(constants.listenChannel);
-    }else{
-      context.read<NavVM>().pushView(constants.channels);
     }
   }
 
