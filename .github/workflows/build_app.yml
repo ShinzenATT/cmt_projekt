@@ -52,7 +52,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Android App bundle
-          path: build/app/outputs/flutter-apk/app.aab
+          path: build/app/outputs/flutter-apk/app-release.aab
 
   build-ios:
     runs-on: macos-latest
@@ -71,8 +71,10 @@ jobs:
       - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
         env:
           SERVER: ${{ secrets.SERVER_IP_IOS }}
+      - run: flutter build ios --help
+      - run: flutter build ipa --help
       # build app
-      - run: flutter build ios --release --no-codesign --export-method development
+      - run: flutter build ios --release --no-codesign
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
@@ -80,7 +82,7 @@ jobs:
           path: build/ios/iphoneos/Runner.app
 
       # build ipa bundle
-      - run: flutter build ipa --obfuscate --split-debug-info --export-method development --no-codesign
+      - run: flutter build ipa --obfuscate --split-debug-info --no-codesign
       - uses: actions/upload-artifact@v3
         with:
           name: IOS IPA bundle
@@ -126,7 +128,8 @@ jobs:
         # get dependencies
       - run: flutter pub get
         # copy env file
-      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+      - shell: bash
+        run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
@@ -134,7 +137,7 @@ jobs:
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
-          name: Database server {{ matrix.os }} executable
+          name: Database server ${{ matrix.os }} executable
           path: server/database_server.exe
   build-stream-server:
     strategy:
@@ -152,7 +155,8 @@ jobs:
         # get dependencies
       - run: flutter pub get
         # copy env file
-      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+      - shell: bash
+        run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
