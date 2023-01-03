@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cmt_projekt/view_models/main_vm.dart';
 import 'package:cmt_projekt/constants.dart' as constants;
+import '../view_models/stream_vm.dart';
 
 /// This is a persistent AppBar used in almost every view. It rebuilds itself
 /// when notified by MainVM or NavigationVM and thus dynamically changes
@@ -32,12 +33,15 @@ class CommentAppBar extends StatelessWidget implements PreferredSizeWidget {
               if(navVM.canPop){
                 return BackButton(
                   onPressed: () {
+                    context.read<StreamVM>().closeClient();
                     navVM.goBack(context);
+
                   },
                 );
               } else {
                 return InkWell(
                   onTap: () {
+                    context.read<StreamVM>().closeClient();
                     navVM.pushView(constants.menu);
                   },
                   child: Padding(
