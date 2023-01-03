@@ -99,8 +99,8 @@ jobs:
       - run: flutter pub get
         # copy env file
       - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
-          env:
-            SERVER: ${{ secrets.SERVER_IP_IOS }}
+        env:
+          SERVER: ${{ secrets.SERVER_IP_IOS }}
       # build app
       - run: flutter build web
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
@@ -123,8 +123,8 @@ jobs:
       - run: flutter pub get
         # copy env file
       - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
-          env:
-            SERVER: ${{ secrets.SERVER_IP_DART }}
+        env:
+          SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
       - run: dart compile server/database_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
@@ -147,8 +147,8 @@ jobs:
       - run: flutter pub get
         # copy env file
       - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
-          env:
-            SERVER: ${{ secrets.SERVER_IP_DART }}
+        env:
+          SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
       - run: dart compile server/stream_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
