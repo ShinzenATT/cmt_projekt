@@ -3,33 +3,12 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Flutter build tests
+name: Build Application for Production
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  dart-analyze:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2.8.0
-        with:
-          flutter-version: '2.10.5'
-          channel: 'stable'
-          cache: true
-
-        # get dependencies
-      - run: flutter pub get
-        # copy env file
-      - run: cp lib/environment.dart.example lib/environment.dart
-      # lint the code
-      - run: dart analyze --fatal-infos
-
   build-android:
     runs-on: ubuntu-latest
     steps:
@@ -38,7 +17,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-          cache: 'gradle'
       - uses: subosito/flutter-action@v2.8.0
         with:
           flutter-version: '2.10.5'
@@ -52,13 +30,29 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_ANDROID }}
       # build app
-      - run: flutter build apk
+      - run: flutter build apk --split-per-abi --release
       - run: echo 'The app will use server IP found in SERVER_IP_ANDROID in repository secrets'
+
       - uses: actions/upload-artifact@v3
         with:
-          name: Android APK
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 7
+          name: Android APK armeabi-v7a
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Android APK arm64-v8a
+          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Android APK x86_64
+          path: build/app/outputs/flutter-apk/app-x86_64-release.apk
+
+      # build android appbundle
+      - run: flutter build appbundle --release
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Android App bundle
+          path: build/app/outputs/flutter-apk/app.aab
 
   build-ios:
     runs-on: macos-latest
@@ -78,13 +72,19 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_IOS }}
       # build app
-      - run: flutter build ios --release --no-codesign
+      - run: flutter build ios --release --no-codesign --export-method development
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
           name: IOS APP file
           path: build/ios/iphoneos/Runner.app
-          retention-days: 7
+
+      # build ipa bundle
+      - run: flutter build ipa --obfuscate --split-debug-info --export-method development --no-codesign
+      - uses: actions/upload-artifact@v3
+        with:
+          name: IOS IPA bundle
+          path: build/ios/ipa
 
   build-web:
     runs-on: ubuntu-latest
@@ -109,9 +109,12 @@ jobs:
         with:
           name: Web files
           path: build/web
-          retention-days: 7
+
   build-database-server:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2.8.0
@@ -131,11 +134,13 @@ jobs:
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
-          name: Database server Linux executable
+          name: Database server {{ matrix.os }} executable
           path: server/database_server.exe
-          retention-days: 7
   build-stream-server:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2.8.0
@@ -155,8 +160,7 @@ jobs:
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
-          name: Stream server Linux executable
+          name: Stream server ${{ matrix.os }} executable
           path: server/stream_server.exe
-          retention-days: 7
 
 
