@@ -46,10 +46,18 @@ jobs:
 
         # get dependencies
       - run: flutter pub get
-        # copy env file
-      - run: cp lib/environment.dart.example lib/environment.dart
+        # copy env file and apply repo env variable
+      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+        env:
+          SERVER: ${{ secrets.SERVER_IP_ANDROID }}
       # build app
       - run: flutter build apk
+      - run: echo 'The app will use server IP found in SERVER_IP_ANDROID in repository secrets'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Android APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
 
   build-ios:
     runs-on: macos-latest
@@ -65,9 +73,17 @@ jobs:
         # get dependencies
       - run: flutter pub get
         # copy env file
-      - run: cp lib/environment.dart.example lib/environment.dart
+      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+        env:
+          SERVER: ${{ secrets.SERVER_IP_IOS }}
       # build app
       - run: flutter build ios --release --no-codesign
+      - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: IOS APP file
+          path: build/ios/iphoneos/Runner.app
+          retention-days: 7
 
   build-web:
     runs-on: ubuntu-latest
@@ -82,8 +98,64 @@ jobs:
         # get dependencies
       - run: flutter pub get
         # copy env file
-      - run: cp lib/environment.dart.example lib/environment.dart
+      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+          env:
+            SERVER: ${{ secrets.SERVER_IP_IOS }}
       # build app
       - run: flutter build web
+      - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Web files
+          path: build/web
+          retention-days: 7
+  build-database-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.8.0
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
+          cache: true
+
+        # get dependencies
+      - run: flutter pub get
+        # copy env file
+      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+          env:
+            SERVER: ${{ secrets.SERVER_IP_DART }}
+      # build app
+      - run: dart compile server/database_server.dart
+      - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Database server Linux executable
+          path: server/database_server.exe
+          retention-days: 7
+  build-stream-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.8.0
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
+          cache: true
+
+        # get dependencies
+      - run: flutter pub get
+        # copy env file
+      - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
+          env:
+            SERVER: ${{ secrets.SERVER_IP_DART }}
+      # build app
+      - run: dart compile server/stream_server.dart
+      - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Stream server Linux executable
+          path: server/stream_server.exe
+          retention-days: 7
 
 
