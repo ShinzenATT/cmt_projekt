@@ -52,7 +52,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Android App bundle
-          path: build/app/outputs/flutter-apk/app-release.aab
+          path: build/app/outputs/bundle/release/app-release.aab
 
   build-ios:
     runs-on: macos-latest
@@ -71,22 +71,21 @@ jobs:
       - run: sed -e "s/192.168.0.XXX/$SERVER/g" lib/environment.dart.example > lib/environment.dart
         env:
           SERVER: ${{ secrets.SERVER_IP_IOS }}
-      - run: flutter build ios --help
-      - run: flutter build ipa --help
       # build app
-      - run: flutter build ios --release --no-codesign
+      - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
           name: IOS APP file
           path: build/ios/iphoneos/Runner.app
 
+      # removed since it requires code signing
       # build ipa bundle
-      - run: flutter build ipa --obfuscate --split-debug-info --no-codesign
-      - uses: actions/upload-artifact@v3
-        with:
-          name: IOS IPA bundle
-          path: build/ios/ipa
+      #- run: flutter build ipa --obfuscate --split-debug-info --no-codesign
+      #- uses: actions/upload-artifact@v3
+      #  with:
+      #    name: IOS IPA bundle
+      #    path: build/ios/ipa
 
   build-web:
     runs-on: ubuntu-latest
