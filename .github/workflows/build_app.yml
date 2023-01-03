@@ -72,7 +72,7 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_IOS }}
       # build app
-      - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info
+      - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info="cmt_projekt/"
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
