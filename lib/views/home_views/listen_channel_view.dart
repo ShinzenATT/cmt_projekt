@@ -19,8 +19,8 @@ class ListenChannelView extends StatelessWidget {
     return StreamBuilder(
       stream: context.watch<StreamVM>().streamModel.streamClient!.msgController.stream,
       initialData: ChannelDataModel(channelid: '', category: '', channelname: ''),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
               color: Colors.black,
               child: Column(
@@ -112,7 +112,7 @@ class ListenChannelView extends StatelessWidget {
                                       // v Central image of the stream, this should come from the tableau
                                       //------------------------------------------
                                       Container(
-                                        margin: const EdgeInsets.only(left: 3, right: 3, top: 50),
+                                        margin: const EdgeInsets.only(left: 3, right: 3, top: 20),
                                         height: MediaQuery.of(context).size.height*0.4,
                                         alignment: Alignment.center,
                                         decoration:  BoxDecoration(
@@ -172,8 +172,8 @@ class ListenChannelView extends StatelessWidget {
                                           const Spacer(),
                                           Container(
                                             margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-                                            height: MediaQuery.of(context).size.height*0.12,
-                                            width: MediaQuery.of(context).size.height*0.12,
+                                            height: MediaQuery.of(context).size.height*0.10,
+                                            width: MediaQuery.of(context).size.height*0.10,
                                             alignment: Alignment.topRight,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
@@ -191,7 +191,8 @@ class ListenChannelView extends StatelessWidget {
                               )
                             ],
                           ),
-                        )
+                        ),
+                        buildActionButtonsRow(context),
                       ],
                     ),
 
