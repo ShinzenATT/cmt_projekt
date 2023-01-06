@@ -234,7 +234,8 @@ class ListenChannelView extends StatelessWidget {
                 _loadNextChannel(context, -1);
               },
               child: const Icon(Icons.arrow_back_ios),
-              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.black.withOpacity(0.15),
             ),
           ),
           Expanded(
@@ -247,7 +248,8 @@ class ListenChannelView extends StatelessWidget {
                 _loadNextChannel(context, 1);
               },
               child: const Icon(Icons.arrow_forward_ios),
-              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.black.withOpacity(0.15),
             ),
           )
         ]
