@@ -70,15 +70,13 @@ flutter run
 flutter build web # build website
 ```
 
-#### Runs tests
-```bash
-flutter test
-```
-
 ## How to generate and install an APK on your android. 
 If you want to use the application on your physical android phone rather than the emulator, you can generate an APK (a file which represents the app), install it on your phone and then run it. This allows you to test the application on a physical device rather than solely testing it on an emulator. 
 To generate and install the APK, follow the guide from flutter’s [official website](https://docs.flutter.dev/deployment/android). 
 
+There's also a Github Actions workflow that also builds multiple packages and executables. To run go to the Actions tab and click "Build Application for Production" to the left. Afterwards you will see a blue banner with a "run workflow" button to the right to start it. Afterwards, you will see a new list entry that has a yellow circle which means that it's running, once it's done it will turn green. When it's done you can click it and scroll the to the buttom to  find the artifacts section which is where all the files are contained!
+
+To configure which server url the application will connect to then you need to go to the Settings tab and select the  "Secrets and Variables">Actions category. You can add repository secrets by clicking the green button at the top left. You will need the variables `SERVER_IP_ANDROID`, `SERVER_IP_IOS` and `SERVER_IP_DART`  which contains the domain/ip adress to the server.
 
 ## Where users can get help with your project
 For inquiries and problems with the app contact the support division of CMT Sweden. 
