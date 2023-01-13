@@ -75,7 +75,7 @@ jobs:
       - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info="cmt_projekt/"
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
       - run: xcodebuild -list -project ios/Runner.xcodeproj
-      - run: xcodebuild -target ios -xcconfig ios/Flutter/Release.xconfig build
+      - run: xcodebuild -target ios -xcconfig ios/Flutter/Release.xcconfig build
       - uses: actions/upload-artifact@v3
         with:
           name: IOS APP file
