@@ -74,11 +74,18 @@ jobs:
       # build app
       - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info="cmt_projekt/"
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
-      - run: xcodebuild -project ios/Runner.xcodeproj -scheme Runner build
+      #- run: xcodebuild -project ios/Runner.xcodeproj -scheme Runner build
+      - run: cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
+      - run: zip Payload
+      - run: mv Payload.zip Payload.ipa
       - uses: actions/upload-artifact@v3
         with:
-          name: IOS APP file
+          name: IOS APP files
           path: build/ios/iphoneos/Runner.app
+      - uses: actions/upload-artifact@v3
+        with:
+          name: IOS IPA file
+          path: Payload.ipa
 
       # removed since it requires code signing
       # build ipa bundle
