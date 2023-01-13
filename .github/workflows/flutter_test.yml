@@ -127,12 +127,12 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
-      - run: dart compile exe server/database_server.dart
+      - run: dart compile aot-snapshot server/database_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
-          name: Database server Linux executable
-          path: server/database_server.exe
+          name: Database server AOT-snapshot
+          path: server/database_server.aot
           retention-days: 7
   build-stream-server:
     runs-on: ubuntu-latest
@@ -151,12 +151,12 @@ jobs:
         env:
           SERVER: ${{ secrets.SERVER_IP_DART }}
       # build app
-      - run: dart compile exe server/stream_server.dart
+      - run: dart compile aot-snapshot server/stream_server.dart
       - run: echo 'The executable will use server IP found in SERVER_IP_DART in repository secrets'
       - uses: actions/upload-artifact@v3
         with:
-          name: Stream server Linux executable
-          path: server/stream_server.exe
+          name: Stream server AOT-snapshot
+          path: server/stream_server.aot
           retention-days: 7
 
 
