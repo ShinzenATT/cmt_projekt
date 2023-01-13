@@ -77,8 +77,7 @@ jobs:
       #- run: xcodebuild -project ios/Runner.xcodeproj -scheme Runner build
       - run: mkdir Payload
       - run: cp -R build/ios/iphoneos/Runner.app Payload/
-      - run: zip Payload
-      - run: mv Payload.zip Payload.ipa
+      - run: zip -r Payload.ipa Payload
       - uses: actions/upload-artifact@v3
         with:
           name: IOS APP files
