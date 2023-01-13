@@ -1,0 +1,10 @@
+dartdoc:
+  includeExternal:
+     - "server/database_server.dart"
+     - "server/stream_server.dart"
+     - "server/helpers/database_queries.dart"
+     - "server/controllers/account.dart"
+     - "server/controllers/channel.dart"
+     - "server/controllers/channel_viewers.dart"
+  exclude:
+    - "lib/--Bin (Deprecated)/"

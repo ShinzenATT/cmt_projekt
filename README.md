@@ -70,6 +70,12 @@ flutter run
 flutter build web # build website
 ```
 
+### Generate documentation
+```bash
+flutter pub global activate dartdoc #only needed to do once
+flutter pub global run dartdoc
+```
+
 ## How to generate and install an APK on your android. 
 If you want to use the application on your physical android phone rather than the emulator, you can generate an APK (a file which represents the app), install it on your phone and then run it. This allows you to test the application on a physical device rather than solely testing it on an emulator. 
 To generate and install the APK, follow the guide from flutter’s [official website](https://docs.flutter.dev/deployment/android). 

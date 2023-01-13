@@ -74,6 +74,8 @@ jobs:
       # build app
       - run: flutter build ios --release --no-codesign --obfuscate --split-debug-info="cmt_projekt/"
       - run: echo 'The app will use server IP found in SERVER_IP_IOS in repository secrets'
+      - run: xcodebuild -list -project ios/Runner.xcodeproj
+      - run: xcodebuild -target ios -xconfig ios/Flutter/Release.xconfig
       - uses: actions/upload-artifact@v3
         with:
           name: IOS APP file
@@ -110,6 +112,28 @@ jobs:
         with:
           name: Web files
           path: build/web
+
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2.8.0
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
+          cache: true
+
+        # get dependencies
+      - run: flutter pub get
+        # copy env file
+      - run: cp lib/environment.dart.example lib/environment.dart
+      # build app
+      - run: flutter pub global activate dartdoc
+      - run: flutter pub global run dartdoc
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Documentation
+          path: doc
 
   build-database-server:
     strategy:
